@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="简介出于安全原因，浏览器限制从脚本内发起的跨源HTTP请求。 例如，XMLHttpRequest和Fetch API遵循同源策略。 这意味着使用这些API的Web应用程序只能从加载应用程序的同一个域请求HTTP资源，除非使用CORS头文件。跨域资源共享（ CORS ）机制允许 Web 应用服务器进行跨域访问控制，从而使跨域数据传输得以安全进行。浏览器支持在 API 容器中（例如 XMLHttpRe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CORS简析">
+<meta property="og:url" content="http://anruence.com/2018/01/12/cors/index.html">
+<meta property="og:site_name" content="安然写字的地方">
+<meta property="og:description" content="简介出于安全原因，浏览器限制从脚本内发起的跨源HTTP请求。 例如，XMLHttpRequest和Fetch API遵循同源策略。 这意味着使用这些API的Web应用程序只能从加载应用程序的同一个域请求HTTP资源，除非使用CORS头文件。跨域资源共享（ CORS ）机制允许 Web 应用服务器进行跨域访问控制，从而使跨域数据传输得以安全进行。浏览器支持在 API 容器中（例如 XMLHttpRe">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-01-12T04:06:12.000Z">
+<meta property="article:modified_time" content="2020-10-26T14:57:00.644Z">
+<meta property="article:author" content="anruence">
+<meta property="article:tag" content="CORS">
+<meta property="article:tag" content="HTTP">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://anruence.com/2018/01/12/cors/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CORS简析 | 安然写字的地方</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">安然写字的地方</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">关山难越，谁悲失路之人？萍水相逢，尽是他乡之客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82"><span class="nav-number">2.</span> <span class="nav-text">简单请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#withCredentials-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">withCredentials 属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82"><span class="nav-number">5.</span> <span class="nav-text">非简单请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82"><span class="nav-number">6.</span> <span class="nav-text">预检请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82%E7%9A%84%E5%9B%9E%E5%BA%94"><span class="nav-number">7.</span> <span class="nav-text">预检请求的回应</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anruence</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/anruence" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;anruence" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:anruence@gmail.com" title="E-Mail → mailto:anruence@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/anruence" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/12/cors/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CORS简析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-12 12:06:12" itemprop="dateCreated datePublished" datetime="2018-01-12T12:06:12+08:00">2018-01-12</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 22:57:00" itemprop="dateModified" datetime="2020-10-26T22:57:00+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>出于安全原因，浏览器限制从脚本内发起的跨源HTTP请求。 例如，XMLHttpRequest和Fetch API遵循同源策略。 这意味着使用这些API的Web应用程序只能从加载应用程序的同一个域请求HTTP资源，除非使用CORS头文件。<br>跨域资源共享（ CORS ）机制允许 Web 应用服务器进行跨域访问控制，从而使跨域数据传输得以安全进行。浏览器支持在 API 容器中（例如 XMLHttpRequest 或 Fetch ）使用 CORS，以降低跨域 HTTP 请求所带来的风险。<br>CORS需要浏览器和服务器同时支持。目前，所有浏览器都支持该功能，IE浏览器不能低于IE10。<br>整个CORS通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS通信与同源的AJAX通信没有差别，代码完全一样。浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。<br>因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。<br>当一个资源从与该资源本身所在的服务器不同的域或端口请求一个资源时，资源会发起一个跨域 HTTP 请求。</p>
+<h2 id="简单请求"><a href="#简单请求" class="headerlink" title="简单请求"></a>简单请求</h2><h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p>某些请求不会触发 CORS 预检请求。本文称这样的请求为“简单请求”，请注意，该术语并不属于 Fetch （其中定义了 CORS）规范。若请求满足所有下述条件，则该请求可视为“简单请求”：</p>
+<p>（1）使用下列方法之一：</p>
+<ul>
+<li>GET</li>
+<li>HEAD</li>
+<li>POST</li>
+</ul>
+<p>（2）HTTP的头信息不超出以下几种字段：</p>
+<ul>
+<li>Accept</li>
+<li>Accept-Language</li>
+<li>Content-Language</li>
+<li>Last-Event-ID</li>
+<li>Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain</li>
+</ul>
+<p>另外Fetch 规范定义了对 CORS 安全的首部字段集合，不得人为设置该集合之外的其他首部字段。该集合为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Accept</span><br><span class="line">Accept-Language</span><br><span class="line">Content-Language</span><br><span class="line">Content-Type （需要注意额外的限制）</span><br><span class="line">DPR</span><br><span class="line">Downlink</span><br><span class="line">Save-Data</span><br><span class="line">Viewport-Width</span><br><span class="line">Width</span><br><span class="line">Content-Type 的值仅限于下列三者之一：</span><br><span class="line">text&#x2F;plain</span><br><span class="line">multipart&#x2F;form-data</span><br><span class="line">application&#x2F;x-www-form-urlencoded</span><br></pre></td></tr></table></figure>
+
+<p>对于简单请求，浏览器直接发出CORS请求。具体来说，就是在头信息之中，增加一个Origin字段。</p>
+<p>下面是一个例子，浏览器发现这次跨源AJAX请求是简单请求，就自动在头信息之中，添加一个Origin字段。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;cors HTTP&#x2F;1.1</span><br><span class="line">Origin: http:&#x2F;&#x2F;api.bob.com</span><br><span class="line">Host: api.alice.com</span><br><span class="line">Accept-Language: en-US</span><br><span class="line">Connection: keep-alive</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0...</span><br></pre></td></tr></table></figure>
+<p>上面的头信息中，Origin字段用来说明，本次请求来自哪个源（协议 + 域名 + 端口）。服务器根据这个值，决定是否同意这次请求。</p>
+<p>如果Origin指定的源，不在许可范围内，服务器会返回一个正常的HTTP回应。浏览器发现，这个回应的头信息没有包含Access-Control-Allow-Origin字段（详见下文），就知道出错了，从而抛出一个错误，被XMLHttpRequest的onerror回调函数捕获。注意，这种错误无法通过状态码识别，因为HTTP回应的状态码有可能是200。</p>
+<p>如果Origin指定的域名在许可范围内，服务器返回的响应，会多出几个头信息字段。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Origin: http:&#x2F;&#x2F;api.bob.com</span><br><span class="line">Access-Control-Allow-Credentials: true</span><br><span class="line">Access-Control-Expose-Headers: FooBar</span><br><span class="line">Content-Type: text&#x2F;html; charset&#x3D;utf-8</span><br></pre></td></tr></table></figure>
+<p>上面的头信息之中，有三个与CORS请求相关的字段，都以Access-Control-开头。</p>
+<p>（1）Access-Control-Allow-Origin</p>
+<p>该字段是必须的。它的值要么是请求时Origin字段的值，要么是一个*，表示接受任意域名的请求。</p>
+<p>（2）Access-Control-Allow-Credentials</p>
+<p>该字段可选。它的值是一个布尔值，表示是否允许发送Cookie。默认情况下，Cookie不包括在CORS请求之中。设为true，即表示服务器明确许可，Cookie可以包含在请求中，一起发给服务器。这个值也只能设为true，如果服务器不要浏览器发送Cookie，删除该字段即可。</p>
+<p>（3）Access-Control-Expose-Headers</p>
+<p>该字段可选。CORS请求时，XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在Access-Control-Expose-Headers里面指定。上面的例子指定，getResponseHeader(‘FooBar’)可以返回FooBar字段的值。</p>
+<h2 id="withCredentials-属性"><a href="#withCredentials-属性" class="headerlink" title="withCredentials 属性"></a>withCredentials 属性</h2><p>上面说到，CORS请求默认不发送Cookie和HTTP认证信息。如果要把Cookie发到服务器，一方面要服务器同意，指定Access-Control-Allow-Credentials字段。</p>
+<p>Access-Control-Allow-Credentials: true<br>另一方面，开发者必须在AJAX请求中打开withCredentials属性。</p>
+<p>var xhr = new XMLHttpRequest();<br>xhr.withCredentials = true;<br>否则，即使服务器同意发送Cookie，浏览器也不会发送。或者，服务器要求设置Cookie，浏览器也不会处理。</p>
+<p>但是，如果省略withCredentials设置，有的浏览器还是会一起发送Cookie。这时，可以显式关闭withCredentials。</p>
+<p>xhr.withCredentials = false;<br>需要注意的是，如果要发送Cookie，Access-Control-Allow-Origin就不能设为星号，必须指定明确的、与请求网页一致的域名。同时，Cookie依然遵循同源政策，只有用服务器域名设置的Cookie才会上传，其他域名的Cookie并不会上传，且（跨源）原网页代码中的document.cookie也无法读取服务器域名下的Cookie。</p>
+<h2 id="非简单请求"><a href="#非简单请求" class="headerlink" title="非简单请求"></a>非简单请求</h2><h2 id="预检请求"><a href="#预检请求" class="headerlink" title="预检请求"></a>预检请求</h2><p>非简单请求是那种对服务器有特殊要求的请求，比如请求方法是PUT或DELETE，或者Content-Type字段的类型是application/json。</p>
+<p>非简单请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为”预检”请求（preflight）。</p>
+<p>浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var url &#x3D; &#39;http:&#x2F;&#x2F;api.alice.com&#x2F;cors&#39;;</span><br><span class="line">var xhr &#x3D; new XMLHttpRequest();</span><br><span class="line">xhr.open(&#39;PUT&#39;, url, true);</span><br><span class="line">xhr.setRequestHeader(&#39;X-Custom-Header&#39;, &#39;value&#39;);</span><br><span class="line">xhr.send();</span><br></pre></td></tr></table></figure>
+<p>上面代码中，HTTP请求的方法是PUT，并且发送一个自定义头信息X-Custom-Header。<br>浏览器发现，这是一个非简单请求，就自动发出一个”预检”请求，要求服务器确认可以这样请求。下面是这个”预检”请求的HTTP头信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">OPTIONS &#x2F;cors HTTP&#x2F;1.1</span><br><span class="line">Origin: http:&#x2F;&#x2F;api.bob.com</span><br><span class="line">Access-Control-Request-Method: PUT</span><br><span class="line">Access-Control-Request-Headers: X-Custom-Header</span><br><span class="line">Host: api.alice.com</span><br><span class="line">Accept-Language: en-US</span><br><span class="line">Connection: keep-alive</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0...</span><br></pre></td></tr></table></figure>
+
+<p>“预检”请求用的请求方法是OPTIONS，表示这个请求是用来询问的。头信息里面，关键字段是Origin，表示请求来自哪个源。</p>
+<p>除了Origin字段，”预检”请求的头信息包括两个特殊字段。</p>
+<p>（1）Access-Control-Request-Method</p>
+<p>该字段是必须的，用来列出浏览器的CORS请求会用到哪些HTTP方法，上例是PUT。</p>
+<p>（2）Access-Control-Request-Headers</p>
+<p>该字段是一个逗号分隔的字符串，指定浏览器CORS请求会额外发送的头信息字段，上例是X-Custom-Header。</p>
+<h2 id="预检请求的回应"><a href="#预检请求的回应" class="headerlink" title="预检请求的回应"></a>预检请求的回应</h2><p>服务器收到”预检”请求以后，检查了Origin、Access-Control-Request-Method和Access-Control-Request-Headers字段以后，确认允许跨源请求，就可以做出回应。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">HTTP&#x2F;1.1 200 OK</span><br><span class="line">Date: Mon, 01 Dec 2008 01:15:39 GMT</span><br><span class="line">Server: Apache&#x2F;2.0.61 (Unix)</span><br><span class="line">Access-Control-Allow-Origin: http:&#x2F;&#x2F;api.bob.com</span><br><span class="line">Access-Control-Allow-Methods: GET, POST, PUT</span><br><span class="line">Access-Control-Allow-Headers: X-Custom-Header</span><br><span class="line">Content-Type: text&#x2F;html; charset&#x3D;utf-8</span><br><span class="line">Content-Encoding: gzip</span><br><span class="line">Content-Length: 0</span><br><span class="line">Keep-Alive: timeout&#x3D;2, max&#x3D;100</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line">Content-Type: text&#x2F;plain</span><br></pre></td></tr></table></figure>
+<p>上面的HTTP回应中，关键的是Access-Control-Allow-Origin字段，表示<a target="_blank" rel="noopener" href="http://api.bob.com可以请求数据.该字段也可以设为星号,表示同意任意跨源请求./">http://api.bob.com可以请求数据。该字段也可以设为星号，表示同意任意跨源请求。</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Origin: *</span><br></pre></td></tr></table></figure>
+<p>如果浏览器否定了”预检”请求，会返回一个正常的HTTP回应，但是没有任何CORS相关的头信息字段。这时，浏览器就会认定，服务器不同意预检请求，因此触发一个错误，被XMLHttpRequest对象的onerror回调函数捕获。控制台会打印出如下的报错信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">XMLHttpRequest cannot load http:&#x2F;&#x2F;api.alice.com.</span><br><span class="line">Origin http:&#x2F;&#x2F;api.bob.com is not allowed by Access-Control-Allow-Origin.</span><br></pre></td></tr></table></figure>
+<p>服务器回应的其他CORS相关字段如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Methods: GET, POST, PUT</span><br><span class="line">Access-Control-Allow-Headers: X-Custom-Header</span><br><span class="line">Access-Control-Allow-Credentials: true</span><br><span class="line">Access-Control-Max-Age: 1728000</span><br></pre></td></tr></table></figure>
+<p>（1）Access-Control-Allow-Methods</p>
+<p>该字段必需，它的值是逗号分隔的一个字符串，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次”预检”请求。</p>
+<p>（2）Access-Control-Allow-Headers</p>
+<p>如果浏览器请求包括Access-Control-Request-Headers字段，则Access-Control-Allow-Headers字段是必需的。它也是一个逗号分隔的字符串，表明服务器支持的所有头信息字段，不限于浏览器在”预检”中请求的字段。</p>
+<p>（3）Access-Control-Allow-Credentials</p>
+<p>该字段与简单请求时的含义相同。</p>
+<p>（4）Access-Control-Max-Age</p>
+<p>该字段可选，用来指定本次预检请求的有效期，单位为秒。上面结果中，有效期是20天（1728000秒），即允许缓存该条回应1728000秒（即20天），在此期间，不用发出另一条预检请求。</p>
+<p>4.3 浏览器的正常请求和回应<br>一旦服务器通过了”预检”请求，以后每次浏览器正常的CORS请求，就都跟简单请求一样，会有一个Origin头信息字段。服务器的回应，也都会有一个Access-Control-Allow-Origin头信息字段。</p>
+<p>下面是”预检”请求之后，浏览器的正常CORS请求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT &#x2F;cors HTTP&#x2F;1.1</span><br><span class="line">Origin: http:&#x2F;&#x2F;api.bob.com</span><br><span class="line">Host: api.alice.com</span><br><span class="line">X-Custom-Header: value</span><br><span class="line">Accept-Language: en-US</span><br><span class="line">Connection: keep-alive</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0...</span><br></pre></td></tr></table></figure>
+<p>上面头信息的Origin字段是浏览器自动添加的。</p>
+<p>下面是服务器正常的回应。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Origin: http:&#x2F;&#x2F;api.bob.com</span><br><span class="line">Content-Type: text&#x2F;html; charset&#x3D;utf-8</span><br></pre></td></tr></table></figure>
+<p>上面头信息中，Access-Control-Allow-Origin字段是每次回应都必定包含的。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/04/cors.html">http://www.ruanyifeng.com/blog/2016/04/cors.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.w3.org/TR/cors/">https://www.w3.org/TR/cors/</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>您的支持将鼓励我继续创作 笔芯</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpeg" alt="anruence 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpeg" alt="anruence 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/CORS/" rel="tag"><i class="fa fa-tag"></i> CORS</a>
+              <a href="/tags/HTTP/" rel="tag"><i class="fa fa-tag"></i> HTTP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/01/10/reentrantlock/" rel="prev" title="理解ReentrantLock">
+                  <i class="fa fa-chevron-left"></i> 理解ReentrantLock
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/01/15/restful/" rel="next" title="理解RESTful中的PUT请求">
+                  理解RESTful中的PUT请求 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anruence</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">249k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:47</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1ade6ae310dee1a615bb',
+      clientSecret: 'bb83a1099492163bf8a19e4a14f956dd1d27d018',
+      repo        : 'anruence.github.io',
+      owner       : 'anruence',
+      admin       : ['anruence'],
+      id          : '69f17b165cefe0eb9eff389421564b04',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

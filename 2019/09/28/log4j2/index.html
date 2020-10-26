@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="需求如何自定义log4j的配置文件路径？ 加载顺序1234567891011Automatic ConfigurationLog4j has the ability to automatically configure itself during initialization. When Log4j starts it will locate all the ConfigurationFactor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重新熟悉log4j配置">
+<meta property="og:url" content="http://anruence.com/2019/09/28/log4j2/index.html">
+<meta property="og:site_name" content="安然写字的地方">
+<meta property="og:description" content="需求如何自定义log4j的配置文件路径？ 加载顺序1234567891011Automatic ConfigurationLog4j has the ability to automatically configure itself during initialization. When Log4j starts it will locate all the ConfigurationFactor">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-09-28T13:34:30.000Z">
+<meta property="article:modified_time" content="2020-10-23T02:38:21.217Z">
+<meta property="article:author" content="anruence">
+<meta property="article:tag" content="log4j">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://anruence.com/2019/09/28/log4j2/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>重新熟悉log4j配置 | 安然写字的地方</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">安然写字的地方</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">关山难越，谁悲失路之人？萍水相逢，尽是他乡之客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.1.</span> <span class="nav-text">加载顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Native-Java-Application"><span class="nav-number">1.2.</span> <span class="nav-text">Native Java Application</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringBoot%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">SpringBoot应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring%E5%BA%94%E7%94%A8"><span class="nav-number">1.4.</span> <span class="nav-text">Spring应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4"><span class="nav-number">1.4.1.</span> <span class="nav-text">配置变更</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90"><span class="nav-number">1.5.</span> <span class="nav-text">详细分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#web-app-%E8%BF%99%E4%BA%9B%E9%85%8D%E7%BD%AE%E6%98%AF%E5%B9%B2%E5%98%9B%E7%9A%84"><span class="nav-number">1.5.1.</span> <span class="nav-text">web-app 这些配置是干嘛的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E5%9B%A0%E5%88%86%E6%9E%90"><span class="nav-number">1.5.2.</span> <span class="nav-text">根因分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anruence</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/anruence" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;anruence" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:anruence@gmail.com" title="E-Mail → mailto:anruence@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/anruence" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/09/28/log4j2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          重新熟悉log4j配置
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-09-28 21:34:30" itemprop="dateCreated datePublished" datetime="2019-09-28T21:34:30+08:00">2019-09-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/log4j/" itemprop="url" rel="index"><span itemprop="name">log4j</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>如何自定义log4j的配置文件路径？</p>
+<h3 id="加载顺序"><a href="#加载顺序" class="headerlink" title="加载顺序"></a>加载顺序</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Automatic Configuration</span><br><span class="line">Log4j has the ability to automatically configure itself during initialization. When Log4j starts it will locate all the ConfigurationFactory plugins and arrange then in weighted order from highest to lowest. As delivered, Log4j contains three ConfigurationFactory implementations: one for JSON, one for YAML, and one for XML.</span><br><span class="line"></span><br><span class="line">Log4j will inspect the &quot;log4j.configurationFile&quot; system property and, if set, will attempt to load the configuration using the ConfigurationFactory that matches the file extension.</span><br><span class="line">If no system property is set the YAML ConfigurationFactory will look for log4j2-test.yaml or log4j2-test.yml in the classpath.</span><br><span class="line">If no such file is found the JSON ConfigurationFactory will look for log4j2-test.json or log4j2-test.jsn in the classpath.</span><br><span class="line">If no such file is found the XML ConfigurationFactory will look for log4j2-test.xml in the classpath.</span><br><span class="line">If a test file cannot be located the YAML ConfigurationFactory will look for log4j2.yaml or log4j2.yml on the classpath.</span><br><span class="line">If a YAML file cannot be located the JSON ConfigurationFactory will look for log4j2.json or log4j2.jsn on the classpath.</span><br><span class="line">If a JSON file cannot be located the XML ConfigurationFactory will try to locate log4j2.xml on the classpath.</span><br><span class="line">If no configuration file could be located the DefaultConfiguration will be used. This will cause logging output to go to the console.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Native-Java-Application"><a href="#Native-Java-Application" class="headerlink" title="Native Java Application"></a>Native Java Application</h3><p>原生Java应用，通过启动时添加系统变量即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Dlog4j.configurationFile&#x3D;log4j2.xml</span><br></pre></td></tr></table></figure>
+<h3 id="SpringBoot应用"><a href="#SpringBoot应用" class="headerlink" title="SpringBoot应用"></a>SpringBoot应用</h3><p>SpringBoot应用也很简单<br>直接在application.properties中配置即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logging.config&#x3D;classpath:log4j2-hui-prod.xml</span><br></pre></td></tr></table></figure>
+
+<h3 id="Spring应用"><a href="#Spring应用" class="headerlink" title="Spring应用"></a>Spring应用</h3><p>网络上一搜，大部分都是这样的配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;context-param&gt;</span><br><span class="line">    &lt;param-name&gt;log4jConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">    &lt;param-value&gt;classpath:log4j2-hui-prod.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">&lt;&#x2F;context-param&gt;</span><br><span class="line">&lt;context-param&gt;</span><br><span class="line">    &lt;param-name&gt;log4jRefreshInterval&lt;&#x2F;param-name&gt;</span><br><span class="line">    &lt;param-value&gt;60000&lt;&#x2F;param-value&gt;</span><br><span class="line">&lt;&#x2F;context-param&gt;</span><br><span class="line">&lt;listener&gt;</span><br><span class="line">    &lt;listener-class&gt;org.springframework.web.util.Log4jConfigListener&lt;&#x2F;listener-class&gt;</span><br><span class="line">&lt;&#x2F;listener&gt;</span><br></pre></td></tr></table></figure>
+<p>这样能行？log4j1 时代用的都是这套配置，但同样适用log4j2吗？追踪实现时发现Log4jConfigListener 在Spring 4.2.1版本后已经废弃了</p>
+<p>先直接贴出答案，各位看官急用的话看到这里就可以解决问题。</p>
+<h4 id="配置变更"><a href="#配置变更" class="headerlink" title="配置变更"></a>配置变更</h4><p>log4jConfigLocation -&gt; log4jConfiguration</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;context-param&gt;</span><br><span class="line">    &lt;param-name&gt;log4jConfiguration&lt;&#x2F;param-name&gt;</span><br><span class="line">    &lt;param-value&gt;classpath:log4j2-hui-prod.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">&lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
+
+<p>PS：大家是不是从来没有注意过web.xml下的web-app的配置，类似下面这样的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">web-app</span> <span class="attr">version</span>=<span class="string">&quot;2.5&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://java.sun.com/xml/ns/javaee&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://java.sun.com/xml/ns/javaee </span></span></span><br><span class="line"><span class="tag"><span class="string">         http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;</span>&gt;</span></span><br><span class="line">        </span><br><span class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>修改为 3.1 or higher<br>可参考：<a target="_blank" rel="noopener" href="http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/index.html">http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/index.html</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">web-app</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee</span></span></span><br><span class="line"><span class="tag"><span class="string">         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">version</span>=<span class="string">&quot;3.1&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="详细分析"><a href="#详细分析" class="headerlink" title="详细分析"></a>详细分析</h3><h4 id="web-app-这些配置是干嘛的"><a href="#web-app-这些配置是干嘛的" class="headerlink" title="web-app 这些配置是干嘛的"></a>web-app 这些配置是干嘛的</h4><p>首先这是个 XML Schemas for Java EE Deployment Descriptors，主要是配置描述符</p>
+<h4 id="根因分析"><a href="#根因分析" class="headerlink" title="根因分析"></a>根因分析</h4><p>上面说到Spring实现的Listener已经废弃了，我们详细跟踪到了 Log4jServletContextListener ，这个是log4j2-web这个jar中实现的。按理说直接引入就应该可以达到修改配置路径的目的了，但发现实际上还是做了些限制，贴出下面的代码应该就能说明问题了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> org.apache.logging.log4j.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.EnumSet;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.DispatcherType;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterRegistration;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletContainerInitializer;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletContext;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.status.StatusLogger;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * In a Servlet 3.0 or newer environment, this initializer is responsible for starting up Log4j logging before anything</span></span><br><span class="line"><span class="comment"> * else happens in application initialization. For consistency across all containers, if the effective Servlet major</span></span><br><span class="line"><span class="comment"> * version of the application is less than 3.0, this initializer does nothing.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Log4jServletContainerInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = StatusLogger.getLogger();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(<span class="keyword">final</span> Set&lt;Class&lt;?&gt;&gt; classes, <span class="keyword">final</span> ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (servletContext.getMajorVersion() &gt; <span class="number">2</span> &amp;&amp; servletContext.getEffectiveMajorVersion() &gt; <span class="number">2</span> &amp;&amp;</span><br><span class="line">                !<span class="string">&quot;true&quot;</span>.equalsIgnoreCase(servletContext.getInitParameter(</span><br><span class="line">                        Log4jWebSupport.IS_LOG4J_AUTO_INITIALIZATION_DISABLED</span><br><span class="line">                ))) &#123;</span><br><span class="line">            LOGGER.debug(<span class="string">&quot;Log4jServletContainerInitializer starting up Log4j in Servlet 3.0+ environment.&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> FilterRegistration.Dynamic filter =</span><br><span class="line">                    servletContext.addFilter(<span class="string">&quot;log4jServletFilter&quot;</span>, Log4jServletFilter.class);</span><br><span class="line">            <span class="keyword">if</span> (filter == <span class="keyword">null</span>) &#123;</span><br><span class="line">                LOGGER.warn(<span class="string">&quot;WARNING: In a Servlet 3.0+ application, you should not define a &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;log4jServletFilter in web.xml. Log4j 2 normally does this for you automatically. Log4j 2 &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;web auto-initialization has been canceled.&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> Log4jWebLifeCycle initializer = WebLoggerContextUtils.getWebLifeCycle(servletContext);</span><br><span class="line">            initializer.start();</span><br><span class="line">            initializer.setLoggerContext(); <span class="comment">// the application is just now starting to start up</span></span><br><span class="line"></span><br><span class="line">            servletContext.addListener(<span class="keyword">new</span> Log4jServletContextListener());</span><br><span class="line"></span><br><span class="line">            filter.setAsyncSupported(<span class="keyword">true</span>); <span class="comment">// supporting async when the user isn&#x27;t using async has no downsides</span></span><br><span class="line">            filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), <span class="keyword">false</span>, <span class="string">&quot;/*&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Returns the major version of the Servlet API that this</span></span><br><span class="line"><span class="comment"> * servlet container supports. All implementations that comply</span></span><br><span class="line"><span class="comment"> * with Version 3.0 must have this method return the integer 3.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 3</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMajorVersion</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Returns the minor version of the Servlet API that this</span></span><br><span class="line"><span class="comment"> * servlet container supports. All implementations that comply</span></span><br><span class="line"><span class="comment"> * with Version 3.0 must have this method return the integer 0.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMinorVersion</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Gets the major version of the Servlet specification that the</span></span><br><span class="line"><span class="comment"> * application represented by this ServletContext is based on.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;The value returned may be different from &#123;<span class="doctag">@link</span> #getMajorVersion&#125;,</span></span><br><span class="line"><span class="comment"> * which returns the major version of the Servlet specification</span></span><br><span class="line"><span class="comment"> * supported by the Servlet container.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> the major version of the Servlet specification that the</span></span><br><span class="line"><span class="comment"> * application represented by this ServletContext is based on</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> UnsupportedOperationException if this ServletContext was</span></span><br><span class="line"><span class="comment"> * passed to the &#123;<span class="doctag">@link</span> ServletContextListener#contextInitialized&#125; method</span></span><br><span class="line"><span class="comment"> * of a &#123;<span class="doctag">@link</span> ServletContextListener&#125; that was neither declared in</span></span><br><span class="line"><span class="comment"> * &lt;code&gt;web.xml&lt;/code&gt; or &lt;code&gt;web-fragment.xml&lt;/code&gt;, nor annotated</span></span><br><span class="line"><span class="comment"> * with &#123;<span class="doctag">@link</span> javax.servlet.annotation.WebListener&#125;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> Servlet 3.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getEffectiveMajorVersion</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Gets the minor version of the Servlet specification that the</span></span><br><span class="line"><span class="comment"> * application represented by this ServletContext is based on.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;The value returned may be different from &#123;<span class="doctag">@link</span> #getMinorVersion&#125;,</span></span><br><span class="line"><span class="comment"> * which returns the minor version of the Servlet specification</span></span><br><span class="line"><span class="comment"> * supported by the Servlet container.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> the minor version of the Servlet specification that the</span></span><br><span class="line"><span class="comment"> * application xrepresented by this ServletContext is based on</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> UnsupportedOperationException if this ServletContext was</span></span><br><span class="line"><span class="comment"> * passed to the &#123;<span class="doctag">@link</span> ServletContextListener#contextInitialized&#125; method</span></span><br><span class="line"><span class="comment"> * of a &#123;<span class="doctag">@link</span> ServletContextListener&#125; that was neither declared in</span></span><br><span class="line"><span class="comment"> * &lt;code&gt;web.xml&lt;/code&gt; or &lt;code&gt;web-fragment.xml&lt;/code&gt;, nor annotated</span></span><br><span class="line"><span class="comment"> * with &#123;<span class="doctag">@link</span> javax.servlet.annotation.WebListener&#125;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> Servlet 3.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getEffectiveMinorVersion</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>简而言之就是：<br>2.5 =&gt; (major = 2 minor = 5)<br>3.1 =&gt; (major = 3 minor = 1)<br>MajorVersion =&gt; 实际引入jar的版本<br>EffectiveMajorVersion =&gt; web-app中声明的版本</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.voidcn.com/article/p-hzdnxyhq-pm.html">http://www.voidcn.com/article/p-hzdnxyhq-pm.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/index.html">https://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/index.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://logging.apache.org/log4j/2.x/manual/configuration.html#AutomaticConfiguration">https://logging.apache.org/log4j/2.x/manual/configuration.html#AutomaticConfiguration</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>您的支持将鼓励我继续创作 笔芯</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpeg" alt="anruence 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpeg" alt="anruence 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/log4j/" rel="tag"><i class="fa fa-tag"></i> log4j</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/06/13/enode-arch/" rel="prev" title="enode执行过程">
+                  <i class="fa fa-chevron-left"></i> enode执行过程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/05/maven/" rel="next" title="maven配置分享">
+                  maven配置分享 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anruence</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">249k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:47</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1ade6ae310dee1a615bb',
+      clientSecret: 'bb83a1099492163bf8a19e4a14f956dd1d27d018',
+      repo        : 'anruence.github.io',
+      owner       : 'anruence',
+      admin       : ['anruence'],
+      id          : '7b778d5da1e933499fe37eb432de7d4b',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

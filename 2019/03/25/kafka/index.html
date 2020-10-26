@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="kafka如何实现高吞吐？高吞吐是 Kafka 需要实现的核心目标之一，为此 kafka 做了以下一些设计：  数据磁盘持久化：消息不在内存中 Cache ，直接写入到磁盘，充分利用磁盘的顺序读写性能。直接使用 Linux 文件系统的 Cache ，来高效缓存数据。文件追加写 zero-copy：减少 IO 操作步骤采用 Linux Zero-Copy 提高发送性能。   传统的数据发送需要发送">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafka的关键概念">
+<meta property="og:url" content="http://anruence.com/2019/03/25/kafka/index.html">
+<meta property="og:site_name" content="安然写字的地方">
+<meta property="og:description" content="kafka如何实现高吞吐？高吞吐是 Kafka 需要实现的核心目标之一，为此 kafka 做了以下一些设计：  数据磁盘持久化：消息不在内存中 Cache ，直接写入到磁盘，充分利用磁盘的顺序读写性能。直接使用 Linux 文件系统的 Cache ，来高效缓存数据。文件追加写 zero-copy：减少 IO 操作步骤采用 Linux Zero-Copy 提高发送性能。   传统的数据发送需要发送">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-25T10:05:47.000Z">
+<meta property="article:modified_time" content="2020-10-23T02:38:21.217Z">
+<meta property="article:author" content="anruence">
+<meta property="article:tag" content="kafka">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://anruence.com/2019/03/25/kafka/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>kafka的关键概念 | 安然写字的地方</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">安然写字的地方</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">关山难越，谁悲失路之人？萍水相逢，尽是他乡之客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%90%9E%E5%90%90%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">kafka如何实现高吞吐？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E7%9A%84%E5%89%AF%E6%9C%AC%E6%9C%BA%E5%88%B6%E6%98%AF%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">Kafka 的副本机制是怎么样的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Kafka-%E4%BA%8B%E5%8A%A1%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">什么是 Kafka 事务？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kafka-%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%B6%88%E6%81%AF%E7%9A%84%E9%A1%BA%E5%BA%8F%E6%80%A7%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">Kafka 如何保证消息的顺序性？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anruence</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/anruence" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;anruence" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:anruence@gmail.com" title="E-Mail → mailto:anruence@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/anruence" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/03/25/kafka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          kafka的关键概念
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-25 18:05:47" itemprop="dateCreated datePublished" datetime="2019-03-25T18:05:47+08:00">2019-03-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/kafka/" itemprop="url" rel="index"><span itemprop="name">kafka</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="kafka如何实现高吞吐？"><a href="#kafka如何实现高吞吐？" class="headerlink" title="kafka如何实现高吞吐？"></a>kafka如何实现高吞吐？</h2><p>高吞吐是 Kafka 需要实现的核心目标之一，为此 kafka 做了以下一些设计：</p>
+<ol>
+<li>数据磁盘持久化：消息不在内存中 Cache ，直接写入到磁盘，充分利用磁盘的顺序读写性能。<br>直接使用 Linux 文件系统的 Cache ，来高效缓存数据。<br>文件追加写</li>
+<li>zero-copy：减少 IO 操作步骤<br>采用 Linux Zero-Copy 提高发送性能。</li>
+</ol>
+<ul>
+<li>传统的数据发送需要发送 4 次上下文切换。</li>
+<li>采用 sendfile 系统调用之后，数据直接在内核态交换，系统上下文切换减少为2次。根据测试结果，可以提高60%的数据发送性能。<br>避免二次拷贝以及内核态到用户态的切换，详情见：<a target="_blank" rel="noopener" href="https://developer.ibm.com/articles/j-zerocopy/">https://developer.ibm.com/articles/j-zerocopy/</a></li>
+</ul>
+<ol start="3">
+<li><p>数据批量发送</p>
+</li>
+<li><p>数据压缩</p>
+</li>
+<li><p>Topic 划分为多个 Partition ，提高并行度。<br>数据在磁盘上存取代价为 O(1)。<br>Kafka 以 Topic 来进行消息管理，每个 Topic 包含多个 Partition ，每个 Partition 对应一个逻辑 log ，有多个 segment 文件组成。<br>每个 segment 中存储多条消息（见下图），消息 id 由其逻辑位置决定，即从消息 id 可直接定位到消息的存储位置，避免 id 到位置的额外映射。<br>每个 Partition 在内存中对应一个 index ，记录每个 segment 中的第一条消息偏移。<br>发布者发到某个 Topic 的消息会被均匀的分布到多个 Partition 上（随机或根据用户指定的回调函数进行分布），Broker 收到发布消息往对应 Partition 的最后一个 segment 上添加该消息。<br>当某个 segment上 的消息条数达到配置值或消息发布时间超过阈值时，segment上 的消息会被 flush 到磁盘，只有 flush 到磁盘上的消息订阅者才能订阅到，segment 达到一定的大小后将不会再往该 segment 写数据，Broker 会创建新的 segment 文件。</p>
+</li>
+<li><p>Broker NIO异步消息处理，实现了IO线程与业务线程分离。</p>
+</li>
+</ol>
+<h2 id="Kafka-的副本机制是怎么样的？"><a href="#Kafka-的副本机制是怎么样的？" class="headerlink" title="Kafka 的副本机制是怎么样的？"></a>Kafka 的副本机制是怎么样的？</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013256816/article/details/71091774">https://blog.csdn.net/u013256816/article/details/71091774</a></li>
+</ul>
+<h2 id="什么是-Kafka-事务？"><a href="#什么是-Kafka-事务？" class="headerlink" title="什么是 Kafka 事务？"></a>什么是 Kafka 事务？</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ransom0512/article/details/78840042">https://blog.csdn.net/ransom0512/article/details/78840042</a></li>
+</ul>
+<h2 id="Kafka-如何保证消息的顺序性？"><a href="#Kafka-如何保证消息的顺序性？" class="headerlink" title="Kafka 如何保证消息的顺序性？"></a>Kafka 如何保证消息的顺序性？</h2><p>Kafka 本身，并不像 RocketMQ 一样，提供顺序性的消息。所以，提供的方案，都是相对有损的。如下：<br>这里的顺序消息，我们更多指的是，单个 Partition 的消息，被顺序消费。<br>方式一，Consumer ，对每个 Partition 内部单线程消费，单线程吞吐量太低，一般不会用这个。<br>方式二，Consumer ，拉取到消息后，写到N个内存 queue，具有相同 key 的数据都到同一个内存 queue 。然后，对于N个线程，每个线程分别消费一个内存 queue 即可，这样就能保证顺序性。<br>这种方式，相当于对【方式一】的改进，将相同 Partition 的消息进一步拆分，保证相同 key 的数据消费是顺序的。<br>不过这种方式，消费进度的更新会比较麻烦。<br>当然，实际情况也不太需要考虑消息的顺序性，基本没有业务需要。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/pzVS7r3QaQPFwob-fY8b4A">为什么Kafka这么快？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/d9KIz0xvp5I9rqnDAlZvXw">震惊了！原来这才是 Kafka！（多图+深入）</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/javagrowing/JGrowing/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/IO/%E8%B5%B0%E8%BF%9B%E7%A7%91%E5%AD%A6%E4%B9%8B%E6%8F%AD%E5%BC%80%E7%A5%9E%E7%A7%98%E7%9A%84%E9%9B%B6%E6%8B%B7%E8%B4%9D.md">零拷贝</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ssJV6wnH7fE2arZ07_Og4w">Kafka源码系列之kafka如何实现高性能读写的</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/csdn_9527666/article/details/82709198">https://blog.csdn.net/csdn_9527666/article/details/82709198</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh314/article/details/77568580">https://blog.csdn.net/yjh314/article/details/77568580</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.iocoder.cn/Kafka/message-format/">http://www.iocoder.cn/Kafka/message-format/</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5b573eafe51d45198f5c80a4">你需要知道的kafka</a></li>
+<li><a target="_blank" rel="noopener" href="https://gitbook.cn/books/5bc446269a9adf54c7ccb8bc/index.html">再谈基于 Kafka 和 ZooKeeper 的分布式消息队列原理</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>您的支持将鼓励我继续创作 笔芯</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpeg" alt="anruence 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpeg" alt="anruence 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/kafka/" rel="tag"><i class="fa fa-tag"></i> kafka</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/03/25/jit-ref/" rel="prev" title="JIT参考材料">
+                  <i class="fa fa-chevron-left"></i> JIT参考材料
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/04/03/saga/" rel="next" title="Saga的意义">
+                  Saga的意义 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anruence</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">249k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:47</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1ade6ae310dee1a615bb',
+      clientSecret: 'bb83a1099492163bf8a19e4a14f956dd1d27d018',
+      repo        : 'anruence.github.io',
+      owner       : 'anruence',
+      admin       : ['anruence'],
+      id          : 'a824a9c1aad93c4852bccfa27c386b0d',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

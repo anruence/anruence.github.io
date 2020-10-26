@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="前言介绍InheritableThreadLocal之前，假设对 ThreadLocal 已经有了一定的理解，比如基本概念，原理，如果没有，可以参考：ThreadLocal源码分析解密在讲解之前我们先列举有关ThreadLocal的几个关键点 每一个Thread线程都有属于自己的ThreadLocalMap,里面有一个弱引用的Entry(ThreadLocal,Object),如下 1234Ent">
+<meta property="og:type" content="article">
+<meta property="og:title" content="thread-local-transmit">
+<meta property="og:url" content="http://anruence.com/2018/06/11/thread-local-transmit/index.html">
+<meta property="og:site_name" content="安然写字的地方">
+<meta property="og:description" content="前言介绍InheritableThreadLocal之前，假设对 ThreadLocal 已经有了一定的理解，比如基本概念，原理，如果没有，可以参考：ThreadLocal源码分析解密在讲解之前我们先列举有关ThreadLocal的几个关键点 每一个Thread线程都有属于自己的ThreadLocalMap,里面有一个弱引用的Entry(ThreadLocal,Object),如下 1234Ent">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-06-11T09:57:15.000Z">
+<meta property="article:modified_time" content="2020-10-23T02:38:21.226Z">
+<meta property="article:author" content="anruence">
+<meta property="article:tag" content="ThreadLocal">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://anruence.com/2018/06/11/thread-local-transmit/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>thread-local-transmit | 安然写字的地方</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">安然写字的地方</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">关山难越，谁悲失路之人？萍水相逢，尽是他乡之客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Threadlocal-bug%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">Threadlocal bug？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InheritableThreadLocal%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">InheritableThreadLocal实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InheritableThreadLocal%E8%BF%98%E6%9C%89%E9%97%AE%E9%A2%98%E5%90%97%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">InheritableThreadLocal还有问题吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%A0%E6%88%90%E9%97%AE%E9%A2%98%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">5.</span> <span class="nav-text">造成问题的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">6.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transmittable-thread-local%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">7.</span> <span class="nav-text">transmittable-thread-local实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="nav-number">7.1.</span> <span class="nav-text">如何使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anruence</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/anruence" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;anruence" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:anruence@gmail.com" title="E-Mail → mailto:anruence@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/anruence" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/06/11/thread-local-transmit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          thread-local-transmit
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-06-11 17:57:15" itemprop="dateCreated datePublished" datetime="2018-06-11T17:57:15+08:00">2018-06-11</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>介绍InheritableThreadLocal之前，假设对 ThreadLocal 已经有了一定的理解，比如基本概念，原理，如果没有，<br>可以参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/a837199685/article/details/50806876">ThreadLocal源码分析解密</a><br>在讲解之前我们先列举有关ThreadLocal的几个关键点</p>
+<p>每一个Thread线程都有属于自己的ThreadLocalMap,里面有一个弱引用的Entry(ThreadLocal,Object),如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Entry(ThreadLocal k, Object v) &#123;</span><br><span class="line"> <span class="keyword">super</span>(k);</span><br><span class="line"> value = v;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从ThreadLocal中get值的时候,首先通过Thread.currentThread得到当前线程，然后拿到这个线程的ThreadLocalMap。再传递当前ThreadLocal对象（结合上一点）。取得Entry中的value值</p>
+<p>set值的时候同理，更改的是当先线程的ThreadLocalMap中Entry中key为当前Threadlocal对象的value值</p>
+<h2 id="Threadlocal-bug？"><a href="#Threadlocal-bug？" class="headerlink" title="Threadlocal bug？"></a>Threadlocal bug？</h2><p>如果子线程想要拿到父线程的中的ThreadLocal值怎么办呢？比如会有以下的这种代码的实现。由于ThreadLocal的实现机制,在子线程中get时,我们拿到的Thread对象是当前子线程对象,那么他的ThreadLocalMap是null的,所以我们得到的value也是null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> ThreadLocal threadLocal=<span class="keyword">new</span> ThreadLocal()&#123;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> Object <span class="title">initialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="string">&quot;xiezhaodong&quot;</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;;</span><br><span class="line"> <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> threadLocal.get();<span class="comment">//NULL</span></span><br><span class="line"> &#125;</span><br><span class="line"> &#125;).start();</span><br></pre></td></tr></table></figure>
+
+<h2 id="InheritableThreadLocal实现"><a href="#InheritableThreadLocal实现" class="headerlink" title="InheritableThreadLocal实现"></a>InheritableThreadLocal实现</h2><p>那其实很多时候我们是有子线程获得父线程ThreadLocal的需求的,要如何解决这个问题呢？这就是InheritableThreadLocal这个类所做的事情。先来看下InheritableThreadLocal所做的事情。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InheritableThreadLocal</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">ThreadLocal</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"> </span><br><span class="line"> <span class="function"><span class="keyword">protected</span> T <span class="title">childValue</span><span class="params">(T parentValue)</span> </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> parentValue;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">/**  * 重写Threadlocal类中的getMap方法，在原Threadlocal中是返回  *t.theadLocals，而在这么却是返回了inheritableThreadLocals，因为  * Thread类中也有一个要保存父子传递的变量  */</span></span><br><span class="line"> <span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> t.inheritableThreadLocals;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">/**  * 同理，在创建ThreadLocalMap的时候不是给t.threadlocal赋值  *而是给inheritableThreadLocals变量赋值  *   */</span></span><br><span class="line"> <span class="function"><span class="keyword">void</span> <span class="title">createMap</span><span class="params">(Thread t, T firstValue)</span> </span>&#123;</span><br><span class="line"> t.inheritableThreadLocals = <span class="keyword">new</span> ThreadLocalMap(<span class="keyword">this</span>, firstValue);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码大致的意思就是，如果你使用InheritableThreadLocal,那么保存的所有东西都已经不在原来的t.thradLocals里面，而是在一个新的t.inheritableThreadLocals变量中了。下面是Thread类中两个变量的定义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ThreadLocal values pertaining to this thread. This map is maintained  * by the ThreadLocal class. */</span></span><br><span class="line"> ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">/*  * InheritableThreadLocal values pertaining to this thread. This map is  * maintained by the InheritableThreadLocal class.  */</span></span><br><span class="line"> ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Q：InheritableThreadLocal是如何实现在子线程中能拿到当前父线程中的值的呢？<br>A：一个常见的想法就是把父线程的所有的值都copy到子线程中。<br>下面来看看在线程new Thread的时候线程都做了些什么？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ThreadGroup g, Runnable target, String name,  <span class="keyword">long</span> stackSize, AccessControlContext acc)</span> </span>&#123;</span><br><span class="line"> <span class="comment">//省略上面部分代码</span></span><br><span class="line"> <span class="keyword">if</span> (parent.inheritableThreadLocals != <span class="keyword">null</span>)</span><br><span class="line"> <span class="comment">//这句话的意思大致不就是，copy父线程parent的map，创建一个新的map赋值给当前线程的inheritableThreadLocals。</span></span><br><span class="line"> <span class="keyword">this</span>.inheritableThreadLocals =</span><br><span class="line"> ThreadLocal.createInheritedMap(parent.inheritableThreadLocals);</span><br><span class="line"> <span class="comment">//ignore</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>而且，在copy过程中是浅拷贝，key和value都是原来的引用地址</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">ThreadLocalMap</span><span class="params">(ThreadLocalMap parentMap)</span> </span>&#123;</span><br><span class="line"> Entry[] parentTable = parentMap.table;</span><br><span class="line"> <span class="keyword">int</span> len = parentTable.length;</span><br><span class="line"> setThreshold(len);</span><br><span class="line"> table = <span class="keyword">new</span> Entry[len];</span><br><span class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; len; j++) &#123;</span><br><span class="line"> Entry e = parentTable[j];</span><br><span class="line"> <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line"> ThreadLocal key = e.get();</span><br><span class="line"> <span class="keyword">if</span> (key != <span class="keyword">null</span>) &#123;</span><br><span class="line"> Object value = key.childValue(e.value);</span><br><span class="line"> Entry c = <span class="keyword">new</span> Entry(key, value);</span><br><span class="line"> <span class="keyword">int</span> h = key.threadLocalHashCode &amp; (len - <span class="number">1</span>);</span><br><span class="line"> <span class="keyword">while</span> (table[h] != <span class="keyword">null</span>)</span><br><span class="line"> h = nextIndex(h, len);</span><br><span class="line"> table[h] = c;</span><br><span class="line"> size++;</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>恩，到了这里，大致的解释了一下InheritableThreadLocal为什么能解决父子线程传递Threadlcoal值的问题。<br>在创建InheritableThreadLocal对象的时候赋值给线程的t.inheritableThreadLocals变量<br>在创建新线程的时候会check父线程中t.inheritableThreadLocals变量是否为null，如果不为null则copy一份ThradLocalMap到子线程的t.inheritableThreadLocals成员变量中去<br>因为复写了getMap(Thread)和CreateMap()方法,所以get值得时候，就可以在getMap(t)的时候就会从t.inheritableThreadLocals中拿到map对象，从而实现了可以拿到父线程ThreadLocal中的值<br>so,在最开始的代码示例中，如果把ThreadLocal对象换成InheritableThreadLocal对象，那么get到的字符会是“xiezhaodong”而不是NULL</p>
+<h2 id="InheritableThreadLocal还有问题吗？"><a href="#InheritableThreadLocal还有问题吗？" class="headerlink" title="InheritableThreadLocal还有问题吗？"></a>InheritableThreadLocal还有问题吗？</h2><p>问题场景<br>我们在使用线程的时候往往不会只是简单的new Thrad对象，而是使用线程池，当然线程池的好处多多。这里不详解，既然这里提出了问题，那么线程池会给InheritableThreadLocal带来什么问题呢？我们列举一下线程池的特点：</p>
+<ul>
+<li>为了减小创建线程的开销，线程池会缓存已经使用过的线程</li>
+<li>生命周期统一管理,合理的分配系统资源</li>
+</ul>
+<p>对于第一点，如果一个子线程已经使用过，并且会set新的值到ThreadLocal中，那么第二个task提交进来的时候还能获得父线程中的值吗？比如下面这种情况(虽然是线程，用sleep尽量让他们串行的执行):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> InheritableThreadLocal&lt;Span&gt; inheritableThreadLocal = <span class="keyword">new</span> InheritableThreadLocal&lt;Span&gt;();</span><br><span class="line"> inheritableThreadLocal.set(<span class="keyword">new</span> Span(<span class="string">&quot;xiexiexie&quot;</span>));</span><br><span class="line"> <span class="comment">//输出 xiexiexie</span></span><br><span class="line"> Object o = inheritableThreadLocal.get();</span><br><span class="line"> Runnable runnable = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">&quot;========&quot;</span>);</span><br><span class="line"> inheritableThreadLocal.get();</span><br><span class="line"> inheritableThreadLocal.set(<span class="keyword">new</span> Span(<span class="string">&quot;zhangzhangzhang&quot;</span>);</span><br><span class="line"> inheritableThreadLocal.get();</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;;</span><br><span class="line"> </span><br><span class="line"> ExecutorService executorService = Executors.newFixedThreadPool(<span class="number">1</span>);</span><br><span class="line"> executorService.submit(runnable);</span><br><span class="line"> TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line"> executorService.submit(runnable);</span><br><span class="line"> TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line"> System.out.println(<span class="string">&quot;========&quot;</span>);</span><br><span class="line"> Span span = inheritableThreadLocal.get();</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Span</span> </span>&#123;</span><br><span class="line"> <span class="keyword">public</span> String name;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">int</span> age;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">Span</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line"> <span class="keyword">this</span>.name = name;</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出的会是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">xiexiexie</span><br><span class="line"> &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">xiexiexie</span><br><span class="line">zhangzhangzhang</span><br><span class="line"> &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">zhangzhangzhang</span><br><span class="line">zhangzhangzhang</span><br><span class="line"> &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">xiexiexie</span><br></pre></td></tr></table></figure>
+<p>造成这个问题的原因是什么呢，下图大致讲解一下整个过程的变化情况，如图所示，由于B任务提交的时候使用了，A任务的缓存线程，A缓存线程的InheritableThreadLocal中的value已经被更新成了”zhangzhangzhang“。B任务在代码内获得值的时候，直接从t.InheritableThreadLocal中获得值，所以就获得了线程A中心设置的值，而不是父线程中InheritableThreadLocal的值。</p>
+<p>so，InheritableThreadLocal还是不能够解决线程池当中获得父线程中ThreadLocal中的值。</p>
+<h2 id="造成问题的原因"><a href="#造成问题的原因" class="headerlink" title="造成问题的原因"></a>造成问题的原因</h2><p>那么造成这个问题的原因是什么呢？如何让任务之间使用缓存的线程不受影响呢？实际原因是，我们的线程在执行完毕的时候并没有清除ThreadLocal中的值，导致后面的任务重用现在的localMap。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>如果我们能够，在使用完这个线程的时候清除所有的localMap，在submit新任务的时候在重新重父线程中copy所有的Entry。然后重新给当前线程的t.inhertableThreadLocal赋值。这样就能够解决在线程池中每一个新的任务都能够获得父线程中ThreadLocal中的值而不受其他任务的影响，因为在生命周期完成的时候会自动clear所有的数据。<br>Alibaba的一个库解决了这个问题: <a target="_blank" rel="noopener" href="https://github.com/alibaba/transmittable-thread-local">https://github.com/alibaba/transmittable-thread-local</a></p>
+<h2 id="transmittable-thread-local实现原理"><a href="#transmittable-thread-local实现原理" class="headerlink" title="transmittable-thread-local实现原理"></a>transmittable-thread-local实现原理</h2><p>JDK的InheritableThreadLocal类可以完成父线程到子线程的值传递。但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的ThreadLocal值传递已经没有意义，应用需要的实际上是把 任务提交给线程池时的ThreadLocal值传递到 任务执行时。</p>
+<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><p>这个库最简单的方式是这样使用的,通过简单的修饰，使得提交的runable拥有了上一节所述的功能。具体的API文档详见github，这里不再赘述</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">TransmittableThreadLocal&lt;String&gt; parent = <span class="keyword">new</span> TransmittableThreadLocal&lt;String&gt;();</span><br><span class="line">parent.set(<span class="string">&quot;value-set-in-parent&quot;</span>);</span><br><span class="line"> </span><br><span class="line">Runnable task = <span class="keyword">new</span> Task(<span class="string">&quot;1&quot;</span>);</span><br><span class="line"><span class="comment">// 额外的处理，生成修饰了的对象ttlRunnable</span></span><br><span class="line">Runnable ttlRunnable = TtlRunnable.get(task); </span><br><span class="line">executorService.submit(ttlRunnable);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Task中可以读取, 值是&quot;value-set-in-parent&quot;</span></span><br><span class="line">String value = parent.get();</span><br><span class="line">``` </span><br><span class="line">### 原理简述</span><br><span class="line">这个方法TtlRunnable.get(task)最终会调用构造方法，返回的是该类本身，也是一个Runable,这样就完成了简单的装饰。最重要的是在run方法这个地方。</span><br><span class="line">```java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TtlRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> AtomicReference&lt;Map&lt;TransmittableThreadLocal&lt;?&gt;, Object&gt;&gt; copiedRef;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> Runnable runnable;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">boolean</span> releaseTtlValueReferenceAfterRun;</span><br><span class="line"> </span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="title">TtlRunnable</span><span class="params">(Runnable runnable, <span class="keyword">boolean</span> releaseTtlValueReferenceAfterRun)</span> </span>&#123;</span><br><span class="line"> <span class="comment">//从父类copy值到本类当中</span></span><br><span class="line"> <span class="keyword">this</span>.copiedRef = <span class="keyword">new</span> AtomicReference&lt;Map&lt;TransmittableThreadLocal&lt;?&gt;, Object&gt;&gt;(TransmittableThreadLocal.copy());</span><br><span class="line"> <span class="keyword">this</span>.runnable = runnable;<span class="comment">//提交的runable,被修饰对象</span></span><br><span class="line"> <span class="keyword">this</span>.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">/**  * wrap method &#123;<span class="doctag">@link</span> Runnable#run()&#125;.  */</span></span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> Map&lt;TransmittableThreadLocal&lt;?&gt;, Object&gt; copied = copiedRef.get();</span><br><span class="line"> <span class="keyword">if</span> (copied == <span class="keyword">null</span> || releaseTtlValueReferenceAfterRun &amp;&amp; !copiedRef.compareAndSet(copied, <span class="keyword">null</span>)) &#123;</span><br><span class="line"> <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">&quot;TTL value reference is released after run!&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">//装载到当前线程</span></span><br><span class="line"> Map&lt;TransmittableThreadLocal&lt;?&gt;, Object&gt; backup = TransmittableThreadLocal.backupAndSetToCopied(copied);</span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line"> runnable.run();<span class="comment">//执行提交的task</span></span><br><span class="line"> &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> <span class="comment">//clear</span></span><br><span class="line"> TransmittableThreadLocal.restoreBackup(backup);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面的使用线程池的例子当中，如果换成这种修饰的方式进行操作，B任务得到的肯定是父线程中ThreadLocal的值，解决了在线程池中InheritableThreadLocal不能解决的问题。</p>
+<p>更新父线程ThreadLocal值？<br>如果线程之间出了要能够得到父线程中的值，同时想更新值怎么办呢？在前面我们有提到，当子线程copy父线程的ThreadLocalMap的时候是浅拷贝的,代表子线程Entry里面的value都是指向的同一个引用，我们只要修改这个引用的同时就能够修改父线程当中的值了,比如这样:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">&quot;========&quot;</span>);</span><br><span class="line"> Span span= inheritableThreadLocal.get();</span><br><span class="line"> System.out.println(span);</span><br><span class="line"> span.name=<span class="string">&quot;liuliuliu&quot;</span>;<span class="comment">//修改父引用为liuliuliu</span></span><br><span class="line"> inheritableThreadLocal.set(<span class="keyword">new</span> Span(<span class="string">&quot;zhangzhangzhang&quot;</span>));</span><br><span class="line"> System.out.println(inheritableThreadLocal.get());</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>这样父线程中的值就会得到更新了。能够满足父线程ThreadLocal值的实时更新，同时子线程也能共享父线程的值。不过场景倒是不是很常见的样子。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/a837199685/article/details/52712547">https://blog.csdn.net/a837199685/article/details/52712547</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>您的支持将鼓励我继续创作 笔芯</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpeg" alt="anruence 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpeg" alt="anruence 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ThreadLocal/" rel="tag"><i class="fa fa-tag"></i> ThreadLocal</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/11/hilo/" rel="prev" title="hilo算法">
+                  <i class="fa fa-chevron-left"></i> hilo算法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/27/enum-thrift/" rel="next" title="Thrift中enum的一些探究">
+                  Thrift中enum的一些探究 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anruence</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">249k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:47</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1ade6ae310dee1a615bb',
+      clientSecret: 'bb83a1099492163bf8a19e4a14f956dd1d27d018',
+      repo        : 'anruence.github.io',
+      owner       : 'anruence',
+      admin       : ['anruence'],
+      id          : '17e3998a600a1985e4c1b3b04cfb5cda',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

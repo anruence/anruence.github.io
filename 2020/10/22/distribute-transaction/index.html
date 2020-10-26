@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="如何理解事务中的一致性单机事务一致性的定义  https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Consistency_(database_systems)#mw-head  可以理解单机一致性是：应用系统从一个正确的状态到另一个正确的状态，而ACID就是说事务能够通过AID来保证这个C的过程，C是目的，AID都是方法，ACID中的一致性是数据库保证所有的约束没有被打破 关于分布式事务的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于分布式事务的文章">
+<meta property="og:url" content="http://anruence.com/2020/10/22/distribute-transaction/index.html">
+<meta property="og:site_name" content="安然写字的地方">
+<meta property="og:description" content="如何理解事务中的一致性单机事务一致性的定义  https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Consistency_(database_systems)#mw-head  可以理解单机一致性是：应用系统从一个正确的状态到另一个正确的状态，而ACID就是说事务能够通过AID来保证这个C的过程，C是目的，AID都是方法，ACID中的一致性是数据库保证所有的约束没有被打破 关于分布式事务的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-22T12:26:18.000Z">
+<meta property="article:modified_time" content="2020-10-26T15:05:22.819Z">
+<meta property="article:author" content="anruence">
+<meta property="article:tag" content="CAP">
+<meta property="article:tag" content="ACID">
+<meta property="article:tag" content="分布式事务">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://anruence.com/2020/10/22/distribute-transaction/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>关于分布式事务的文章 | 安然写字的地方</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">安然写字的地方</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">关山难越，谁悲失路之人？萍水相逢，尽是他乡之客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E4%BA%8B%E5%8A%A1%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">如何理解事务中的一致性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%96%87%E7%AB%A0"><span class="nav-number">2.</span> <span class="nav-text">关于分布式事务的文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6"><span class="nav-number">3.</span> <span class="nav-text">关于分布式事务开源框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E8%B5%84%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text">补充资料</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anruence</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/anruence" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;anruence" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:anruence@gmail.com" title="E-Mail → mailto:anruence@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/anruence" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2020/10/22/distribute-transaction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于分布式事务的文章
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-10-22 20:26:18" itemprop="dateCreated datePublished" datetime="2020-10-22T20:26:18+08:00">2020-10-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 23:05:22" itemprop="dateModified" datetime="2020-10-26T23:05:22+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">分布式事务</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="如何理解事务中的一致性"><a href="#如何理解事务中的一致性" class="headerlink" title="如何理解事务中的一致性"></a>如何理解事务中的一致性</h2><p>单机事务一致性的定义</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Consistency_(database_systems)#mw-head">https://en.wikipedia.org/wiki/Consistency_(database_systems)#mw-head</a></li>
+</ul>
+<p>可以理解单机一致性是：应用系统从一个正确的状态到另一个正确的状态，而ACID就是说事务能够通过AID来保证这个C的过程，C是目的，AID都是方法，ACID中的一致性是数据库保证所有的约束没有被打破</p>
+<h2 id="关于分布式事务的文章"><a href="#关于分布式事务的文章" class="headerlink" title="关于分布式事务的文章"></a>关于分布式事务的文章</h2><ul>
+<li><p>ServiceComb中的数据最终一致性方案<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/FL63Zv9Zou86950w/article/details/78393439">https://blog.csdn.net/FL63Zv9Zou86950w/article/details/78393439</a><br>开源项目：ServiceComb-Saga<br>地址：<a target="_blank" rel="noopener" href="https://github.com/ServiceComb/ServiceComb-Saga">https://github.com/ServiceComb/ServiceComb-Saga</a></p>
+</li>
+<li><p>基于Sagas思路实现：Sagas相关论文<br><a target="_blank" rel="noopener" href="https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf">https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf</a><br>分布式事务系列文章<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27384769/article/details/79305402">https://blog.csdn.net/qq_27384769/article/details/79305402</a></p>
+</li>
+<li><p>分布式事务学习之（可靠消息一致性方案之独立消息服务）（七）<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014401141/article/details/78933248">https://blog.csdn.net/u014401141/article/details/78933248</a></p>
+</li>
+<li><p>（微服务）分布式事务-最大努力交付 &amp;&amp; 消息最终一致性方案<br><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011479826">https://segmentfault.com/a/1190000011479826</a></p>
+</li>
+<li><p>分布式事务：不过是在一致性、吞吐量和复杂度之间，做一个选择<br><a target="_blank" rel="noopener" href="http://p.primeton.com/articles/59030eeda6f2a40690f03602">http://p.primeton.com/articles/59030eeda6f2a40690f03602</a></p>
+</li>
+<li><p>微服务架构下的数据一致性保证（三）：补偿模式<br><a target="_blank" rel="noopener" href="http://dwz.cn/3TVJaB">http://dwz.cn/3TVJaB</a></p>
+</li>
+<li><p>使用事件和消息队列实现分布式事务<br><a target="_blank" rel="noopener" href="http://www.bubuko.com/infodetail-1996270.html">http://www.bubuko.com/infodetail-1996270.html</a></p>
+</li>
+<li><p>微服务架构分布式事务解决方案设计思路（可靠消息最终一致方案-概念）<br><a target="_blank" rel="noopener" href="https://my.oschina.net/sundasheng44/blog/834259">https://my.oschina.net/sundasheng44/blog/834259</a></p>
+</li>
+</ul>
+<h2 id="关于分布式事务开源框架"><a href="#关于分布式事务开源框架" class="headerlink" title="关于分布式事务开源框架"></a>关于分布式事务开源框架</h2><ul>
+<li><p>Tarzan 基于外部事件实现的可靠事件系统<br><a target="_blank" rel="noopener" href="https://github.com/beston123/Tarzan">https://github.com/beston123/Tarzan</a></p>
+</li>
+<li><p>LCN: LCN分布式事务框架，兼容dubbo、springcloud、motan框架<br>官方地址：<br><a target="_blank" rel="noopener" href="http://www.txlcn.org/">http://www.txlcn.org/</a><br><a target="_blank" rel="noopener" href="https://github.com/codingapi/tx-lcn">https://github.com/codingapi/tx-lcn</a></p>
+</li>
+<li><p>消息最终一致性方案，基于rabbitmq的分布式事务解决方案<br> <br><a target="_blank" rel="noopener" href="https://github.com/vvsuperman/coolmq">https://github.com/vvsuperman/coolmq</a></p>
+</li>
+<li><p>tcc-transaction: 是TCC型事务java实现<br>      <br><a target="_blank" rel="noopener" href="https://github.com/changmingxie/tcc-transaction">https://github.com/changmingxie/tcc-transaction</a></p>
+</li>
+<li><p>Hmily框架<br>分布式事务方案之tcc开源框架，支持dubbo，SpringCloud等rpc框架进行分布式事务<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/hmily">https://github.com/yu199195/hmily</a></p>
+</li>
+<li><p>myth框架：基于消息队列最终一致性<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/myth">https://github.com/yu199195/myth</a></p>
+</li>
+<li><p>happylifeplat-tcc：TCC型解决方案<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/happylifeplat-tcc">https://github.com/yu199195/happylifeplat-tcc</a>
+ </p>
+</li>
+<li><p>happylifeplat-transaction 二阶段提交强一致性<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/happylifeplat-transaction">https://github.com/yu199195/happylifeplat-transaction</a></p>
+</li>
+</ul>
+<h2 id="补充资料"><a href="#补充资料" class="headerlink" title="补充资料"></a>补充资料</h2><p>大型SOA架构体系里的数据一致性问题 <br><a target="_blank" rel="noopener" href="http://www.360doc.com/content/17/0212/09/13792507_628391906.shtml">http://www.360doc.com/content/17/0212/09/13792507_628391906.shtml</a></p>
+<p>从CRUD编程切换到事件溯源和区块链编程<br><a target="_blank" rel="noopener" href="http://www.jdon.com/49396">http://www.jdon.com/49396</a></p>
+<p>事件概念正在重塑分布式系统的未来<br><a target="_blank" rel="noopener" href="http://www.jdon.com/49368">http://www.jdon.com/49368</a></p>
+<p>什么是事件溯源Event Sourcing？<br><a target="_blank" rel="noopener" href="http://www.jdon.com/48501">http://www.jdon.com/48501</a><br><a target="_blank" rel="noopener" href="https://github.com/baihui212/tsharding">https://github.com/baihui212/tsharding</a></p>
+<p>保障数据一致性的6种方案<br><a target="_blank" rel="noopener" href="http://www.360doc.com/content/16/0419/22/31851752_552140045.shtml">http://www.360doc.com/content/16/0419/22/31851752_552140045.shtml</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>您的支持将鼓励我继续创作 笔芯</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpeg" alt="anruence 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpeg" alt="anruence 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/CAP/" rel="tag"><i class="fa fa-tag"></i> CAP</a>
+              <a href="/tags/ACID/" rel="tag"><i class="fa fa-tag"></i> ACID</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" rel="tag"><i class="fa fa-tag"></i> 分布式事务</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/10/21/git-modify/" rel="prev" title="Git修改历史提交作者记录">
+                  <i class="fa fa-chevron-left"></i> Git修改历史提交作者记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anruence</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">249k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:47</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1ade6ae310dee1a615bb',
+      clientSecret: 'bb83a1099492163bf8a19e4a14f956dd1d27d018',
+      repo        : 'anruence.github.io',
+      owner       : 'anruence',
+      admin       : ['anruence'],
+      id          : '51ca98fafd3b73e020d88e79ed548a9b',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>
