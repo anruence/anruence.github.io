@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -19,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta property="og:type" content="website">
@@ -136,17 +138,22 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">70</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">37</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -203,13 +210,14 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">anruence</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -218,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-count">70</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -247,7 +255,8 @@
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -272,6 +281,119 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2020/10/29/vert.x/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/29/vert.x/" class="post-title-link" itemprop="url">vert.x 实现点对点的通信</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2020-10-29 14:24:16 / 修改时间：14:52:54" itemprop="dateCreated datePublished" datetime="2020-10-29T14:24:16+08:00">2020-10-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/vert-x/" itemprop="url" rel="index"><span itemprop="name">vert.x</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="vert-x"><a href="#vert-x" class="headerlink" title="vert.x"></a>vert.x</h1><p>vert.x 已经提供了很便利的 NetClinet，NetServer，这个EventBus Bridge提供的核心能力到底是什么呢？</p>
+<p>Server和Client之间采用这种方式进行通信可以让Server端的代码更加清晰明了<br>Client和Server之间的交互模式也更简单一些：</p>
+<ul>
+<li>对于request-response，server简单地message.reply即可</li>
+<li>对于某些广播消息，client向多个server实例广播，或者是server向多个client广播，又或某些client也想接收另外的client向server的广播都非常简单和直观。</li>
+<li>通过注册地址，client也可以收到感兴趣的消息，不论是server发的，还是client发的</li>
+</ul>
+<p>这里有个例子<br><a target="_blank" rel="noopener" href="https://github.com/foxgem/how-to/tree/master/vertx-tcp-eventbridge/src/main/groovy/foxgem">https://github.com/foxgem/how-to/tree/master/vertx-tcp-eventbridge/src/main/groovy/foxgem</a></p>
+<ul>
+<li>client向多个bridge send，则只有一个bridge可以收到</li>
+<li>client向多个bridge publish，则都能收到</li>
+<li>server和client之间的request-response</li>
+<li>client注册要接受某地址的消息</li>
+</ul>
+<p>vert.x 的EventBus有单机和cluster，bridge和cluster之间的区别又是什么？</p>
+<p>EventBus 主要面向的是 verticles（类似actor）间的消息通信，cluster是为了将 EventBus 抽象为分布式的，同时提供了分布式网络下共识的能力</p>
+<p>bridge 我理解则是通过跨进程的交互方式，让eventbus成为跨语言通信的 polyglot</p>
+<p>EventBus虽然有tcp bridge，但是本意是用做verticles之间的通信用的</p>
+<p>并不是用作客户端和服务器端之间的通信用的，正确的通信姿势应该是用vert.x的各种clients &amp; servers</p>
+<p>详细使用代码参见测试用例：<br><a target="_blank" rel="noopener" href="https://github.com/vert-x3/vertx-tcp-eventbus-bridge/blob/master/src/test/java/io/vertx/ext/eventbus/bridge/tcp/TcpEventBusBridgeTest.java">https://github.com/vert-x3/vertx-tcp-eventbus-bridge/blob/master/src/test/java/io/vertx/ext/eventbus/bridge/tcp/TcpEventBusBridgeTest.java</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000008294524">https://segmentfault.com/a/1190000008294524</a> Vert.x TCP EventBus Bridge补遗</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -488,6 +610,114 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend --author=<span class="string">&quot;anruence &lt;anruence@gmail.com&gt;&quot;</span></span><br></pre></td></tr></table></figure>
 
 <h1 id="官方方案"><a href="#官方方案" class="headerlink" title="官方方案"></a>官方方案</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">git filter-branch --env-filter <span class="string">&#x27;</span></span><br><span class="line"><span class="string">WRONG_EMAIL=&quot;anran.war@alibaba-inc.com&quot;</span></span><br><span class="line"><span class="string">NEW_NAME=&quot;anruence&quot;</span></span><br><span class="line"><span class="string">NEW_EMAIL=&quot;anruence@gmail.com&quot;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">if [ &quot;$GIT_COMMITTER_EMAIL&quot; = &quot;$WRONG_EMAIL&quot; ]</span></span><br><span class="line"><span class="string">then</span></span><br><span class="line"><span class="string">    export GIT_COMMITTER_NAME=&quot;$NEW_NAME&quot;</span></span><br><span class="line"><span class="string">    export GIT_COMMITTER_EMAIL=&quot;$NEW_EMAIL&quot;</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string">if [ &quot;$GIT_AUTHOR_EMAIL&quot; = &quot;$WRONG_EMAIL&quot; ]</span></span><br><span class="line"><span class="string">then</span></span><br><span class="line"><span class="string">    export GIT_AUTHOR_NAME=&quot;$NEW_NAME&quot;</span></span><br><span class="line"><span class="string">    export GIT_AUTHOR_EMAIL=&quot;$NEW_EMAIL&quot;</span></span><br><span class="line"><span class="string">fi</span></span><br><span class="line"><span class="string">&#x27;</span> --tag-name-filter cat -- --branches --tags</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2020/09/18/arthas/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/18/arthas/" class="post-title-link" itemprop="url">Arthas初探</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-09-18 13:03:49" itemprop="dateCreated datePublished" datetime="2020-09-18T13:03:49+08:00">2020-09-18</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-29 14:23:43" itemprop="dateModified" datetime="2020-10-29T14:23:43+08:00">2020-10-29</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/jvm/" itemprop="url" rel="index"><span itemprop="name">jvm</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>436</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><p>Arthas 是Alibaba开源的Java诊断工具，深受开发者喜爱</p>
+<p>当你遇到以下类似问题而束手无策时，Arthas可以帮助你解决：</p>
+<blockquote>
+<p>这个类从哪个 jar 包加载的？为什么会报各种类相关的 Exception？<br>我改的代码为什么没有执行到？难道是我没 commit？分支搞错了？<br>遇到问题无法在线上debug，难道只能通过加日志打印入参出参再重新发布吗？<br>线上遇到某个用户的数据处理有问题，但线上同样无法debug，线下无法重现！<br>是否有一个全局视角来查看系统的运行状况？<br>有什么办法可以监控到JVM的实时运行状态？<br>接口链路耗时的统计</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sc</span><br><span class="line">watch</span><br><span class="line">trace</span><br></pre></td></tr></table></figure>
+
+<h2 id="官方使用文档"><a href="#官方使用文档" class="headerlink" title="官方使用文档"></a>官方使用文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://arthas.aliyun.com/doc/quick-start.html">https://arthas.aliyun.com/doc/quick-start.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/arthas/issues/71">https://github.com/alibaba/arthas/issues/71</a> Arthas的一些特殊用法文档说明</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/arthas/issues/11">https://github.com/alibaba/arthas/issues/11</a> 活用ognl表达式</li>
+</ul>
 
       
     </div>
@@ -1248,260 +1478,6 @@ spring相关组件完整提供了这种能力，资料很多，就不赘述了</
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/05/29/cap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/29/cap/" class="post-title-link" itemprop="url">CAP</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-05-29 18:13:37" itemprop="dateCreated datePublished" datetime="2019-05-29T18:13:37+08:00">2019-05-29</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/CAP/" itemprop="url" rel="index"><span itemprop="name">CAP</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>105</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="关于CAP的优秀文章"><a href="#关于CAP的优秀文章" class="headerlink" title="关于CAP的优秀文章"></a>关于CAP的优秀文章</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UQ79VxS7YNetYwUw5KKuZw">请不要再称数据库是CP或者AP</a></li>
-</ul>
-<blockquote>
-<p>2012年CAP理论提出者Eric Brewer撰文回顾CAP时也提到，C和A并不是完全互斥，建议大家使用CRDT来保障一致性。</p>
-</blockquote>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/635632">CRDT—-解决最终一致问题的利器</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/05/23/enode/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/23/enode/" class="post-title-link" itemprop="url">对enode设计上的思考</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-05-23 14:58:08" itemprop="dateCreated datePublished" datetime="2019-05-23T14:58:08+08:00">2019-05-23</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:09:45" itemprop="dateModified" datetime="2020-10-26T23:09:45+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>enode是真正意义上的，聚合根完全独立不相互依赖，聚合之间完全无感知，聚合之间通信完全通过消息，消息流程控制器完全无状态，消息幂等处理自动支持，支持分布式，支持actor，in-memory模式的一个框架，聚合的关系上做到了完全的解耦。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/anruence/enode">https://github.com/anruence/enode</a></p>
-<h2 id="核心点"><a href="#核心点" class="headerlink" title="核心点"></a>核心点</h2><ul>
-<li><p>事件驱动架构</p>
-</li>
-<li><p>全流程异步</p>
-</li>
-<li><p>聚合根in-memory</p>
-</li>
-<li><p>聚合根并发修改问题规避，保证对同一个聚合的操作路由到同一个分区</p>
-</li>
-<li><p>实现了Saga (Process Manager)</p>
-</li>
-</ul>
-<h3 id="CQRS如何实现避免资源竞争"><a href="#CQRS如何实现避免资源竞争" class="headerlink" title="CQRS如何实现避免资源竞争"></a>CQRS如何实现避免资源竞争</h3><p>对于C端，我们的目标是尽可能的在1s内处理更多的Command，也就是数据写请求。在经典DDD的四层架构中，我们会有一个模式叫工作单元模式，即Unit of Work（简称UoW）模式。通过该模式，我们能在应用层，一次性以事务的方式将当前请求所涉及的多个对象的修改提交到DB。微软的EF实体框架的DbContext就是一个UoW模式的实现。这种做法的好处是，一个请求对多个聚合根的修改，能做到强一致性，因为是事务的。但是这种做法，实际上，没有很好的遵守避开资源竞争的原则。</p>
-<p>试想，事务A要修改a1,a2,a3三个聚合根；事务B要修改a2,a3,a4；事务C要修改a3,a4,a5三个聚合根。那这样，我们很容易理解，这三个事务只能串行执行，因为它们要修改相同的资源。比如事务A和事务B都要修改a2,a3这两个聚合根，那同一时刻，只能由一个事务能被执行。同理，事务B和事务C也是一样。如果A,B,C这种事务执行的并发很高，那数据库就会出现严重的并发冲突，甚至死锁。那要如何避免这种资源竞争呢？</p>
-<h3 id="让一个Command总是只修改一个聚合根"><a href="#让一个Command总是只修改一个聚合根" class="headerlink" title="让一个Command总是只修改一个聚合根"></a>让一个Command总是只修改一个聚合根</h3><p>这个做法其实就是缩小事务的范围，确保一个事务一次只涉及一条记录的修改。也就是做到，只有单个聚合根的修改才是事务的，让聚合根成为数据强一致性的最小单位。这样我们就能最大化的实现并行修改。但是你会问，但是我一个请求就是会涉及多个聚合根的修改的，这种情况怎么办呢？在CQRS架构中，有一个东西叫Saga。Saga是一种基于事件驱动的思想来实现业务流程的技术，通过Saga，我们可以用最终一致性的方式最终实现对多个聚合根的修改。对于一次涉及多个聚合根修改的业务场景，一般总是可以设计为一个业务流程，也就是可以定义出要先做什么后做什么。比如以银行转账的场景为例子，如果是按照传统事务的做法，那可能是先开启一个事务，然后让A账号扣减余额，再让B账号加上余额，最后提交事务；如果A账号余额不足，则直接抛出异常，同理B账号如果加上余额也遇到异常，那也抛出异常即可，事务会保证原子性以及自动回滚。也就是说，数据一致性已经由DB帮我们做掉了。</p>
-<p>但是，如果是Saga的设计，那就不是这样了。我们会把整个转账过程定义为一个业务流程。然后，流程中会包括多个参与该流程的聚合根以及一个用于协调聚合根交互的流程管理器（ProcessManager，无状态），流程管理器负责响应流程中的每个聚合根产生的领域事件，然后根据事件发送相应的Command，从而继续驱动其他的聚合根进行操作。</p>
-<p>转账的例子，涉及到的聚合根有：两个银行账号聚合根，一个交易（Transaction）聚合根，它用于负责存储流程的当前状态，它还会维护流程状态变更时的规则约束；然后当然还有一个流程管理器。转账开始时，我们会先创建一个Transaction聚合根，然后它产生一个TransactionStarted的事件，然后流程管理器响应事件，然后发送一个Command让A账号聚合根做减余额的操作；A账号操作完成后，产生领域事件；然后流程管理器响应事件，然后发送一个Command通知Transaction聚合根确认A账号的操作；确认完成后也会产生事件，然后流程管理器再响应，然后发送一个Command通知B账号做加上余额的操作；后续的步骤就不详细讲了。大概意思我想已经表达了。总之，通过这样的设计，我们可以通过事件驱动的方式，来完成整个业务流程。如果流程中的任何一步出现了异常，那我们可以在流程中定义补偿机制实现回退操作。或者不回退也没关系，因为Transaction聚合根记录了流程的当前状态，这样我们可以很方便的后续排查有状态没有正常结束的转账交易。</p>
-<h2 id="原则"><a href="#原则" class="headerlink" title="原则"></a>原则</h2><p>领域事件 =&gt; 事件是聚合根产生的，原则是一个命令只能修改一个聚合根，如果遇到一个请求需要操作多个聚合根时，将请求拆分成命令一个个处理（通过Saga机制）<br>域 =&gt; 问题域，系统要解决什么问题<br>上下文 =&gt; 解决方案，解决域问题的系统</p>
-<ul>
-<li>如何设计聚合</li>
-</ul>
-<ol>
-<li><p>找出你关心的所有领域概念</p>
-</li>
-<li><p>先假设所有概念都是实体，且都是聚合根</p>
-</li>
-<li><p>利用排除法，分析哪些概念没有独立的生命周期，则排除。怎么分析生命周期呢，这样思考，是否有场景会直接创建或者修改该概念，而不是先导航到其他概念再修改这个概念</p>
-</li>
-<li><p>把排查的概念放在其他的聚合根下形成聚合</p>
-</li>
-</ol>
-<ul>
-<li><p>如何理解界限上下文，界限上下文跟子域有什么关系？<br>领域过大时候需要分拆子域，子域有分核心子域和支撑子域，通用子域等，按业务划分。<br>之所以要写个程序，这个程序的最核心的作用(核心域)，有行业或者业务共识的模型(通用子域)，为了让核心域能发挥作用补充相关功能串联整个系统的(支撑子域)</p>
-</li>
-<li><p>是否可以一次事务操作多个聚合根？</p>
-</li>
-</ul>
-<p>这种情况应该避免，如果有人这样做了，需要首先分析这两个聚合根的操作是否一定要一起修改？通常应该允许不一起修改的。<br>就像下订单，处理订单时，创建订单和减库存可以不在一个事务里一样<br>虽然原则上是一个事务操作一个聚合根，但在单个上下文内使用领域服务操作两个紧密关联的聚合根也可以。只是取舍问题<br>只是他的这个上下文架构选型可能用了强一致性事务的基础设施支持， 在一个上下文中使用强一致性，一次事务操作多个聚合也是很常见的</p>
-<ul>
-<li><p>一个聚合根可以出现在多个领域服务里不？<br>聚合根不是放在领域服务里的。<br>领域服务的作用是协调聚合根，通常不需要领域服务。你问出这个问题问感觉你犯了一个错误，就是你认为聚合根的操作一定要通过领域服务暴露出来。<br>需求是聚合根，服务是服务，所以，你说把需求做成服务A，让人无法理解，太混乱<br>领域服务只不过是协调多个聚合的操作而已，如果你这个业务操作只牵涉到一个聚合，那么在应用服务层就行。</p>
-</li>
-<li><p>为什么注册时要加锁？<br>DDD 业务规则要在领域中体现出来，限制条件要显式的表达出来</p>
-</li>
-</ul>
-<p>Q端的任何更新都应该把聚合根ID和事件版本号作为条件</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/tangxuehua/enode">https://github.com/tangxuehua/enode</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/netfocus/category/496012.html">http://www.cnblogs.com/netfocus/category/496012.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/netfocus/p/5180378.html">https://www.cnblogs.com/netfocus/p/5180378.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/netfocus/p/4249237.html">https://www.cnblogs.com/netfocus/p/4249237.html</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1557,13 +1533,13 @@ spring相关组件完整提供了这种能力，资料很多，就不赘述了</
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">249k</span>
+    <span title="站点总字数">251k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:47</span>
+    <span title="站点阅读时长">3:48</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

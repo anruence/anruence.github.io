@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -19,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="前言 https:&#x2F;&#x2F;www.cnblogs.com&#x2F;netfocus&#x2F;p&#x2F;3859371.html  ENode是一个基于消息的架构，使用ENode开发的系统，每个环节都是处理消息，处理完后产生新的消息。本篇文章我想详细分析一下ENode框架内部是如何实现整个消息处理流程的。为了更好的理解我后面的流程的描述，我觉得还是应该先把ENode的架构图贴出来，好让大家在看后面的分析时，可以对照这个架构图">
@@ -144,17 +146,22 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">70</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">37</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -211,14 +218,15 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ENode%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">1.1.</span> <span class="nav-text">ENode架构图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ENode%E6%A1%86%E6%9E%B6%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">ENode框架内部实现流程分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Command%E7%9A%84%E5%B9%82%E7%AD%89%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">Command的幂等处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Domain-Event%E6%8C%81%E4%B9%85%E5%8C%96%E6%97%B6%E7%9A%84%E5%B9%B6%E5%8F%91%E5%86%B2%E7%AA%81%E6%A3%80%E6%B5%8B%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">Domain Event持久化时的并发冲突检测和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BA%8B%E4%BB%B6%E4%BA%A7%E7%94%9F%E7%9A%84%E9%A1%BA%E5%BA%8F%E5%92%8C%E8%A2%AB%E6%B6%88%E8%B4%B9%E7%9A%84%E9%A1%BA%E5%BA%8F%E7%9B%B8%E5%90%8C"><span class="nav-number">5.</span> <span class="nav-text">如何保证事件产生的顺序和被消费的顺序相同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%B8%80%E4%B8%AAIDomainEvent%E5%8F%AA%E4%BC%9A%E8%A2%AB%E4%B8%80%E4%B8%AAIEventHandler%E5%A4%84%E7%90%86%E4%B8%80%E6%AC%A1"><span class="nav-number">6.</span> <span class="nav-text">如何保证一个IDomainEvent只会被一个IEventHandler处理一次</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8Saga-Process-Manager%E4%B8%AD%E4%BA%A7%E7%94%9F%E7%9A%84ICommand%E5%A6%82%E4%BD%95%E8%83%BD%E5%A4%9F%E6%94%AF%E6%8C%81%E9%87%8D%E8%AF%95%E5%8F%91%E9%80%81%E8%80%8C%E4%B8%8D%E5%AF%BC%E8%87%B4%E6%93%8D%E4%BD%9C%E7%9A%84%E9%87%8D%E5%A4%8D"><span class="nav-number">7.</span> <span class="nav-text">在Saga Process Manager中产生的ICommand如何能够支持重试发送而不导致操作的重复</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ENode%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">1.1.</span> <span class="nav-text">ENode架构图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ENode%E6%A1%86%E6%9E%B6%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">ENode框架内部实现流程分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Command%E7%9A%84%E5%B9%82%E7%AD%89%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">Command的幂等处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Domain-Event%E6%8C%81%E4%B9%85%E5%8C%96%E6%97%B6%E7%9A%84%E5%B9%B6%E5%8F%91%E5%86%B2%E7%AA%81%E6%A3%80%E6%B5%8B%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">Domain Event持久化时的并发冲突检测和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BA%8B%E4%BB%B6%E4%BA%A7%E7%94%9F%E7%9A%84%E9%A1%BA%E5%BA%8F%E5%92%8C%E8%A2%AB%E6%B6%88%E8%B4%B9%E7%9A%84%E9%A1%BA%E5%BA%8F%E7%9B%B8%E5%90%8C"><span class="nav-number">5.</span> <span class="nav-text">如何保证事件产生的顺序和被消费的顺序相同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%B8%80%E4%B8%AAIDomainEvent%E5%8F%AA%E4%BC%9A%E8%A2%AB%E4%B8%80%E4%B8%AAIEventHandler%E5%A4%84%E7%90%86%E4%B8%80%E6%AC%A1"><span class="nav-number">6.</span> <span class="nav-text">如何保证一个IDomainEvent只会被一个IEventHandler处理一次</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8Saga-Process-Manager%E4%B8%AD%E4%BA%A7%E7%94%9F%E7%9A%84ICommand%E5%A6%82%E4%BD%95%E8%83%BD%E5%A4%9F%E6%94%AF%E6%8C%81%E9%87%8D%E8%AF%95%E5%8F%91%E9%80%81%E8%80%8C%E4%B8%8D%E5%AF%BC%E8%87%B4%E6%93%8D%E4%BD%9C%E7%9A%84%E9%87%8D%E5%A4%8D"><span class="nav-number">7.</span> <span class="nav-text">在Saga Process Manager中产生的ICommand如何能够支持重试发送而不导致操作的重复</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">anruence</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -227,20 +235,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-count">70</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -256,7 +264,8 @@
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -547,13 +556,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">249k</span>
+    <span title="站点总字数">251k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:47</span>
+    <span title="站点阅读时长">3:48</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

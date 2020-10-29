@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -19,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="面试题netty为什么需要IO线程池和业务线程池分开与如何实现 https:&#x2F;&#x2F;blog.csdn.net&#x2F;x5fnncxzq4&#x2F;article&#x2F;details&#x2F;82977562 https:&#x2F;&#x2F;www.cnblogs.com&#x2F;my_life&#x2F;articles&#x2F;5537972.html https:&#x2F;&#x2F;www.cnblogs.com&#x2F;stateis0&#x2F;p&#x2F;9062151.html  快速替换10亿">
@@ -141,17 +143,22 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">70</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">37</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,14 +215,15 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#netty%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81IO%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%92%8C%E4%B8%9A%E5%8A%A1%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%88%86%E5%BC%80%E4%B8%8E%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">netty为什么需要IO线程池和业务线程池分开与如何实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%9B%BF%E6%8D%A210%E4%BA%BF%E6%9D%A1%E6%A0%87%E9%A2%98%E4%B8%AD%E7%9A%845%E4%B8%87%E4%B8%AA%E6%95%8F%E6%84%9F%E8%AF%8D%EF%BC%8C%E6%9C%89%E5%93%AA%E4%BA%9B%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">快速替换10亿条标题中的5万个敏感词，有哪些解决思路？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%9C%89%E4%B8%80%E4%B8%AA%E4%B8%80%E4%BA%BF%E8%8A%82%E7%82%B9%E7%9A%84%E6%A0%91%EF%BC%8C%E7%8E%B0%E5%9C%A8%E5%B7%B2%E7%9F%A5%E4%B8%A4%E4%B8%AA%E7%82%B9%EF%BC%8C%E6%89%BE%E8%BF%99%E4%B8%A4%E4%B8%AA%E7%82%B9%E7%9A%84%E5%85%B1%E5%90%8C%E7%9A%84%E7%A5%96%E5%85%88-%E6%9C%89%E4%BB%80%E4%B9%88%E5%A5%BD%E7%AE%97%E6%B3%95%E5%91%A2%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">淘宝面试题：有一个一亿节点的树，现在已知两个点，找这两个点的共同的祖先.有什么好算法呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">Java类加载机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E9%93%BE%E8%A1%A8%E6%95%B0%E5%AD%97%E5%8A%A0%E5%92%8C"><span class="nav-number">6.</span> <span class="nav-text">两链表数字加和</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BALRU-Cache%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">7.</span> <span class="nav-text">为LRU Cache设计一个数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-B-%E6%A0%91%E7%89%B9%E6%80%A7"><span class="nav-number">8.</span> <span class="nav-text">MySQL B+树特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="nav-number">9.</span> <span class="nav-text">进程间的通信方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tcp%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">10.</span> <span class="nav-text">tcp可靠传输的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9B%B8%E5%85%B3"><span class="nav-number">11.</span> <span class="nav-text">线程池相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E4%B8%8A%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%AD%A3%E5%9C%A8%E5%A4%84%E7%90%86%E6%9C%8D%E5%8A%A1%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%BF%BD%E7%84%B6%E6%96%AD%E7%94%B5%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%88%E6%AD%A3%E5%9C%A8%E5%A4%84%E7%90%86%E5%92%8C%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E9%87%8C%E7%9A%84%E8%AF%B7%E6%B1%82%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%EF%BC%89%EF%BC%9F"><span class="nav-number">11.1.</span> <span class="nav-text">单机上一个线程池正在处理服务，如果忽然断电了怎么办（正在处理和阻塞队列里的请求怎么处理）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%EF%BC%9F"><span class="nav-number">11.2.</span> <span class="nav-text">为什么要使用线程池？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-number">11.3.</span> <span class="nav-text">线程池有什么作用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E8%AF%B4%E5%87%A0%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E3%80%82"><span class="nav-number">11.4.</span> <span class="nav-text">说说几种常见的线程池及使用场景。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E9%83%BD%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97%EF%BC%9F"><span class="nav-number">11.5.</span> <span class="nav-text">线程池都有哪几种工作队列？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">11.5.1.</span> <span class="nav-text">执行流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E7%9B%B8%E5%85%B3"><span class="nav-number">12.</span> <span class="nav-text">JVM相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#netty%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81IO%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%92%8C%E4%B8%9A%E5%8A%A1%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%88%86%E5%BC%80%E4%B8%8E%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">netty为什么需要IO线程池和业务线程池分开与如何实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%9B%BF%E6%8D%A210%E4%BA%BF%E6%9D%A1%E6%A0%87%E9%A2%98%E4%B8%AD%E7%9A%845%E4%B8%87%E4%B8%AA%E6%95%8F%E6%84%9F%E8%AF%8D%EF%BC%8C%E6%9C%89%E5%93%AA%E4%BA%9B%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">快速替换10亿条标题中的5万个敏感词，有哪些解决思路？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%9C%89%E4%B8%80%E4%B8%AA%E4%B8%80%E4%BA%BF%E8%8A%82%E7%82%B9%E7%9A%84%E6%A0%91%EF%BC%8C%E7%8E%B0%E5%9C%A8%E5%B7%B2%E7%9F%A5%E4%B8%A4%E4%B8%AA%E7%82%B9%EF%BC%8C%E6%89%BE%E8%BF%99%E4%B8%A4%E4%B8%AA%E7%82%B9%E7%9A%84%E5%85%B1%E5%90%8C%E7%9A%84%E7%A5%96%E5%85%88-%E6%9C%89%E4%BB%80%E4%B9%88%E5%A5%BD%E7%AE%97%E6%B3%95%E5%91%A2%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">淘宝面试题：有一个一亿节点的树，现在已知两个点，找这两个点的共同的祖先.有什么好算法呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">Java类加载机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E9%93%BE%E8%A1%A8%E6%95%B0%E5%AD%97%E5%8A%A0%E5%92%8C"><span class="nav-number">6.</span> <span class="nav-text">两链表数字加和</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BALRU-Cache%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">7.</span> <span class="nav-text">为LRU Cache设计一个数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-B-%E6%A0%91%E7%89%B9%E6%80%A7"><span class="nav-number">8.</span> <span class="nav-text">MySQL B+树特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="nav-number">9.</span> <span class="nav-text">进程间的通信方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tcp%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">10.</span> <span class="nav-text">tcp可靠传输的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9B%B8%E5%85%B3"><span class="nav-number">11.</span> <span class="nav-text">线程池相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E4%B8%8A%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%AD%A3%E5%9C%A8%E5%A4%84%E7%90%86%E6%9C%8D%E5%8A%A1%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%BF%BD%E7%84%B6%E6%96%AD%E7%94%B5%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%88%E6%AD%A3%E5%9C%A8%E5%A4%84%E7%90%86%E5%92%8C%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E9%87%8C%E7%9A%84%E8%AF%B7%E6%B1%82%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%EF%BC%89%EF%BC%9F"><span class="nav-number">11.1.</span> <span class="nav-text">单机上一个线程池正在处理服务，如果忽然断电了怎么办（正在处理和阻塞队列里的请求怎么处理）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%EF%BC%9F"><span class="nav-number">11.2.</span> <span class="nav-text">为什么要使用线程池？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-number">11.3.</span> <span class="nav-text">线程池有什么作用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E8%AF%B4%E5%87%A0%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E3%80%82"><span class="nav-number">11.4.</span> <span class="nav-text">说说几种常见的线程池及使用场景。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E9%83%BD%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97%EF%BC%9F"><span class="nav-number">11.5.</span> <span class="nav-text">线程池都有哪几种工作队列？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">11.5.1.</span> <span class="nav-text">执行流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E7%9B%B8%E5%85%B3"><span class="nav-number">12.</span> <span class="nav-text">JVM相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">anruence</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -224,20 +232,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">69</span>
+        <span class="site-state-item-count">70</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -253,7 +261,8 @@
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -600,13 +609,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">249k</span>
+    <span title="站点总字数">251k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:47</span>
+    <span title="站点阅读时长">3:48</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

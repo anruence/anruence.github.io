@@ -1638,17 +1638,21 @@ pre code {
 .sidebar-overview-active .sidebar-nav-overview:hover {
   color: #fc6423;
 }
-.sidebar-panel {
-  display: none;
+.sidebar-panel-container {
   max-height: var(--sidebar-wrapper-height);
   overflow-x: hidden;
   overflow-y: auto;
 }
-.sidebar-toc-active .post-toc-wrap,
+.sidebar-panel {
+  display: none;
+}
 .sidebar-overview-active .site-overview-wrap {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.sidebar-toc-active .post-toc-wrap {
+  display: block;
 }
 .sidebar-toggle {
   bottom: 45px;
