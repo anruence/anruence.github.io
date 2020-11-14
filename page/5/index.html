@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">70</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">72</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">37</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">38</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">84</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-count">72</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,110 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/08/23/sentinel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/08/23/sentinel/" class="post-title-link" itemprop="url">Sentinel</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-08-23 22:33:45" itemprop="dateCreated datePublished" datetime="2018-08-23T22:33:45+08:00">2018-08-23</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="Sentinel-是什么？"><a href="#Sentinel-是什么？" class="headerlink" title="Sentinel 是什么？"></a>Sentinel 是什么？</h2><p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。<br>Sentinel 具有以下特征:</p>
+<ul>
+<li>丰富的应用场景： Sentinel 承接了阿里巴巴近 10 年的双十一大促流量的核心场景，例如秒杀，即突发流量控制在系统容量可以承受的范围；消息削峰填谷；实时熔断下游不可用应用，等等。</li>
+<li>完备的监控功能： Sentinel 同时提供最实时的监控功能，您可以在控制台中看到接入应用的单台机器秒级数据，甚至 500 台以下规模的集群的汇总运行情况。</li>
+<li>简单易用的扩展点： Sentinel 提供简单易用的扩展点，您可以通过实现扩展点，快速的定制逻辑。例如定制规则管理，适配数据源等。<br>Sentinel 分为两个部分:</li>
+</ul>
+<p>核心库（Java 客户端）不依赖任何框架/库，能够运行于所有 Java 运行时环境，同时对 Dubbo / Spring Cloud 等框架也有较好的支持。<br>控制台（Dashboard）基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器。</p>
+<p>大家可能会问：Sentinel 和之前常用的熔断降级库 Netflix Hystrix 有什么异同呢？<br><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/Sentinel-%E4%B8%8E-Hystrix-%E7%9A%84%E5%AF%B9%E6%AF%94">https://github.com/alibaba/Sentinel/wiki/Sentinel-%E4%B8%8E-Hystrix-%E7%9A%84%E5%AF%B9%E6%AF%94</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/623424">https://yq.aliyun.com/articles/623424</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/%E4%BB%8B%E7%BB%8D">https://github.com/alibaba/Sentinel/wiki/%E4%BB%8B%E7%BB%8D</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/Sentinel-%E4%B8%8E-Hystrix-%E7%9A%84%E5%AF%B9%E6%AF%94">https://github.com/alibaba/Sentinel/wiki/Sentinel-%E4%B8%8E-Hystrix-%E7%9A%84%E5%AF%B9%E6%AF%94</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/tmf-o2B5OhwWjbJeBNtckQ">https://mp.weixin.qq.com/s/tmf-o2B5OhwWjbJeBNtckQ</a></li>
+<li><a target="_blank" rel="noopener" href="http://dubbo.apache.org/zh-cn/blog/sentinel-introduction-for-dubbo.html">http://dubbo.apache.org/zh-cn/blog/sentinel-introduction-for-dubbo.html</a></li>
+<li>&lt;<a target="_blank" rel="noopener" href="https://my.oschina.net/tigerlene/blog/225015">https://my.oschina.net/tigerlene/blog/225015</a>8&gt;</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/huyong1990/article/details/82392386">https://blog.csdn.net/huyong1990/article/details/82392386</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1301,123 +1405,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/04/20/generic/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/04/20/generic/" class="post-title-link" itemprop="url">泛型</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-04-20 15:10:35" itemprop="dateCreated datePublished" datetime="2018-04-20T15:10:35+08:00">2018-04-20</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><p>泛型是JDK 1.5的一项新特性，它的本质是参数化类型（Parameterized Type）的应用，也就是说所操作的数据类型被指定为一个参数，在用到的时候在指定具体的类型。这种参数类型可以用在类、接口和方法的创建中，分别称为泛型类、泛型接口和泛型方法。</p>
-<h2 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h2><p>泛型信息只存在于代码编译阶段，在进入JVM之前，与泛型相关的信息会被擦除掉，专业术语叫做类型擦除。<br>通俗地讲，泛型类和普通类在java虚拟机内是没有什么特别的地方。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; l1 = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">List&lt;Integer&gt; l2 = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">System.out.println(l1.getClass() == l2.getClass());</span><br></pre></td></tr></table></figure>
-<p>结果为true，因为List<String>和List<Integer>在jvm中的Class都是 List.class。<br>泛型信息被擦除了。</p>
-<p>Java的泛型类型擦除是发生在编译时的，在编译时会擦除泛型的参数化类型，并检查相应的代码，同时在相应的地方插入强制转换的代码。插入强制转换的代码可以通过反编译Java字节找到checkcast指令可知。<br>由于Java的泛型机制是在发生编译时擦除泛型的参数化类型，所以在JVM运行时不能获取到泛型参数化类型的基本信息。这点与C#的泛型底层机制有着明显的区别。</p>
-<h2 id="关于CHECKCAST指令"><a href="#关于CHECKCAST指令" class="headerlink" title="关于CHECKCAST指令"></a>关于CHECKCAST指令</h2><p><a target="_blank" rel="noopener" href="http://www.vmth.ucdavis.edu/incoming/Jasmin/ref--7.html">http://www.vmth.ucdavis.edu/incoming/Jasmin/ref--7.html</a></p>
-<p>checkcast checks that the top item on the operand stack (a reference to an object or array) can be cast to a given type. For example, if you write in Java:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> ((String)obj);</span><br></pre></td></tr></table></figure>
-<p>then the Java compiler will generate something like:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">aload_1                        ; push -obj- onto the stack</span><br><span class="line">checkcast java&#x2F;lang&#x2F;String     ; check its a String</span><br><span class="line">areturn                        ; return it</span><br></pre></td></tr></table></figure>
-<p>checkcast is actually a shortand for writing Java code like:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if (! (obj &#x3D;&#x3D; null  ||  obj instanceof &lt;class&gt;)) &#123;</span><br><span class="line">    throw new ClassCastException();</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; if this point is reached, then object is either null, or an instance of</span><br><span class="line">&#x2F;&#x2F; &lt;class&gt; or one of its superclasses.</span><br></pre></td></tr></table></figure>
-<p>所以CHECKCAST指令实际上和INSTANCEOF指令是很像的，不同的是CHECKCAST如果失败，会抛出一个异常，INSTANCEOF是返回一个值。<br><a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.instanceof">http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.instanceof</a></p>
-<p>The instanceof instruction is very similar to the checkcast instruction (§checkcast). It differs in its treatment of null, its behavior when its test fails (checkcast throws an exception,instanceof pushes a result code), and its effect on the operand stack.</p>
-<p>另外，据虚拟机专家RednaxelaFX的说法，JVM有可能在运行时优化掉一些CHECKCAST指令。<br><a target="_blank" rel="noopener" href="http://hllvm.group.iteye.com/group/topic/25910">http://hllvm.group.iteye.com/group/topic/25910</a></p>
-<h2 id="类型转换的时机"><a href="#类型转换的时机" class="headerlink" title="类型转换的时机"></a>类型转换的时机</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">get</span><span class="params">(StoreKey key)</span></span>;</span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Map&lt;StoreKey, T&gt; <span class="title">multiGet</span><span class="params">(List&lt;StoreKey&gt; keys)</span></span>;</span><br></pre></td></tr></table></figure>
-<p>在使用multiGet时获取数据时，只有当遍历获取时才会触发类型cast。<br>Map&lt;StoreKey, List<String>&gt; rets = client.multiGet(keys);</p>
-<p>执行这句是不会触发T的类型转换。<br>Map&lt;StoreKey, CommonEntity&gt; rets = client.multiGet(keys);<br>执行这个语句也不会触发类型转换，类型转换在使用时才会触发，捕获ClassCastException时要注意。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hengyunabc/article/details/16358447">https://blog.csdn.net/hengyunabc/article/details/16358447</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1473,13 +1460,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">251k</span>
+    <span title="站点总字数">252k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:48</span>
+    <span title="站点阅读时长">3:49</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

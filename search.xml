@@ -354,7 +354,14 @@
   <entry>
     <title>理解coroutine</title>
     <url>/2018/01/22/coroutine/</url>
-    <content><![CDATA[<h2 id="什么是coroutine？"><a href="#什么是coroutine？" class="headerlink" title="什么是coroutine？"></a>什么是coroutine？</h2><ul>
+    <content><![CDATA[<h2 id="什么是coroutine？"><a href="#什么是coroutine？" class="headerlink" title="什么是coroutine？"></a>什么是coroutine？</h2><blockquote>
+<p>近几年在高性能web server上node.js、异步IO等概念火了起来，协程作为异步IO的最佳封装方式又被提及起来。假设为了减少线程数量和切换开销，我们的web server运行在单个线程，依次处理请求，某个请求的处理中调用了阻塞函数会影响后续请求，但我们可以使用异步API:</p>
+</blockquote>
+<blockquote>
+<p>假设想让业务中的多个RPC可以并行，通过线程池创建Future来实现的代价会很大。<br>有一个应用的请求处理被拆成了一堆可并发的模块，默认情况下顺序方法调用这些模块，而开启选项是可以使用线程池来并发调用这些模块达到降低RT的目的。该应用设计时未考虑有的模块中是不用进行RPC的，但为了确保需要RPC的部分能正确并发，仍然要通过线程池调用。处理一个请求就需要200次的线程池操作，因此当开启该选项时系统load、cpu都明显吃紧，很快进入限流。</p>
+</blockquote>
+<p>将线程实现切换到协程后(创建多个协程在当前线程内部调度)，我们获得了RT降低的效果，且cpu 使用率，load的情况可以和顺序调用媲美，因为一个普通方法调用和使用协程去执行一个方法然后切换回来(没有任何阻塞的情况)相比之多了几十条指令，那些没有阻塞的模块用异步方式去调用并没有带来很多损耗</p>
+<ul>
 <li><a href="https://en.wikipedia.org/wiki/Coroutine#Comparison_with_subroutines">https://en.wikipedia.org/wiki/Coroutine#Comparison_with_subroutines</a></li>
 </ul>
 <p>协程是自己程序调度的，逻辑上并行执行，底层上非并行执行<br>线程是操作系统调度的，逻辑和底层上都是并行执行</p>
@@ -365,7 +372,11 @@
 <h2 id="coroutine和goroutine对比"><a href="#coroutine和goroutine对比" class="headerlink" title="coroutine和goroutine对比"></a>coroutine和goroutine对比</h2><ul>
 <li><a href="https://stackoverflow.com/questions/18058164/is-a-go-goroutine-a-coroutine">https://stackoverflow.com/questions/18058164/is-a-go-goroutine-a-coroutine</a></li>
 </ul>
-<h2 id="协程在各语言中的实现应用"><a href="#协程在各语言中的实现应用" class="headerlink" title="协程在各语言中的实现应用"></a>协程在各语言中的实现应用</h2><h2 id="php"><a href="#php" class="headerlink" title="php"></a>php</h2><ul>
+<h2 id="协程在各语言中的实现应用"><a href="#协程在各语言中的实现应用" class="headerlink" title="协程在各语言中的实现应用"></a>协程在各语言中的实现应用</h2><h2 id="kotlin"><a href="#kotlin" class="headerlink" title="kotlin"></a>kotlin</h2><ul>
+<li><a href="http://www.kotlincn.net/docs/reference/coroutines/coroutines-guide.html">http://www.kotlincn.net/docs/reference/coroutines/coroutines-guide.html</a></li>
+<li><a href="https://vertx.io/docs/vertx-lang-kotlin-coroutines/kotlin/">https://vertx.io/docs/vertx-lang-kotlin-coroutines/kotlin/</a></li>
+</ul>
+<h2 id="php"><a href="#php" class="headerlink" title="php"></a>php</h2><ul>
 <li><a href="http://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html">http://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html</a></li>
 </ul>
 <h2 id="lua"><a href="#lua" class="headerlink" title="lua"></a>lua</h2><ul>
@@ -3253,6 +3264,36 @@ spring相关组件完整提供了这种能力，资料很多，就不赘述了</
       </categories>
       <tags>
         <tag>http-cache</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何写面向单测的代码</title>
+    <url>/2020/11/01/test-design/</url>
+    <content><![CDATA[<h1 id="单元测试应该如何写"><a href="#单元测试应该如何写" class="headerlink" title="单元测试应该如何写"></a>单元测试应该如何写</h1><p>先上结论：</p>
+<ul>
+<li>不建议使用@Autowired直接属性注入，应使用构造器和setter方法注入</li>
+</ul>
+<p>先抛出几个问题</p>
+<ol>
+<li><p>按照应用的module划分模式，单测应该写在哪里？是每个module独立有自己的单测，还是在启动module中统一写单测？</p>
+</li>
+<li><p>单测时遇到的外部接口是否要采用mock的方式？</p>
+</li>
+<li><p>在Spring成为一种事实标准时，单测时一定要启动Spring容器吗？ @Autowired的迷思？</p>
+</li>
+</ol>
+<p>简单来说下自己的思考</p>
+<p>意图导向编程，测试用来表达接口设计契约<br>单测不是做测试，更是描述接口的职责</p>
+<p>单测写在哪里主要是单测粒度的问题，每个module负责每个module的单测</p>
+<p>单测时的外部依赖我们需要mock，减少我们对外部的依赖，保证程序的逻辑自治，外部依赖可替换</p>
+<p>单测时一定要启动Spring容器吗，虽然Spring提供了很便利的测试工具，但每个测试都要启动容器，是不是带来了很多没必要的依赖，同时由于Autowired的便利性，我们可以很容易的将私有变量属性注入<br>这样就带来了一个问题，如果我们想要mock注入接口功能时，程序根本没有提供修改这个注入实例的方法<br>那为什么建议采用构造器注入呢，当我们想在这个类中增加功能时，这样可以思考下这个接口是不是应该在这个类中定义，会不会导致构造参数过多，而不是一味地增加私有属性变量</p>
+]]></content>
+      <categories>
+        <category>测试</category>
+      </categories>
+      <tags>
+        <tag>测试</tag>
+        <tag>设计</tag>
       </tags>
   </entry>
 </search>
