@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">72</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">74</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">38</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">40</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-count">86</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">72</span>
+        <span class="site-state-item-count">74</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,259 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/02/09/mysql-innodb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/02/09/mysql-innodb/" class="post-title-link" itemprop="url">MySQL事务隔离级别</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-02-09 11:24:22" itemprop="dateCreated datePublished" datetime="2018-02-09T11:24:22+08:00">2018-02-09</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="事务的四种隔离级别"><a href="#事务的四种隔离级别" class="headerlink" title="事务的四种隔离级别"></a>事务的四种隔离级别</h2><table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>未提交读（Read Uncommitted）</td>
+<td>可能</td>
+<td>可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>提交读（Read Committed）</td>
+<td>不可能</td>
+<td>可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>可重复读（Repeatable Read）</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>可串行化（Serializable）</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>不可能</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>未提交读（Read Uncommitted）<br>这种级别对任何操作都不加锁，基本不用。</p>
+</li>
+<li><p>已提交读（Read Committed）<br>读取数据不加锁，数据写入、修改和删除需要加锁。<br>当对数据库中的行进行修改和删除操作时，如果where中的行有索引，则可以直接对操作的行加锁，否则数据库无法知道需要操作的行在哪里，只能对全表进行加锁，将会大大影响性能。在这一点上，MySQL做了相应的优化：当存储引擎对全表加锁以后，MySQL Server会在过滤条件时，释放不满足条件的记录的锁，保证最后只有满足条件的记录被加锁。但是加锁的过程还是存在的，因此可能发生并未被修改的记录被加锁。</p>
+</li>
+<li><p>可重复读（Repeatable Read）<br>已提交读存在不可重复读的问题，即同一个事务两次或多次获取同一行记录时可能获得不同的值，原因在于这中间有其它事务更新了相关数据并提交。而在可重复读中却可以保证在同一次事务中对读取过的记录下次还能读到相同的值，但注意只能保证对读取过的记录读到相同的值，无法保证不会读到新的行，即无法避免幻读的问题。<br>从加锁的角度来看，可重复读会对读取到的数据进行加锁（行锁），保证其他事务无法修改这些已经读过的数据，但行锁无法避免结果中出现新的记录。</p>
+</li>
+<li><p>可串行化（Serializable）<br>可串行化隔离级别在，读加读锁，写加写锁，读锁和写锁互斥，保证所有事务串行化执行，可完全避免脏读、不可重复读、幻读的问题，但对性能影响太大，在高并发的情况下并不适用。</p>
+</li>
+</ul>
+<h2 id="MySQL-InnoDB引擎加锁机制"><a href="#MySQL-InnoDB引擎加锁机制" class="headerlink" title="MySQL InnoDB引擎加锁机制"></a>MySQL InnoDB引擎加锁机制</h2><p>MySQL默认采用可重复读的事务隔离级别，但采用了额外的机制保证不会出现幻读的问题。此外，对于不可重复读的问题，也并未采用上文所述基于悲观锁的方式，而是采用了基于乐观锁的MVCC策略，在保证不会出现不可重复读的前提下，保证了并发的性能。</p>
+<h2 id="多版本并发控制（MVCC）"><a href="#多版本并发控制（MVCC）" class="headerlink" title="多版本并发控制（MVCC）"></a>多版本并发控制（MVCC）</h2><p>多版本并发控制（MVCC）是一种用来解决读-写冲突的无锁并发控制，也就是为事务分配单向增长的时间戳，为每个修改保存一个版本，版本与事务时间戳关联，读操作只读该事务开始前的数据库的快照。 这样在读操作不用阻塞写操作，写操作不用阻塞读操作的同时，避免了脏读和不可重复读</p>
+<p>在MySQL InnoDB引擎中，每个数据行会添加两个额外的隐藏列，分别记录这行数据何时被创建以及何时被删除，这里的时间用版本号控制，即记录每一行记录的创建版本号&amp;删除版本号，所有事务的版本号递增。在可重复读的事务隔离级别下：</p>
+<p>SELECT    读取创建版本号&lt;=当前事务版本号，且删除版本号为空或&gt;当前事务版本号的记录。<br>INSERT    为插入的数据设置创建版本号为当前事务的版本号。<br>DELETE    为删除的数据设置删除版本号为当前事务的版本号。<br>UPDATE    插入一条新的记录，为新的记录设置创建版本号为当前事务的版本号，并为老记录设置删除版本号为当前事务的版本号。</p>
+<h2 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h2><h2 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h2><h2 id="间隙锁（GAP锁）"><a href="#间隙锁（GAP锁）" class="headerlink" title="间隙锁（GAP锁）"></a>间隙锁（GAP锁）</h2><p>由于行锁无法解决幻读的问题，MySQL引入了间隙锁，简单来说就是在锁住需要更新的记录的附近的一段范围，防止在范围内出现其他事物的插入，避免幻读的出现。<br>举例来说，假定有如下数据表，且在id上有主键索引，</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/chen77716/article/details/6742128">https://blog.csdn.net/chen77716/article/details/6742128</a></li>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/innodb-lock.html">https://tech.meituan.com/innodb-lock.html</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/02/08/event-dispatch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/02/08/event-dispatch/" class="post-title-link" itemprop="url">Symfony框架中event的Listener和Subscriber的区别</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-02-08 18:19:38" itemprop="dateCreated datePublished" datetime="2018-02-08T18:19:38+08:00">2018-02-08</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 22:33:02" itemprop="dateModified" datetime="2020-10-26T22:33:02+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PHP/" itemprop="url" rel="index"><span itemprop="name">PHP</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>listener 与 subscriber 的不同点在于，前者在定义阶段就指定了由谁来负责处理事件，而后者是在事件中去决定需要去捕获哪些事件(也就是 EventSubscriberInterface::getSubscribedEvents 方法)，后者更灵活， Symfony 内部代码都是使用的 subscriber ！</p>
+<p>The Listener is signed up specifying the events on which it listens. The Subscriber has a method telling the dispatcher what events it is listening to<br>This might not seem like a big difference, but if you think about it, there are some cases when you want to use one over the other:<br>You can assign one listener to many dispatchers with different events, as they are set at registration time. You only need to make sure every method is in place in the listener You can change the events a subscriber is registered for at runtime and even after registering the subscriber by changing the return value of getSubscribedEvents (Think about a time where you listen to a very noisy event and you only want to execute something one time)</p>
+<p>The difference between an event listener and an event subscriber is that an event subscriber is a collection of event listeners. At first glance this may seem silly, however consider the following two scenarios:<br>Scenario 1: One may have a task that has to be actioned upon the occurrence of various events. Here an event listener would be most optimal as this would allow the code of this action to be re-used across the application’s various events and therefore avoid the violation of the fundamental DRY rule.<br>Scenario 2: One requires a series of specific tasks to be carried out on the occurrence of a specific event. Here, an event subscriber would likely be more suitable.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://symfony.com/doc/current/event_dispatcher.html">http://symfony.com/doc/current/event_dispatcher.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://symfony.com/doc/current/doctrine/event_listeners_subscribers.html">http://symfony.com/doc/current/doctrine/event_listeners_subscribers.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/10730377/doctrine-listener-versus-subscriber">https://stackoverflow.com/questions/10730377/doctrine-listener-versus-subscriber</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1205,255 +1458,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/15/ioc-and-di/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/01/15/ioc-and-di/" class="post-title-link" itemprop="url">理解控制反转和依赖注入</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-01-15 13:43:18" itemprop="dateCreated datePublished" datetime="2018-01-15T13:43:18+08:00">2018-01-15</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 19:23:54" itemprop="dateModified" datetime="2020-10-26T19:23:54+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.9k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="什么是IoC"><a href="#什么是IoC" class="headerlink" title="什么是IoC"></a>什么是IoC</h2><p>Ioc—Inversion of Control，即“控制反转”，不是什么技术，而是一种设计思想。在Java开发中，Ioc意味着将你设计好的对象交给容器控制，而不是传统的在你的对象内部直接控制。如何理解好Ioc呢？理解好Ioc的关键是要明确“谁控制谁，控制什么，为何是反转（有反转就应该有正转了），哪些方面反转了”，那我们来深入分析一下：</p>
-<ul>
-<li><p>谁控制谁，控制什么：传统Java SE程序设计，我们直接在对象内部通过new进行创建对象，是程序主动去创建依赖对象；而IoC是有专门一个容器来创建这些对象，即由Ioc容器来控制对 象的创建；谁控制谁？当然是IoC 容器控制了对象；控制什么？那就是主要控制了外部资源获取（不只是对象包括比如文件等）。</p>
-</li>
-<li><p>为何是反转，哪些方面反转了：有反转就有正转，传统应用程序是由我们自己在对象中主动控制去直接获取依赖对象，也就是正转；而反转则是由容器来帮忙创建及注入依赖对象；为何是反转？因为由容器帮我们查找及注入依赖对象，对象只是被动的接受依赖对象，所以是反转；哪些方面反转了？依赖对象的获取被反转了。</p>
-</li>
-</ul>
-<h2 id="什么是DI"><a href="#什么是DI" class="headerlink" title="什么是DI"></a>什么是DI</h2><p>Dependency Injection，即“依赖注入”：组件之间依赖关系由容器在运行期决定，形象的说，即由容器动态的将某个依赖关系注入到组件之中。依赖注入的目的并非为软件系统带来更多功能，而是为了提升组件重用的频率，并为系统搭建一个灵活、可扩展的平台。通过依赖注入机制，我们只需要通过简单的配置，而无需任何代码就可指定目标需要的资源，完成自身的业务逻辑，而不需要关心具体的资源来自何处，由谁实现。<br>理解DI的关键是：“谁依赖谁，为什么需要依赖，谁注入谁，注入了什么”，那我们来深入分析一下：</p>
-<ul>
-<li>谁依赖于谁：当然是应用程序依赖于IoC容器；</li>
-<li>为什么需要依赖：应用程序需要IoC容器来提供对象需要的外部资源；</li>
-<li>谁注入谁：很明显是IoC容器注入应用程序某个对象，应用程序依赖的对象；</li>
-<li>注入了什么：就是注入某个对象所需要的外部资源（包括对象、资源、常量数据）。</li>
-</ul>
-<p>IoC和DI由什么关系呢？其实它们是同一个概念的不同角度描述，由于控制反转概念比较含糊（可能只是理解为容器控制对象这一个层面，很难让人想到谁来维护对象关系），所以2004年大师级人物Martin Fowler又给出了一个新的名字：“依赖注入”，相对IoC 而言，“依赖注入”明确描述了“被注入对象依赖IoC容器配置依赖对象”。</p>
-<p>看过很多对Spring的Ioc理解的文章，好多人对Ioc和DI的解释都晦涩难懂，反正就是一种说不清，道不明的感觉，读完之后依然是一头雾水，感觉就是开涛这位技术牛人写得特别通俗易懂，他清楚地解释了IoC(控制反转) 和DI(依赖注入)中的每一个字，读完之后给人一种豁然开朗的感觉。我相信对于初学Spring框架的人对Ioc的理解应该是有很大帮助的。</p>
-<p>(don‘t call us, we‘ll call you)”这是著名的好莱坞原则。在好莱坞，把简历递交给演艺公司后就只有回家等待。由演艺公司对整个娱乐项的完全控制，演员只能被动式的接受公司的差使,在需要的环节中，完成自己的演出。这一点完美的提现了在IOC身上，IOC所注重的是设计思想上，从一个常规的创建对象的做法，即new一个对象，转变成向IOC容器递交”简历“，被动的等待IOC容器返回资源给你。控制反转即指的是”演艺公司控制演员“，而说到依赖，则是“演员需要公司混饭”，我们所需求的对象，需要依赖容器来获得，这个过程即是依赖注入。本质上IOC和DI是同一思想下不同维度的表现。</p>
-<p>A-&gt;B-&gt;C-&gt;A</p>
-<p>O-&gt;A<br>O-&gt;B<br>O-&gt;C</p>
-<p>控制反转（Inversion of Control）是一种是面向对象编程中的一种设计原则，用来减低计算机代码之间的耦合度。其基本思想是：借助于“第三方”实现具有依赖关系的对象之间的解耦。</p>
-<p>依赖注入 就是将实例变量传入到一个对象中去(Dependency injection means giving an object its instance variables)。</p>
-<p>如果在 Class A 中，有 Class B 的实例，则称 Class A 对 Class B 有一个依赖。例如下面类 Human 中用到一个 Father 对象，我们就说类 Human 对类 Father 有一个依赖。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        father = <span class="keyword">new</span> Father();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>仔细看这段代码我们会发现存在一些问题：<br>如果现在要改变 father 生成方式，如需要用new Father(String name)初始化 father，需要修改 Human 代码；<br>如果想测试不同 Father 对象对 Human 的影响很困难，因为 father 的初始化被写死在了 Human 的构造函数中；<br>如果new Father()过程非常缓慢，单测时我们希望用已经初始化好的 father 对象 Mock 掉这个过程也很困难。</p>
-<p>上面将依赖在构造函数中直接初始化是一种 Hard init 方式，弊端在于两个类不够独立，不方便测试。我们还有另外一种 Init 方式，如下：<br>构造函数注入和setter注入</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">(Father father)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.father = father;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFather</span><span class="params">(Father father)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.father = father;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>控制反转是一种思想</li>
-<li>依赖注入是一种设计模式</li>
-</ul>
-<p>IoC框架使用依赖注入作为实现控制反转的方式，但是控制反转还有其他的实现方式，例如说ServiceLocator，所以不能将控制反转和依赖注入等同。</p>
-<p>Spring为什么这么火呢，我觉得一大部分原因是Spring的出现让绝大部分程序员可以很容易的写代码了<br>@Autowired 注解的使用很大程度上提供了便利，但大部分注入的方式都是不那么测试友好的。<br>你可以在一个类中写很多的Service，这种对于单元测试需要mock服务时非常不友好。更合理的方式应该是使用构造器注入，这样当一个服务的构造方法多时，会让你好好思考这个服务应不应该属于这个类</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/bestone0213/article/details/47424255">https://blog.csdn.net/bestone0213/article/details/47424255</a></li>
-<li><a target="_blank" rel="noopener" href="https://martinfowler.com/articles/injection.html">https://martinfowler.com/articles/injection.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xxzhuang/p/5948902.html">https://www.cnblogs.com/xxzhuang/p/5948902.html</a></li>
-<li><a target="_blank" rel="noopener" href="http://jinnianshilongnian.iteye.com/blog/1413846">http://jinnianshilongnian.iteye.com/blog/1413846</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/15/csrf/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/01/15/csrf/" class="post-title-link" itemprop="url">理解csrf</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-01-15 11:07:18" itemprop="dateCreated datePublished" datetime="2018-01-15T11:07:18+08:00">2018-01-15</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 22:33:02" itemprop="dateModified" datetime="2020-10-26T22:33:02+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>5.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="csrf例子"><a href="#csrf例子" class="headerlink" title="csrf例子"></a>csrf例子</h2><p>假如一家銀行用以執行轉帳操作的URL地址如下： <a target="_blank" rel="noopener" href="http://www.examplebank.com/withdraw?account=AccoutName&amp;amount=1000&amp;for=PayeeName">http://www.examplebank.com/withdraw?account=AccoutName&amp;amount=1000&amp;for=PayeeName</a></p>
-<p>那麼，一個惡意攻擊者可以在另一个網站上放置如下代碼： &lt;img src=”<a target="_blank" rel="noopener" href="http://www.examplebank.com/withdraw?account=Alice&amp;amount=1000&amp;for=Badman%E2%80%9D&gt;">http://www.examplebank.com/withdraw?account=Alice&amp;amount=1000&amp;for=Badman”&gt;</a></p>
-<p>这里需要防止csrf攻击的是银行的网站</p>
-<p>如果有賬戶名為Alice的用戶訪問了惡意站點，而她之前剛訪問過銀行不久，登錄信息尚未過期，那麼她就會損失1000資金。</p>
-<p>這種惡意的網址可以有很多種形式，藏身於網頁中的許多地方。此外，攻擊者也不需要控制放置惡意網址的網站。例如他可以將這種地址藏在論壇，博客等任何用戶生成內容的網站中。這意味著如果伺服器端沒有合適的防禦措施的話，用戶即使訪問熟悉的可信網站也有受攻擊的危險。</p>
-<p>透過例子能夠看出，攻擊者並不能通過CSRF攻擊來直接獲取用戶的帳戶控制權，也不能直接竊取用戶的任何信息。他們能做到的，是欺騙用戶瀏覽器，讓其以用戶的名義執行操作。</p>
-<h2 id="预防"><a href="#预防" class="headerlink" title="预防"></a>预防</h2><p>在请求时每次都验证下csrf_token的正确性，以此过滤跨域请求（跨域请求是拿不到准确的csrf_token的）。<br>那么如何获取csrf_token呢？每次请求通过$request-&gt;getCsrfToken获取token，第一次请求时token生成后放在cookie中（不可用放session）然后前端生成的maskcsrftoken，然后请求时后端验证maskcsrftoken和masktruetoken。</p>
-<p>参见yii/web/Request.php</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@inheritdoc</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">beforeAction</span>(<span class="params">$action</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">parent</span>::beforeAction($action)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;enableCsrfValidation &amp;&amp; Yii::$app-&gt;getErrorHandler()-&gt;exception === <span class="literal">null</span> &amp;&amp; !Yii::$app-&gt;getRequest()-&gt;validateCsrfToken()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> BadRequestHttpException(Yii::t(<span class="string">&#x27;yii&#x27;</span>, <span class="string">&#x27;Unable to verify your data submission.&#x27;</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Returns the token used to perform CSRF validation.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * This token is generated in a way to prevent [BREACH attacks](http://breachattack.com/). It may be passed</span></span><br><span class="line"><span class="comment"> * along via a hidden field of an HTML form or an HTTP header value to support CSRF validation.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> bool $regenerate whether to regenerate CSRF token. When this parameter is true, each time</span></span><br><span class="line"><span class="comment"> * this method is called, a new CSRF token will be generated and persisted (in session or cookie).</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string the token used to perform CSRF validation.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getCsrfToken</span>(<span class="params">$regenerate = <span class="literal">false</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;_csrfToken === <span class="literal">null</span> || $regenerate) &#123;</span><br><span class="line">        <span class="keyword">if</span> ($regenerate || ($token = <span class="keyword">$this</span>-&gt;loadCsrfToken()) === <span class="literal">null</span>) &#123;</span><br><span class="line">            $token = <span class="keyword">$this</span>-&gt;generateCsrfToken();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_csrfToken = Yii::$app-&gt;security-&gt;maskToken($token);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;_csrfToken;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Loads the CSRF token from cookie or session.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string the CSRF token loaded from cookie or session. Null is returned if the cookie or session</span></span><br><span class="line"><span class="comment"> * does not have CSRF token.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">loadCsrfToken</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;enableCsrfCookie) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;getCookies()-&gt;getValue(<span class="keyword">$this</span>-&gt;csrfParam);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Yii::$app-&gt;getSession()-&gt;get(<span class="keyword">$this</span>-&gt;csrfParam);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Generates an unmasked random token used to perform CSRF validation.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string the random token for CSRF validation.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">generateCsrfToken</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $token = Yii::$app-&gt;getSecurity()-&gt;generateRandomString();</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;enableCsrfCookie) &#123;</span><br><span class="line">        $cookie = <span class="keyword">$this</span>-&gt;createCsrfCookie($token);</span><br><span class="line">        Yii::$app-&gt;getResponse()-&gt;getCookies()-&gt;add($cookie);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Yii::$app-&gt;getSession()-&gt;set(<span class="keyword">$this</span>-&gt;csrfParam, $token);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $token;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string the CSRF token sent via [[CSRF_HEADER]] by browser. Null is returned if no such header is sent.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getCsrfTokenFromHeader</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;headers-&gt;get(<span class="built_in">static</span>::CSRF_HEADER);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a cookie with a randomly generated CSRF token.</span></span><br><span class="line"><span class="comment"> * Initial values specified in [[csrfCookie]] will be applied to the generated cookie.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $token the CSRF token</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> Cookie the generated cookie</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> enableCsrfValidation</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">createCsrfCookie</span>(<span class="params">$token</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $options = <span class="keyword">$this</span>-&gt;csrfCookie;</span><br><span class="line">    <span class="keyword">return</span> Yii::createObject(array_merge($options, [</span><br><span class="line">        <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;yii\web\Cookie&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;name&#x27;</span> =&gt; <span class="keyword">$this</span>-&gt;csrfParam,</span><br><span class="line">        <span class="string">&#x27;value&#x27;</span> =&gt; $token,</span><br><span class="line">    ]));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Performs the CSRF validation.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * This method will validate the user-provided CSRF token by comparing it with the one stored in cookie or session.</span></span><br><span class="line"><span class="comment"> * This method is mainly called in [[Controller::beforeAction()]].</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Note that the method will NOT perform CSRF validation if [[enableCsrfValidation]] is false or the HTTP method</span></span><br><span class="line"><span class="comment"> * is among GET, HEAD or OPTIONS.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $clientSuppliedToken the user-provided CSRF token to be validated. If null, the token will be retrieved from</span></span><br><span class="line"><span class="comment"> * the [[csrfParam]] POST field or HTTP header.</span></span><br><span class="line"><span class="comment"> * This parameter is available since version 2.0.4.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> bool whether CSRF token is valid. If [[enableCsrfValidation]] is false, this method will return true.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">validateCsrfToken</span>(<span class="params">$clientSuppliedToken = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $method = <span class="keyword">$this</span>-&gt;getMethod();</span><br><span class="line">    <span class="comment">// only validate CSRF token on non-&quot;safe&quot; methods https://tools.ietf.org/html/rfc2616#section-9.1.1</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">$this</span>-&gt;enableCsrfValidation || in_array($method, [<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;HEAD&#x27;</span>, <span class="string">&#x27;OPTIONS&#x27;</span>], <span class="literal">true</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $trueToken = <span class="keyword">$this</span>-&gt;getCsrfToken();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($clientSuppliedToken !== <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;validateCsrfTokenInternal($clientSuppliedToken, $trueToken);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;validateCsrfTokenInternal(<span class="keyword">$this</span>-&gt;getBodyParam(<span class="keyword">$this</span>-&gt;csrfParam), $trueToken)</span><br><span class="line">        || <span class="keyword">$this</span>-&gt;validateCsrfTokenInternal(<span class="keyword">$this</span>-&gt;getCsrfTokenFromHeader(), $trueToken);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Validates CSRF token.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $clientSuppliedToken The masked client-supplied token.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $trueToken The masked true token.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> bool</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">validateCsrfTokenInternal</span>(<span class="params">$clientSuppliedToken, $trueToken</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!is_string($clientSuppliedToken)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $security = Yii::$app-&gt;security;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $security-&gt;unmaskToken($clientSuppliedToken) === $security-&gt;unmaskToken($trueToken);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h2><p>黑客：A.com 银行：B.com  用户：C<br>A通过curl或者其他方式访问B获取到的csrf token只是针对用户A的，对C来说是无影响的。</p>
-<h2 id="展望"><a href="#展望" class="headerlink" title="展望"></a>展望</h2><p>因为web正在向JSON API转移，并且浏览器变得更安全，有更多的安全策略， CSRF正在变得不那么值得关注。 阻止旧的浏览器访问你的站点，并尽可能的将你的API变成JSON API， 然后你将不再需要CSRF token。 但是为了安全起见，你还是应该尽量允许他们尤其是当难以实现的时候。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/pillarjs/understanding-csrf/blob/master/README_zh.md">https://github.com/pillarjs/understanding-csrf/blob/master/README_zh.md</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1509,13 +1513,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">252k</span>
+    <span title="站点总字数">253k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:49</span>
+    <span title="站点阅读时长">3:50</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

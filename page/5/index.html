@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">72</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">74</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">38</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">40</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-count">86</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">72</span>
+        <span class="site-state-item-count">74</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,193 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/09/18/jctools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/09/18/jctools/" class="post-title-link" itemprop="url">JCTools</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-09-18 12:26:19" itemprop="dateCreated datePublished" datetime="2018-09-18T12:26:19+08:00">2018-09-18</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>524</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="JCTools"><a href="#JCTools" class="headerlink" title="JCTools"></a>JCTools</h2><p>JCTools是一款对jdk并发数据结构进行增强的并发工具，主要提供了map以及queue的增强数据结构。原来netty还是自己写的MpscLinkedQueueNode，后来新版本就换成使用JCTools的并发队列了。 </p>
+<p>增强map<br>ConcurrentAutoTable(后面几个map/set结构的基础)<br>NonBlockingHashMap<br>NonBlockingHashMapLong<br>NonBlockingHashSet<br>NonBlockingIdentityHashMap<br>NonBlockingSetInt<br>增强队列<br>SPSC - Single Producer Single Consumer (Wait Free, bounded and unbounded)<br>MPSC - Multi Producer Single Consumer (Lock less, bounded and unbounded)<br>SPMC - Single Producer Multi Consumer (Lock less, bounded)<br>MPMC - Multi Producer Multi Consumer (Lock less, bounded)</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/JCTools/JCTools">https://github.com/JCTools/JCTools</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/08/23/how-jvm-load-jar/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/08/23/how-jvm-load-jar/" class="post-title-link" itemprop="url">JVM加载jar包的顺序</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-08-23 22:34:15" itemprop="dateCreated datePublished" datetime="2018-08-23T22:34:15+08:00">2018-08-23</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>705</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="JVM加载jar的顺序"><a href="#JVM加载jar的顺序" class="headerlink" title="JVM加载jar的顺序"></a>JVM加载jar的顺序</h2><p>同一个目录下，jvm加载jar包顺序是无法保证的，每个系统的都不一样，甚至同一个系统不同的时刻加载都不一样。良好设计的系统不应该依赖详细的顺序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The order in which the JAR files in a directory are enumerated in the expanded class path is not specified and may vary from platform to platform and even from moment to moment on the same machine. A well-constructed application should not depend upon any particular order. If a specific order is required, then the JAR files can be enumerated explicitly in the class path.</span><br></pre></td></tr></table></figure>
+<p>jvm在不同机器上加载jar包顺序与文件系统存在关系，jvm在linux通过jar文件在文件系统中生成顺序来进行加载，在linux底层是inode数据机构，是用inode来指示文件的。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/saaav/p/7716179.html">https://www.cnblogs.com/saaav/p/7716179.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzIxNDQ5NzI4OA==&amp;mid=2247484971&amp;idx=1&amp;sn=954448152b5f0f632662b456509ce0f7">https://mp.weixin.qq.com/s?__biz=MzIxNDQ5NzI4OA==&amp;mid=2247484971&amp;idx=1&amp;sn=954448152b5f0f632662b456509ce0f7</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/56147205/answer/220271109">https://www.zhihu.com/question/56147205/answer/220271109</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1184,227 +1371,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/05/08/hard-link/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/05/08/hard-link/" class="post-title-link" itemprop="url">硬链接原理秒删大文件</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-05-08 15:46:49" itemprop="dateCreated datePublished" datetime="2018-05-08T15:46:49+08:00">2018-05-08</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>196</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="硬链接基础"><a href="#硬链接基础" class="headerlink" title="硬链接基础"></a>硬链接基础</h2><p>当多个文件共同指向同一inode、inode链接数N&gt;1、删除任何一个文件都是巨快<br>因为、此时删除的仅仅是指向inode的指针，而当N=1时、则不一样了、此时删除的文件相关的所有数据块、所以慢。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln test.ibd test.ibd.hlk</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/linux/l-cn-hardandsymb-links/">https://www.ibm.com/developerworks/cn/linux/l-cn-hardandsymb-links/</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/04/22/spring-aop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/04/22/spring-aop/" class="post-title-link" itemprop="url">理解SpringAOP</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-04-22 12:22:17" itemprop="dateCreated datePublished" datetime="2018-04-22T12:22:17+08:00">2018-04-22</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.5k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><p>A-&gt;doSomething =&gt; A-&gt;Proxy-&gt;doSomething</p>
-<h2 id="Aop基本概念"><a href="#Aop基本概念" class="headerlink" title="Aop基本概念"></a>Aop基本概念</h2><p>连接点（Joinpoint） ：程序能够应用通知的一个“时机”，这些“时机”就是连接点，例如方法被调用时、异常被抛出时等等。<br>通知（Advice） ：通知定义了切面是什么以及何时使用。描述了切面要完成的工作和何时需要执行这个工作。<br>切入点（Pointcut） ：通知定义了切面要发生的“故事”和时间，那么切入点就定义了“故事”发生的地点，例如某个类或方法的名称。<br>切面（Aspect） ：通知和切入点共同组成了切面，时间、地点和要发生的“故事”。<br>目标对象（Target Object） ：即被通知的对象。<br>AOP代理（AOP Proxy） 在Spring AOP中有两种代理方式，JDK动态代理和CGLIB代理。默认情况下，TargetObject实现了接口时，则采用JDK动态代理；反之，采用CGLIB代理。<br>织入（Weaving）把切面应用到目标对象来创建新的代理对象的过程，织入一般发生在如下几个时机：<br>1）编译时：当一个类文件被编译时进行织入，这需要特殊的编译器才能做到，例如AspectJ的织入编译器；<br>2）类加载时：使用特殊的ClassLoader在目标类被加载到程序之前增强类的字节代码；<br>3）运行时：切面在运行的某个时刻被织入，SpringAOP就是以这种方式织入切面的，原理是使用了JDK的动态代理。</p>
-<h2 id="Spring-AOP与AspectJ区别"><a href="#Spring-AOP与AspectJ区别" class="headerlink" title="Spring AOP与AspectJ区别"></a>Spring AOP与AspectJ区别</h2><p>Spring AOP 与ApectJ 的目的一致，都是为了统一处理横切业务，但与AspectJ不同的是，Spring AOP 并不尝试提供完整的AOP功能(即使它完全可以实现)，Spring AOP 更注重的是与Spring IOC容器的结合，并结合该优势来解决横切业务的问题，因此在AOP的功能完善方面，相对来说AspectJ具有更大的优势，同时，Spring注意到AspectJ在AOP的实现方式上依赖于特殊编译器(ajc编译器)，因此Spring很机智回避了这点，转向采用动态代理技术的实现原理来构建Spring AOP的内部机制（动态织入），这是与AspectJ（静态织入）最根本的区别。</p>
-<p>在AspectJ 1.5后，引入@Aspect形式的注解风格的开发，Spring也非常快地跟进了这种方式，因此Spring 2.0后便使用了与AspectJ一样的注解。请注意，Spring 只是使用了与 AspectJ 5 一样的注解，但仍然没有使用 AspectJ 的编译器，底层依是动态代理技术的实现，因此并不依赖于 AspectJ 的编译器。</p>
-<h2 id="Spring-Aop类内部调用不会被切面的解决办法"><a href="#Spring-Aop类内部调用不会被切面的解决办法" class="headerlink" title="Spring Aop类内部调用不会被切面的解决办法"></a>Spring Aop类内部调用不会被切面的解决办法</h2><p>首先要理解为什么不会被切面，Aop的实现是通过代理的方式。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeServiceImpl</span> <span class="keyword">implements</span> <span class="title">SomeService</span>  </span></span><br><span class="line"><span class="class"></span>&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">someMethod</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function">    </span>&#123;  </span><br><span class="line">        someInnerMethod();  </span><br><span class="line">        <span class="comment">//foo...  </span></span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">someInnerMethod</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function">    </span>&#123;  </span><br><span class="line">        <span class="comment">//bar...  </span></span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>调用someService.someMethod();时内部调用someInnerMethod的切面并不会生效，因为someService此时表示的是代理对象。而在方法内部调用时表示的someService对象。</p>
-<ol>
-<li>修改类，不要出现“自调用”的情况：这是Spring文档中推荐的“最佳”方案；</li>
-<li>若一定要使用“自调用”，那么this.someInnerMethod()替换为：((CustomerService) AopContext.currentProxy()).someInnerMethod();<br>此时需要修改spring的aop配置：<br>&lt;aop:aspectj-autoproxy expose-proxy=”true” /&gt;</li>
-<li>静态织入，参见AspectJ。</li>
-<li>InjectSelfAware，对那些有同一对象里存在方法间相互调用的类，提供一个父类，这个父类的目的是给所有它继承的子类提供一个字段self，self指向为代理对象。</li>
-</ol>
-<h2 id="动态代理解决问题的检查点："><a href="#动态代理解决问题的检查点：" class="headerlink" title="动态代理解决问题的检查点："></a>动态代理解决问题的检查点：</h2><ul>
-<li>需要AOP拦截的类是否是final的，final类不可使用CGLIB来代理。</li>
-<li>是否在给BEAN配AOP的时候强制使用CGLIB，如果是则可指定proxyTargetClass属性以让spring强制代理目标类。</li>
-<li>类是否被多次代理了，如果类被多次代理过，则第二次进行代理的时候拿到的是第一次代理后的对象，这个对象是个final形式的，所以会出现这个错误。</li>
-</ul>
-<p>基于第三点要注意，类是否被多次代理不紧紧取决于类是否被配置了多次AOP，如果类实现了某个接口，则还要看类实现的接口是否被aop拦截过。如果类实现了接口且接口也被AOP拦截了，则很可能出现上面的错误（是否出错取决于AOP代理执行的顺序）。</p>
-<h2 id="spring配置aop需要注意："><a href="#spring配置aop需要注意：" class="headerlink" title="spring配置aop需要注意："></a>spring配置aop需要注意：</h2><ul>
-<li>1、proxy-target-class属性值决定是基于接口的还是基于类的代理被创建，启动对@Aspectj的支持 true为cglib（基于类），false为jdk代理（基于接口），不写的话默认为false。为true的话，会导致拦截不了mybatis的mapper</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">proxy-target-class</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>2、在类没有实现任何接口，并且没有默认构造函数的情况下，通过构造函数注入时，目前的Spring是无法实现AOP切面拦截的。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/study-everyday/p/7429298.html">https://www.cnblogs.com/study-everyday/p/7429298.html</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/hupoling/article/details/54618461">http://blog.csdn.net/hupoling/article/details/54618461</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.baeldung.com/spring-aop-vs-aspectj">http://www.baeldung.com/spring-aop-vs-aspectj</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/javazejian/article/details/56267036">http://blog.csdn.net/javazejian/article/details/56267036</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1460,13 +1426,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">252k</span>
+    <span title="站点总字数">253k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:49</span>
+    <span title="站点阅读时长">3:50</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

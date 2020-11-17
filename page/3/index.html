@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">72</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">74</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">38</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">40</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-count">86</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">72</span>
+        <span class="site-state-item-count">74</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,279 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/03/25/kafka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/25/kafka/" class="post-title-link" itemprop="url">kafka的关键概念</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-25 18:05:47" itemprop="dateCreated datePublished" datetime="2019-03-25T18:05:47+08:00">2019-03-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/kafka/" itemprop="url" rel="index"><span itemprop="name">kafka</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="kafka如何实现高吞吐？"><a href="#kafka如何实现高吞吐？" class="headerlink" title="kafka如何实现高吞吐？"></a>kafka如何实现高吞吐？</h2><p>高吞吐是 Kafka 需要实现的核心目标之一，为此 kafka 做了以下一些设计：</p>
+<ol>
+<li>数据磁盘持久化：消息不在内存中 Cache ，直接写入到磁盘，充分利用磁盘的顺序读写性能。<br>直接使用 Linux 文件系统的 Cache ，来高效缓存数据。<br>文件追加写</li>
+<li>zero-copy：减少 IO 操作步骤<br>采用 Linux Zero-Copy 提高发送性能。</li>
+</ol>
+<ul>
+<li>传统的数据发送需要发送 4 次上下文切换。</li>
+<li>采用 sendfile 系统调用之后，数据直接在内核态交换，系统上下文切换减少为2次。根据测试结果，可以提高60%的数据发送性能。<br>避免二次拷贝以及内核态到用户态的切换，详情见：<a target="_blank" rel="noopener" href="https://developer.ibm.com/articles/j-zerocopy/">https://developer.ibm.com/articles/j-zerocopy/</a></li>
+</ul>
+<ol start="3">
+<li><p>数据批量发送</p>
+</li>
+<li><p>数据压缩</p>
+</li>
+<li><p>Topic 划分为多个 Partition ，提高并行度。<br>数据在磁盘上存取代价为 O(1)。<br>Kafka 以 Topic 来进行消息管理，每个 Topic 包含多个 Partition ，每个 Partition 对应一个逻辑 log ，有多个 segment 文件组成。<br>每个 segment 中存储多条消息（见下图），消息 id 由其逻辑位置决定，即从消息 id 可直接定位到消息的存储位置，避免 id 到位置的额外映射。<br>每个 Partition 在内存中对应一个 index ，记录每个 segment 中的第一条消息偏移。<br>发布者发到某个 Topic 的消息会被均匀的分布到多个 Partition 上（随机或根据用户指定的回调函数进行分布），Broker 收到发布消息往对应 Partition 的最后一个 segment 上添加该消息。<br>当某个 segment上 的消息条数达到配置值或消息发布时间超过阈值时，segment上 的消息会被 flush 到磁盘，只有 flush 到磁盘上的消息订阅者才能订阅到，segment 达到一定的大小后将不会再往该 segment 写数据，Broker 会创建新的 segment 文件。</p>
+</li>
+<li><p>Broker NIO异步消息处理，实现了IO线程与业务线程分离。</p>
+</li>
+</ol>
+<h2 id="Kafka-的副本机制是怎么样的？"><a href="#Kafka-的副本机制是怎么样的？" class="headerlink" title="Kafka 的副本机制是怎么样的？"></a>Kafka 的副本机制是怎么样的？</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013256816/article/details/71091774">https://blog.csdn.net/u013256816/article/details/71091774</a></li>
+</ul>
+<h2 id="什么是-Kafka-事务？"><a href="#什么是-Kafka-事务？" class="headerlink" title="什么是 Kafka 事务？"></a>什么是 Kafka 事务？</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ransom0512/article/details/78840042">https://blog.csdn.net/ransom0512/article/details/78840042</a></li>
+</ul>
+<h2 id="Kafka-如何保证消息的顺序性？"><a href="#Kafka-如何保证消息的顺序性？" class="headerlink" title="Kafka 如何保证消息的顺序性？"></a>Kafka 如何保证消息的顺序性？</h2><p>Kafka 本身，并不像 RocketMQ 一样，提供顺序性的消息。所以，提供的方案，都是相对有损的。如下：<br>这里的顺序消息，我们更多指的是，单个 Partition 的消息，被顺序消费。<br>方式一，Consumer ，对每个 Partition 内部单线程消费，单线程吞吐量太低，一般不会用这个。<br>方式二，Consumer ，拉取到消息后，写到N个内存 queue，具有相同 key 的数据都到同一个内存 queue 。然后，对于N个线程，每个线程分别消费一个内存 queue 即可，这样就能保证顺序性。<br>这种方式，相当于对【方式一】的改进，将相同 Partition 的消息进一步拆分，保证相同 key 的数据消费是顺序的。<br>不过这种方式，消费进度的更新会比较麻烦。<br>当然，实际情况也不太需要考虑消息的顺序性，基本没有业务需要。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/pzVS7r3QaQPFwob-fY8b4A">为什么Kafka这么快？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/d9KIz0xvp5I9rqnDAlZvXw">震惊了！原来这才是 Kafka！（多图+深入）</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/javagrowing/JGrowing/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/IO/%E8%B5%B0%E8%BF%9B%E7%A7%91%E5%AD%A6%E4%B9%8B%E6%8F%AD%E5%BC%80%E7%A5%9E%E7%A7%98%E7%9A%84%E9%9B%B6%E6%8B%B7%E8%B4%9D.md">零拷贝</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ssJV6wnH7fE2arZ07_Og4w">Kafka源码系列之kafka如何实现高性能读写的</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/csdn_9527666/article/details/82709198">https://blog.csdn.net/csdn_9527666/article/details/82709198</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yjh314/article/details/77568580">https://blog.csdn.net/yjh314/article/details/77568580</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.iocoder.cn/Kafka/message-format/">http://www.iocoder.cn/Kafka/message-format/</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5b573eafe51d45198f5c80a4">你需要知道的kafka</a></li>
+<li><a target="_blank" rel="noopener" href="https://gitbook.cn/books/5bc446269a9adf54c7ccb8bc/index.html">再谈基于 Kafka 和 ZooKeeper 的分布式消息队列原理</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/03/25/jit-ref/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/25/jit-ref/" class="post-title-link" itemprop="url">JIT参考材料</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-25 16:07:29" itemprop="dateCreated datePublished" datetime="2019-03-25T16:07:29+08:00">2019-03-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 22:33:02" itemprop="dateModified" datetime="2020-10-26T22:33:02+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="JITWatch相关资料"><a href="#JITWatch相关资料" class="headerlink" title="JITWatch相关资料"></a>JITWatch相关资料</h2><blockquote>
+<p>官网：<a target="_blank" rel="noopener" href="https://github.com/AdoptOpenJDK/jitwatch">https://github.com/AdoptOpenJDK/jitwatch</a></p>
+</blockquote>
+<blockquote>
+<p>第三方使用介绍：<a target="_blank" rel="noopener" href="http://zeroturnaround.com/rebellabs/why-it-rocks-to-finally-understand-java-jit-with-jitwatch/">http://zeroturnaround.com/rebellabs/why-it-rocks-to-finally-understand-java-jit-with-jitwatch/</a></p>
+</blockquote>
+<blockquote>
+<p>中文介绍：<a target="_blank" rel="noopener" href="http://rongmayisheng.com/post/java-jit%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98">http://rongmayisheng.com/post/java-jit性能调优</a></p>
+</blockquote>
+<blockquote>
+<p>优化实例：<a target="_blank" rel="noopener" href="http://rongmayisheng.com/post/%E6%80%8E%E6%A0%B7%E8%AE%A9%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81%E6%9B%B4%E5%A5%BD%E7%9A%84%E8%A2%ABjvm-jit-inlining">http://rongmayisheng.com/post/怎样让你的代码更好的被jvm-jit-inlining</a></p>
+</blockquote>
+<blockquote>
+<p>HotSpot生成汇编代码插件安装：<a target="_blank" rel="noopener" href="https://www.chrisnewland.com/building-hsdis-amd64dylib-on-mac-osx-376">https://www.chrisnewland.com/building-hsdis-amd64dylib-on-mac-osx-376</a></p>
+</blockquote>
+<p>相关链接</p>
+<p>很详细的两篇解释JIT各类优化策略的文章：</p>
+<p><a target="_blank" rel="noopener" href="https://advancedweb.hu/2016/05/27/jvm_jit_optimization_techniques/">https://advancedweb.hu/2016/05/27/jvm_jit_optimization_techniques/</a></p>
+<p><a target="_blank" rel="noopener" href="https://advancedweb.hu/2016/06/28/jvm_jit_optimization_techniques_part_2/">https://advancedweb.hu/2016/06/28/jvm_jit_optimization_techniques_part_2/</a></p>
+<p>来自IBM的介绍: <a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/java/j-lo-just-in-time/">https://www.ibm.com/developerworks/cn/java/j-lo-just-in-time/</a></p>
+<p>这个带视频: <a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/Java-Application-Hostile-to-JIT-Compilation">http://www.infoq.com/cn/articles/Java-Application-Hostile-to-JIT-Compilation</a></p>
+<p>JIT Arch(推荐): <a target="_blank" rel="noopener" href="https://www.infoq.com/articles/OpenJDK-HotSpot-What-the-JIT">https://www.infoq.com/articles/OpenJDK-HotSpot-What-the-JIT</a></p>
+<p>JIT history: <a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/692136/when-did-java-get-a-jit-compiler">http://stackoverflow.com/questions/692136/when-did-java-get-a-jit-compiler</a></p>
+<p>Wiki:</p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Java_performance">https://en.wikipedia.org/wiki/Java_performance</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/HotSpot">https://en.wikipedia.org/wiki/HotSpot</a></p>
+<p>官方（OpenJDK）的JIT所有优化方法汇总:</p>
+<p><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/HotSpot/PerformanceTacticIndex">https://wiki.openjdk.java.net/display/HotSpot/PerformanceTacticIndex</a></p>
+<p><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/HotSpot/PerformanceTechniques">https://wiki.openjdk.java.net/display/HotSpot/PerformanceTechniques</a></p>
+<p>HotSpot Dev Group: <a target="_blank" rel="noopener" href="http://openjdk.java.net/groups/hotspot/">http://openjdk.java.net/groups/hotspot/</a></p>
+<p>HotSpot中的名词解释: <a target="_blank" rel="noopener" href="http://openjdk.java.net/groups/hotspot/docs/HotSpotGlossary.html">http://openjdk.java.net/groups/hotspot/docs/HotSpotGlossary.html</a></p>
+<p>Java7和8的performance enhancement</p>
+<p><a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/7/docs/technotes/guides/vm/performance-enhancements-7.html">http://docs.oracle.com/javase/7/docs/technotes/guides/vm/performance-enhancements-7.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/performance-enhancements-7.html">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/performance-enhancements-7.html</a></p>
+<p>来自Oracle的JVM spec：<a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/specs/jvms/se8/html/index.html">http://docs.oracle.com/javase/specs/jvms/se8/html/index.html</a></p>
+<p>很短的JIT讲解：<a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E13150_01/jrockit_jvm/jrockit/geninfo/diagnos/underst_jit.html">https://docs.oracle.com/cd/E13150_01/jrockit_jvm/jrockit/geninfo/diagnos/underst_jit.html</a></p>
+<p>美团的一篇关于乱序执行的文章：<a target="_blank" rel="noopener" href="http://tech.meituan.com/java-memory-reordering.html">http://tech.meituan.com/java-memory-reordering.html</a></p>
+<p>相关资料</p>
+<p>来自IBM的一次会议报告，非常详细的解释了JIT做的工作: ACACES06.pdf</p>
+<p>Intel早期的一篇论文（98年），可以看到对Java的JIT刚开始的设计: pldi98.ps</p>
+<p>IBM的一个长文，简要解释了JIT技术，更重要的是提供了如何让代码更容易被JIT优化的guideline: IBM_just_in_time_compiler_for_java.pdf</p>
+<p>JITWatch的介绍：UnderstandingHotSpotJVMPerformancewithJITWatch.pdf</p>
+<p>全面介绍JVM的书，在国产书里算写得好的: 《深入理解Java虚拟机》（第二版）</p>
+<p>Java性能优化的权威读物：《Java Performance: The Definitive Guide》</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1315,238 +1588,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/02/26/think-in/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/02/26/think-in/" class="post-title-link" itemprop="url">一些想法的落地</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-02-26 16:03:59" itemprop="dateCreated datePublished" datetime="2019-02-26T16:03:59+08:00">2019-02-26</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/think/" itemprop="url" rel="index"><span itemprop="name">think</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="为什么分库分表的数量都采用2-n之类的数字"><a href="#为什么分库分表的数量都采用2-n之类的数字" class="headerlink" title="为什么分库分表的数量都采用2^n之类的数字"></a>为什么分库分表的数量都采用2^n之类的数字</h2><p>扩容时只需要迁移一半的数据，计算路由规则时也较为方便。<br>数据在裂变时一般是 1 -&gt; 2 -&gt; 4 -&gt; 8<br>2 的 n 次方直接使用位运算操作 如果使用十进制的取模的话，必须先从内存里面读到二进制数的这两个数，再转成十进制数，再运算，性能比较差。<br>更容易做一些表的迁移，数据只需要动一半，比如  id  =  1，对  8  取余得  1  ，4  取余也是  1，  2  取余也是  1。这样我们不需要迁移行记录，只要迁移表记录，这样迁移成本会小得多。</p>
-<h2 id="迁移服务的基本思路"><a href="#迁移服务的基本思路" class="headerlink" title="迁移服务的基本思路"></a>迁移服务的基本思路</h2><p>消息队列迁移时，可以考虑在消息体重添加新字段。消费者兼容逻辑先上线。<br>原有字段尽量不改变语义，上线顺序要求兼容逻辑先上线。</p>
-<h2 id="使用CountDownLatch实现任务线程执行排序"><a href="#使用CountDownLatch实现任务线程执行排序" class="headerlink" title="使用CountDownLatch实现任务线程执行排序"></a>使用CountDownLatch实现任务线程执行排序</h2><p>A B C D E，5个任务，ABC同时执行 -&gt; DE同时执行，要求DE，在ABC都执行完成后才执行。<br>思路：D E持有一个数量为3的CountDownLatch实例，当A B C 任务执行完成时对D E 持有的CountDownLatch实例进行减1。</p>
-<h2 id="高并发大量级下的秒级超时检测机制"><a href="#高并发大量级下的秒级超时检测机制" class="headerlink" title="高并发大量级下的秒级超时检测机制"></a>高并发大量级下的秒级超时检测机制</h2><p>常规思路:启动一个每秒定时任务，定时获取队列数据，一个个扫描过期时间。但是，会导致扫描的对象 过多，浪费 CPU 资源以及增加锁竞争开销。<br>优化思路:采用分桶策略，将某一秒内的数据按顺序添加到桶中，然后将桶以过期时间作为 key 添加到 map 中。扫描线程中首先获取跟下一次过期时间的时间间隔，若间隔 &gt; 0，则说明还未过期，线程休眠得到的时间间隔，然后再取出过期的桶，对桶中的数据进行一一处理;因为未过期的早已经从桶中移除了， 所以桶中剩下的数据肯定就是已经过期。这个思路，事实上参考了 ZooKeeper 的会话分桶策略，在一些需要管理大量超时会话的场景下，会非常有用。因此，超时检测线程只要在这些指定的时间点上进行检査即可，这样既提髙了会话检査的效率。我们将一个时间段的数据放入一个桶中，然后定时任务扫描这些任务桶，那么过期的数据肯定是同一个桶里面的，就不需要扫描其他任务桶了。</p>
-<h2 id="业务上实现幂等的方式"><a href="#业务上实现幂等的方式" class="headerlink" title="业务上实现幂等的方式"></a>业务上实现幂等的方式</h2><p>幂等机制的核⼼是保证资源唯⼀性，例如客户端重复提交或服务端的多次重试只会产⽣⼀份结果。⽀付场景、退款场景，涉及⾦钱的交易不能出现多次扣款等问题。事实上，查询接⼝⽤于获取资源，因为它只是查询数据⽽不会影响到资源的变化，因此不管调⽤多少次接⼝，资源都不会改变，所以是它是幂等的。⽽新增接⼝是⾮幂等的，因为调⽤接⼝多次，它都将会产⽣资源的变化。因此，我们需要在出现重复提交时进⾏幂等处理。那么，如何保证幂等机制呢？事实上，我们有很多实现⽅案。</p>
-<h2 id="数据拆分原则"><a href="#数据拆分原则" class="headerlink" title="数据拆分原则"></a>数据拆分原则</h2><p>如果在“尽量减少事务边界”与“数据尽可能平均拆分”两个原则间发生了冲突，那么请选择“数据尽可能平 均拆分”作为优先考虑原则，因为事务边界的问题相对来说更好解决，无论是全表扫描或做异构索引复制都 是可以解决的。如果为每一个存在跨 join 或全表扫描的场景都采用数据异构索引的方式，整个数据库出现 大量数据冗余，数据一致性的保障也会带来挑战，同时数据库间的业务逻辑关系也变得非常复杂，因此以 82 法则，在实际中，我们仅针对那些在 80% 情况下访问的那 20% 的场景进行如数据异构索引这样的处 理，达到这类场景的性能最优化，而对其他 80% 偶尔出现跨库 join、全表扫描的场景，采用最为简单直 接的方式往往是最有效的方式。</p>
-<h3 id="⽅案一：创建唯⼀索引"><a href="#⽅案一：创建唯⼀索引" class="headerlink" title="⽅案一：创建唯⼀索引"></a>⽅案一：创建唯⼀索引</h3><p>在数据库中针对我们需要约束的资源字段创建唯⼀索引，可以防⽌插⼊重复的数据。但是，遇到分库分表的情况是，唯⼀索引也就不那么好使了，此时，我们可以先查询⼀次数据库，然后判断是否约束的资源字段存在重复，没有的重复时再进⾏插⼊操作。注意的是，为了避免并发场景，我们可以通过锁机制，例如悲观锁与乐观锁保证数据的唯⼀性。这⾥，分布式锁是⼀种经常使⽤的⽅案，它通常情况下是⼀种悲观锁的实现。但是，很多⼈经常把悲观锁、乐观锁、分布式锁当作幂等机制的解决⽅案，这个是不正确的。除此之外，我们还可以引⼊状态机，通过状态机进⾏状态的约束以及状态跳转，确保同⼀个业务的流程化执⾏，从⽽实现数据幂等。事实上，并不是所有的接⼝都要保证幂等，换句话说，是否需要幂等机制可以通过考量需不需要确保资源唯⼀性，例如⾏为⽇志可以不考虑幂等性。</p>
-<h3 id="方案二：版本号"><a href="#方案二：版本号" class="headerlink" title="方案二：版本号"></a>方案二：版本号</h3><p>接⼝不考虑幂等机制，在业务实现的时候通过业务层来保证，例如允许存在多份数据，但是在业务处理的时候获取最新的版本进⾏处理。</p>
-<h2 id="引入消息中间件有什么缺点？"><a href="#引入消息中间件有什么缺点？" class="headerlink" title="引入消息中间件有什么缺点？"></a>引入消息中间件有什么缺点？</h2><ul>
-<li>复杂系统的解耦</li>
-<li>复杂链路的异步调用</li>
-<li>瞬时高峰的削峰处理</li>
-</ul>
-<h3 id="系统可用性降低"><a href="#系统可用性降低" class="headerlink" title="系统可用性降低"></a>系统可用性降低</h3><h3 id="系统稳定性降低"><a href="#系统稳定性降低" class="headerlink" title="系统稳定性降低"></a>系统稳定性降低</h3><h3 id="分布式一致性问题"><a href="#分布式一致性问题" class="headerlink" title="分布式一致性问题"></a>分布式一致性问题</h3><h2 id="“并发性，时间和相对性”"><a href="#“并发性，时间和相对性”" class="headerlink" title="“并发性，时间和相对性”"></a>“并发性，时间和相对性”</h2><p>“如果两个操作“同时”发生，似乎应该称为并发——但事实上，它们在字面时间上重叠与否并不重要。由于分布式系统中的时钟问题，现实中是很难判断两个事件是否同时发生的，这个问题我们将在第8章中详细讨论。</p>
-<p>为了定义并发性，确切的时间并不重要：如果两个操作都意识不到对方的存在，就称这两个操作并发，而不管它们发生的物理时间。人们有时把这个原理和狭义相对论的物理学联系起来【54】，它引入了信息不能比光速更快的思想。因此，如果事件之间的时间短于光通过它们之间的距离，那么发生一定距离的两个事件不可能相互影响。</p>
-<p>在计算机系统中，即使光速原则上允许一个操作影响另一个操作，但两个操作也可能是并行的。例如，如果网络缓慢或中断，两个操作间可能会出现一段时间间隔，且仍然是并发的，因为网络问题阻止一个操作意识到另一个操作的存在”</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5c1214a66fb9a049bb7c3410">https://juejin.im/post/5c1214a66fb9a049bb7c3410</a></li>
-<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5bf2c6b6e51d456693549af4">https://juejin.im/post/5bf2c6b6e51d456693549af4</a></li>
-<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5bf6b40de51d4536656f1f28">https://juejin.im/post/5bf6b40de51d4536656f1f28</a> 分布式锁高并发优化，锁分段</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/02/25/aqs/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/02/25/aqs/" class="post-title-link" itemprop="url">aqs相关问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-02-25 14:41:26" itemprop="dateCreated datePublished" datetime="2019-02-25T14:41:26+08:00">2019-02-25</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="AQS为什么采用双向队列，只用单向会有什么问题？"><a href="#AQS为什么采用双向队列，只用单向会有什么问题？" class="headerlink" title="AQS为什么采用双向队列，只用单向会有什么问题？"></a>AQS为什么采用双向队列，只用单向会有什么问题？</h2><p>多线程下唤醒线程时，存在从后往前遍历的情况。非公平锁，唤醒方向不确定</p>
-<p>unparkSuccessor 里面的确有从尾部向前遍历的代码，但是为什么要这么做？<br>进入队列需要找到安全的休息点，需要访问前驱节点，前驱节点可能挂掉，新来的不能一直等着它后面，不然无法被唤醒</p>
-<p>前置节点有一个比较重要的原因：等待队列的线程判断当前线程是否抢占成功，还是阻塞。<br>取消节点的next指向了自己。<br>因此unparkSuccessor的时候，如果node已经被取消，则无法通过next获取下一个node，新来的同步请求会放到队列尾部，这时将新节点的pre指针指向原tail，然后cas，最后设置原tail的next，这种情况下在设置next之前，s是可能为空的，可查看enq方法<br>当前node在获取锁成功时，会修改前驱head节点的next=null。<br>此时前驱head节点对应的线程，如果调用unparkSuccessor(head)，则会遇到head.next=null的情况<br>因此node的next指针在取消时：会指向自己（node.next=node) 在其后继节点，获取锁时：会置为null，因此在某些情况，需要通过prev指针遍历队列</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> interrupted = <span class="keyword">false</span>;<span class="comment">//判断自旋过程中是否被中断过</span></span><br><span class="line">    <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">        <span class="keyword">final</span> Node p = node.predecessor();<span class="comment">//获取前继节点</span></span><br><span class="line">            <span class="keyword">if</span>(p == head &amp;&amp; tryAcquire(arg))&#123;<span class="comment">//如果当前的这个节点的前继节点是头节点就去尝试获取了同步状态</span></span><br><span class="line">                setHead(node);<span class="comment">//设为头节点</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="ConcurrentHashMap-中对key进行加锁，防止对value多次实例化"><a href="#ConcurrentHashMap-中对key进行加锁，防止对value多次实例化" class="headerlink" title="ConcurrentHashMap 中对key进行加锁，防止对value多次实例化"></a>ConcurrentHashMap 中对key进行加锁，防止对value多次实例化</h2><ul>
-<li>synchronizing on interned strings</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">I&#39;d second that NON-recommendation of synchronizing on interned strings.  If you&#39;re interested in a high-performance in-memory cache with good concurrency, I would recommend checking out Ehcache.  In particular, I would also look at the SelfPopulatingCache wrapper that can provide this kind of cache loading behavior (and safely handle common cases like the lazy load below).</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String.intern is fine for interning a String, but then, as others have pointed out, the questions remain:</span><br><span class="line"></span><br><span class="line">1. What happens when several threads lookup the same key at about the same time? (dogpile)</span><br><span class="line">2. What else is using these unique Strings as locks? (public lock)</span><br><span class="line">3. What happens if&#x2F;when a value can&#39;t be generated? (failure)</span><br><span class="line">4. What happens when cache entries are no longer used? (garbage)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>通过代理对象，思路不错，重复创建，延迟实例化，实例化的时候可以加锁了。jdk8的话有computeIfAbsent，会block，不适用于创建时间过久的对象</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">* If the specified key is not already associated with a value,</span><br><span class="line">* attempts to compute its value using the given mapping function</span><br><span class="line">* and enters it into this map unless &#123;@code null&#125;.  The entire</span><br><span class="line">* method invocation is performed atomically, so the function is</span><br><span class="line">* applied at most once per key.  Some attempted update operations</span><br><span class="line">* on this map by other threads may be blocked while computation</span><br><span class="line">* is in progress, so the computation should be short and simple,</span><br><span class="line">* and must not attempt to update any other mappings of this map.</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>putIfAbsent，先放一个占位的 Object，占位成功再替换为 费时间的 真正的value，这样value只会初始化一次。 缺点时，读取对象时要加一次判断，可能要用到强制类型转换</li>
-<li>也可以参考java并发编程实战里的关于缓存的例子 Memoizer</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Memoizer</span>&lt;<span class="title">A</span>, <span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Computable</span>&lt;<span class="title">A</span>, <span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ConcurrentMap&lt;A, Future&lt;V&gt;&gt; cache</span><br><span class="line">            = <span class="keyword">new</span> ConcurrentHashMap&lt;A, Future&lt;V&gt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Computable&lt;A, V&gt; c;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Memoizer</span><span class="params">(Computable&lt;A, V&gt; c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.c = c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">compute</span><span class="params">(<span class="keyword">final</span> A arg)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            Future&lt;V&gt; f = cache.get(arg);</span><br><span class="line">            <span class="keyword">if</span> (f == <span class="keyword">null</span>) &#123;</span><br><span class="line">                Callable&lt;V&gt; eval = <span class="keyword">new</span> Callable&lt;V&gt;() &#123;</span><br><span class="line">                    <span class="function"><span class="keyword">public</span> V <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">                        <span class="keyword">return</span> c.compute(arg);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">                FutureTask&lt;V&gt; ft = <span class="keyword">new</span> FutureTask&lt;V&gt;(eval);</span><br><span class="line">                f = cache.putIfAbsent(arg, ft);</span><br><span class="line">                <span class="keyword">if</span> (f == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    f = ft;</span><br><span class="line">                    ft.run();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> f.get();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (CancellationException e) &#123;</span><br><span class="line">                cache.remove(arg, f);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">                <span class="keyword">throw</span> LaunderThrowable.launderThrowable(e.getCause());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1602,13 +1643,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">252k</span>
+    <span title="站点总字数">253k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:49</span>
+    <span title="站点阅读时长">3:50</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

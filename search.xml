@@ -3296,4 +3296,55 @@ spring相关组件完整提供了这种能力，资料很多，就不赘述了</
         <tag>设计</tag>
       </tags>
   </entry>
+  <entry>
+    <title>面向数据系统的设计</title>
+    <url>/2020/11/14/data-design/</url>
+    <content><![CDATA[<h1 id="数据分类"><a href="#数据分类" class="headerlink" title="数据分类"></a>数据分类</h1><ul>
+<li>业务数据</li>
+<li>索引数据</li>
+<li>计算数据</li>
+</ul>
+<h1 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h1><p>在做数据库设计时应该考虑几个点<br>索引和数据分离<br>数据和计算分离</p>
+<p>做面向CQRS的业务系统设计是和这个思路完美契合的</p>
+<h1 id="场景分析"><a href="#场景分析" class="headerlink" title="场景分析"></a>场景分析</h1><p>当我们的传统的MySQL无法满足 多样化的查询需求时，我们一般会引入lucene，elastic search类似的搜索引擎<br>那么在设计时有个问题，是将业务中所有的数据都异构到搜索引擎中，还是只把索引字段的数据存储进去 只查询出id</p>
+<p>看似简单的选择后面其实会完全走向不同的设计</p>
+<p>一股脑的把业务数据全部异构到搜索引擎里面 我能想到的优点就是</p>
+<ul>
+<li>依赖数据源只有一个，不需要回源数据</li>
+<li>代码实现简单</li>
+</ul>
+<p>反之带来的问题</p>
+<ul>
+<li>索引构建频繁，业务中任何数据的变更都要同步到搜索引擎中</li>
+<li>吞吐量低</li>
+</ul>
+<p>但如果采用数据回源的方案，优点我想到的如下：</p>
+<ul>
+<li>索引和数据分离，搜索引擎索引的数据量下来了，吞吐量大，可针对性的横向扩容</li>
+<li>get by primary key操作对于任何数据库都是极快的，为了极致性能时，很容易针对性的做缓存优化</li>
+<li>更容易和DDD中聚合根结合起来</li>
+<li>修改索引时，对业务数据不影响</li>
+<li>计算和数据分离，数据和索引分离</li>
+</ul>
+]]></content>
+      <categories>
+        <category>data</category>
+      </categories>
+      <tags>
+        <tag>data</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>enode错误排查历程</title>
+    <url>/2020/11/14/enode-bug/</url>
+    <content><![CDATA[<h1 id="消息返回类型选择"><a href="#消息返回类型选择" class="headerlink" title="消息返回类型选择"></a>消息返回类型选择</h1><h1 id="为什么一定要是顺序消息"><a href="#为什么一定要是顺序消息" class="headerlink" title="为什么一定要是顺序消息"></a>为什么一定要是顺序消息</h1><h1 id="间接模拟-async-await-语法糖"><a href="#间接模拟-async-await-语法糖" class="headerlink" title="间接模拟 async/await 语法糖"></a>间接模拟 async/await 语法糖</h1><p>Java 中模拟async的执行时<br>如果是循环执行一个异步方法时，还要保证执行的顺序，这时可能就要借住递归的方式来实现</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="命令冲突的定义"><a href="#命令冲突的定义" class="headerlink" title="命令冲突的定义"></a>命令冲突的定义</h1><h1 id="published-version表的作用"><a href="#published-version表的作用" class="headerlink" title="published_version表的作用"></a>published_version表的作用</h1><h1 id="命令消息的顺序执行机制"><a href="#命令消息的顺序执行机制" class="headerlink" title="命令消息的顺序执行机制"></a>命令消息的顺序执行机制</h1><h1 id="事件消息的顺序执行机制"><a href="#事件消息的顺序执行机制" class="headerlink" title="事件消息的顺序执行机制"></a>事件消息的顺序执行机制</h1>]]></content>
+      <categories>
+        <category>enode</category>
+      </categories>
+      <tags>
+        <tag>issues</tag>
+      </tags>
+  </entry>
 </search>

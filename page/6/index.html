@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">72</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">74</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">38</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">40</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-count">86</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">72</span>
+        <span class="site-state-item-count">74</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,227 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/05/08/hard-link/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/05/08/hard-link/" class="post-title-link" itemprop="url">硬链接原理秒删大文件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-05-08 15:46:49" itemprop="dateCreated datePublished" datetime="2018-05-08T15:46:49+08:00">2018-05-08</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>196</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="硬链接基础"><a href="#硬链接基础" class="headerlink" title="硬链接基础"></a>硬链接基础</h2><p>当多个文件共同指向同一inode、inode链接数N&gt;1、删除任何一个文件都是巨快<br>因为、此时删除的仅仅是指向inode的指针，而当N=1时、则不一样了、此时删除的文件相关的所有数据块、所以慢。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln test.ibd test.ibd.hlk</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/linux/l-cn-hardandsymb-links/">https://www.ibm.com/developerworks/cn/linux/l-cn-hardandsymb-links/</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/04/22/spring-aop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/04/22/spring-aop/" class="post-title-link" itemprop="url">理解SpringAOP</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-04-22 12:22:17" itemprop="dateCreated datePublished" datetime="2018-04-22T12:22:17+08:00">2018-04-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><p>A-&gt;doSomething =&gt; A-&gt;Proxy-&gt;doSomething</p>
+<h2 id="Aop基本概念"><a href="#Aop基本概念" class="headerlink" title="Aop基本概念"></a>Aop基本概念</h2><p>连接点（Joinpoint） ：程序能够应用通知的一个“时机”，这些“时机”就是连接点，例如方法被调用时、异常被抛出时等等。<br>通知（Advice） ：通知定义了切面是什么以及何时使用。描述了切面要完成的工作和何时需要执行这个工作。<br>切入点（Pointcut） ：通知定义了切面要发生的“故事”和时间，那么切入点就定义了“故事”发生的地点，例如某个类或方法的名称。<br>切面（Aspect） ：通知和切入点共同组成了切面，时间、地点和要发生的“故事”。<br>目标对象（Target Object） ：即被通知的对象。<br>AOP代理（AOP Proxy） 在Spring AOP中有两种代理方式，JDK动态代理和CGLIB代理。默认情况下，TargetObject实现了接口时，则采用JDK动态代理；反之，采用CGLIB代理。<br>织入（Weaving）把切面应用到目标对象来创建新的代理对象的过程，织入一般发生在如下几个时机：<br>1）编译时：当一个类文件被编译时进行织入，这需要特殊的编译器才能做到，例如AspectJ的织入编译器；<br>2）类加载时：使用特殊的ClassLoader在目标类被加载到程序之前增强类的字节代码；<br>3）运行时：切面在运行的某个时刻被织入，SpringAOP就是以这种方式织入切面的，原理是使用了JDK的动态代理。</p>
+<h2 id="Spring-AOP与AspectJ区别"><a href="#Spring-AOP与AspectJ区别" class="headerlink" title="Spring AOP与AspectJ区别"></a>Spring AOP与AspectJ区别</h2><p>Spring AOP 与ApectJ 的目的一致，都是为了统一处理横切业务，但与AspectJ不同的是，Spring AOP 并不尝试提供完整的AOP功能(即使它完全可以实现)，Spring AOP 更注重的是与Spring IOC容器的结合，并结合该优势来解决横切业务的问题，因此在AOP的功能完善方面，相对来说AspectJ具有更大的优势，同时，Spring注意到AspectJ在AOP的实现方式上依赖于特殊编译器(ajc编译器)，因此Spring很机智回避了这点，转向采用动态代理技术的实现原理来构建Spring AOP的内部机制（动态织入），这是与AspectJ（静态织入）最根本的区别。</p>
+<p>在AspectJ 1.5后，引入@Aspect形式的注解风格的开发，Spring也非常快地跟进了这种方式，因此Spring 2.0后便使用了与AspectJ一样的注解。请注意，Spring 只是使用了与 AspectJ 5 一样的注解，但仍然没有使用 AspectJ 的编译器，底层依是动态代理技术的实现，因此并不依赖于 AspectJ 的编译器。</p>
+<h2 id="Spring-Aop类内部调用不会被切面的解决办法"><a href="#Spring-Aop类内部调用不会被切面的解决办法" class="headerlink" title="Spring Aop类内部调用不会被切面的解决办法"></a>Spring Aop类内部调用不会被切面的解决办法</h2><p>首先要理解为什么不会被切面，Aop的实现是通过代理的方式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeServiceImpl</span> <span class="keyword">implements</span> <span class="title">SomeService</span>  </span></span><br><span class="line"><span class="class"></span>&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">someMethod</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function">    </span>&#123;  </span><br><span class="line">        someInnerMethod();  </span><br><span class="line">        <span class="comment">//foo...  </span></span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">someInnerMethod</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function">    </span>&#123;  </span><br><span class="line">        <span class="comment">//bar...  </span></span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用someService.someMethod();时内部调用someInnerMethod的切面并不会生效，因为someService此时表示的是代理对象。而在方法内部调用时表示的someService对象。</p>
+<ol>
+<li>修改类，不要出现“自调用”的情况：这是Spring文档中推荐的“最佳”方案；</li>
+<li>若一定要使用“自调用”，那么this.someInnerMethod()替换为：((CustomerService) AopContext.currentProxy()).someInnerMethod();<br>此时需要修改spring的aop配置：<br>&lt;aop:aspectj-autoproxy expose-proxy=”true” /&gt;</li>
+<li>静态织入，参见AspectJ。</li>
+<li>InjectSelfAware，对那些有同一对象里存在方法间相互调用的类，提供一个父类，这个父类的目的是给所有它继承的子类提供一个字段self，self指向为代理对象。</li>
+</ol>
+<h2 id="动态代理解决问题的检查点："><a href="#动态代理解决问题的检查点：" class="headerlink" title="动态代理解决问题的检查点："></a>动态代理解决问题的检查点：</h2><ul>
+<li>需要AOP拦截的类是否是final的，final类不可使用CGLIB来代理。</li>
+<li>是否在给BEAN配AOP的时候强制使用CGLIB，如果是则可指定proxyTargetClass属性以让spring强制代理目标类。</li>
+<li>类是否被多次代理了，如果类被多次代理过，则第二次进行代理的时候拿到的是第一次代理后的对象，这个对象是个final形式的，所以会出现这个错误。</li>
+</ul>
+<p>基于第三点要注意，类是否被多次代理不紧紧取决于类是否被配置了多次AOP，如果类实现了某个接口，则还要看类实现的接口是否被aop拦截过。如果类实现了接口且接口也被AOP拦截了，则很可能出现上面的错误（是否出错取决于AOP代理执行的顺序）。</p>
+<h2 id="spring配置aop需要注意："><a href="#spring配置aop需要注意：" class="headerlink" title="spring配置aop需要注意："></a>spring配置aop需要注意：</h2><ul>
+<li>1、proxy-target-class属性值决定是基于接口的还是基于类的代理被创建，启动对@Aspectj的支持 true为cglib（基于类），false为jdk代理（基于接口），不写的话默认为false。为true的话，会导致拦截不了mybatis的mapper</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">proxy-target-class</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>2、在类没有实现任何接口，并且没有默认构造函数的情况下，通过构造函数注入时，目前的Spring是无法实现AOP切面拦截的。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/study-everyday/p/7429298.html">https://www.cnblogs.com/study-everyday/p/7429298.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/hupoling/article/details/54618461">http://blog.csdn.net/hupoling/article/details/54618461</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.baeldung.com/spring-aop-vs-aspectj">http://www.baeldung.com/spring-aop-vs-aspectj</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/javazejian/article/details/56267036">http://blog.csdn.net/javazejian/article/details/56267036</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1284,354 +1505,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/22/interview/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/22/interview/" class="post-title-link" itemprop="url">偶然看到的面试题收集</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-03-22 14:45:49" itemprop="dateCreated datePublished" datetime="2018-03-22T14:45:49+08:00">2018-03-22</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>5.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h2><h2 id="netty为什么需要IO线程池和业务线程池分开与如何实现"><a href="#netty为什么需要IO线程池和业务线程池分开与如何实现" class="headerlink" title="netty为什么需要IO线程池和业务线程池分开与如何实现"></a>netty为什么需要IO线程池和业务线程池分开与如何实现</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/x5fnncxzq4/article/details/82977562">https://blog.csdn.net/x5fnncxzq4/article/details/82977562</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/my_life/articles/5537972.html">https://www.cnblogs.com/my_life/articles/5537972.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/stateis0/p/9062151.html">https://www.cnblogs.com/stateis0/p/9062151.html</a></li>
-</ul>
-<h2 id="快速替换10亿条标题中的5万个敏感词，有哪些解决思路？"><a href="#快速替换10亿条标题中的5万个敏感词，有哪些解决思路？" class="headerlink" title="快速替换10亿条标题中的5万个敏感词，有哪些解决思路？"></a>快速替换10亿条标题中的5万个敏感词，有哪些解决思路？</h2><p>把所有敏感词建立一个 AC 自动机，然后每行标题都在自动机上跑一遍就行了。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/53009346">https://www.zhihu.com/question/53009346</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/creatorx/article/details/71100840">http://blog.csdn.net/creatorx/article/details/71100840</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/u013371163/article/details/60469534">http://blog.csdn.net/u013371163/article/details/60469534</a></li>
-<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm">https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm</a></li>
-<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Tarjan&#39;s_off-line_lowest_common_ancestors_algorithm">https://en.wikipedia.org/wiki/Tarjan&#39;s_off-line_lowest_common_ancestors_algorithm</a></li>
-</ul>
-<h2 id="淘宝面试题：有一个一亿节点的树，现在已知两个点，找这两个点的共同的祖先-有什么好算法呢？"><a href="#淘宝面试题：有一个一亿节点的树，现在已知两个点，找这两个点的共同的祖先-有什么好算法呢？" class="headerlink" title="淘宝面试题：有一个一亿节点的树，现在已知两个点，找这两个点的共同的祖先.有什么好算法呢？"></a>淘宝面试题：有一个一亿节点的树，现在已知两个点，找这两个点的共同的祖先.有什么好算法呢？</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19957473">https://www.zhihu.com/question/19957473</a></li>
-</ul>
-<h2 id="Java类加载机制"><a href="#Java类加载机制" class="headerlink" title="Java类加载机制"></a>Java类加载机制</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000005608960">https://segmentfault.com/a/1190000005608960</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/java/j-lo-classloader/">https://www.ibm.com/developerworks/cn/java/j-lo-classloader/</a></li>
-</ul>
-<h2 id="两链表数字加和"><a href="#两链表数字加和" class="headerlink" title="两链表数字加和"></a>两链表数字加和</h2><p>大数相加的思路</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Boring_Wednesday/article/details/80386804">https://blog.csdn.net/Boring_Wednesday/article/details/80386804</a></li>
-</ul>
-<h2 id="为LRU-Cache设计一个数据结构"><a href="#为LRU-Cache设计一个数据结构" class="headerlink" title="为LRU Cache设计一个数据结构"></a>为LRU Cache设计一个数据结构</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/springfor/p/3869393.html">https://www.cnblogs.com/springfor/p/3869393.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dolphin0520/p/3741519.html">https://www.cnblogs.com/dolphin0520/p/3741519.html</a></li>
-</ul>
-<h2 id="MySQL-B-树特性"><a href="#MySQL-B-树特性" class="headerlink" title="MySQL B+树特性"></a>MySQL B+树特性</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/v_JULY_v/article/details/6530142">https://blog.csdn.net/v_JULY_v/article/details/6530142</a></li>
-</ul>
-<h2 id="进程间的通信方式"><a href="#进程间的通信方式" class="headerlink" title="进程间的通信方式"></a>进程间的通信方式</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wust221/p/5414839.html">https://www.cnblogs.com/wust221/p/5414839.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wh_sjc/article/details/70283843">https://blog.csdn.net/wh_sjc/article/details/70283843</a></li>
-</ul>
-<h2 id="tcp可靠传输的实现"><a href="#tcp可靠传输的实现" class="headerlink" title="tcp可靠传输的实现"></a>tcp可靠传输的实现</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wxgblogs/p/5612066.html">https://www.cnblogs.com/wxgblogs/p/5612066.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wyn126/article/details/80472411">https://blog.csdn.net/wyn126/article/details/80472411</a></li>
-</ul>
-<h2 id="线程池相关"><a href="#线程池相关" class="headerlink" title="线程池相关"></a>线程池相关</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9710b899e749">https://www.jianshu.com/p/9710b899e749</a></li>
-</ul>
-<h3 id="单机上一个线程池正在处理服务，如果忽然断电了怎么办（正在处理和阻塞队列里的请求怎么处理）？"><a href="#单机上一个线程池正在处理服务，如果忽然断电了怎么办（正在处理和阻塞队列里的请求怎么处理）？" class="headerlink" title="单机上一个线程池正在处理服务，如果忽然断电了怎么办（正在处理和阻塞队列里的请求怎么处理）？"></a>单机上一个线程池正在处理服务，如果忽然断电了怎么办（正在处理和阻塞队列里的请求怎么处理）？</h3><blockquote>
-<p>我感觉实现思路和MySQL的redo，undo功能很相似，我们可以对正在处理和阻塞队列的任务做事物管理或者对阻塞队列中的任务持久化处理，并且当断电或者系统崩溃，操作无法继续下去的时候，可以通过回溯日志的方式来撤销正在处理的已经执行成功的操作。然后重新执行整个阻塞队列。<br>即：阻塞队列持久化，正在处理事物控制。断电之后正在处理的回滚，日志恢复该次操作。服务器重启后阻塞队列中的数据再加载</p>
-</blockquote>
-<h3 id="为什么要使用线程池？"><a href="#为什么要使用线程池？" class="headerlink" title="为什么要使用线程池？"></a>为什么要使用线程池？</h3><ul>
-<li>降低资源消耗：通过重用已经创建的线程来降低线程创建和销毁的消耗</li>
-<li>提高响应速度：任务到达时不需要等待线程创建就可以立即执行</li>
-<li>提高线程的可管理性：线程池可以统一管理、分配、调优和监控</li>
-</ul>
-<h3 id="线程池有什么作用？"><a href="#线程池有什么作用？" class="headerlink" title="线程池有什么作用？"></a>线程池有什么作用？</h3><h3 id="说说几种常见的线程池及使用场景。"><a href="#说说几种常见的线程池及使用场景。" class="headerlink" title="说说几种常见的线程池及使用场景。"></a>说说几种常见的线程池及使用场景。</h3><ul>
-<li>newFixedThreadPool（固定大小的线程池）</li>
-<li>newSingleThreadExecutor（单线程线程池）</li>
-<li>newCachedThreadPool（可缓存线程的线程池）</li>
-<li>newScheduledThreadPool</li>
-</ul>
-<h3 id="线程池都有哪几种工作队列？"><a href="#线程池都有哪几种工作队列？" class="headerlink" title="线程池都有哪几种工作队列？"></a>线程池都有哪几种工作队列？</h3><ul>
-<li>ArrayBlockingQueue （有界队列）：是一个基于数组结构的有界阻塞队列，此队列按 FIFO（先进先出）原则对元素进行排序。</li>
-<li>LinkedBlockingQueue （无界队列）：一个基于链表结构的阻塞队列，此队列按FIFO （先进先出） 排序元素，吞吐量通常要高于ArrayBlockingQueue。静态工厂方法Executors.newFixedThreadPool()使用了这个队列。</li>
-<li>SynchronousQueue（同步队列）: 一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于LinkedBlockingQueue，静态工厂方法Executors.newCachedThreadPool使用了这个队列。</li>
-<li>DelayQueue（延迟队列）：一个任务定时周期的延迟执行的队列。根据指定的执行时间从小到大排序，否则根据插入到队列的先后排序。<br>PriorityBlockingQueue（优先级队列）: 一个具有优先级得无限阻塞队列。</li>
-</ul>
-<p>怎么理解无界队列和有界队列？</p>
-<ul>
-<li>有界队列即长度有限，满了以后ArrayBlockingQueue会插入阻塞。</li>
-<li>无界队列就是里面能放无数的东西而不会因为队列长度限制被阻塞，但是可能会出现OOM异常。</li>
-</ul>
-<p>线程池中的几种重要的参数及流程说明。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="function"><span class="params">                          TimeUnit unit,</span></span></span><br><span class="line"><span class="function"><span class="params">                          BlockingQueue&lt;Runnable&gt; workQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">                          ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">                          RejectedExecutionHandler handler)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (corePoolSize &lt; <span class="number">0</span> ||</span><br><span class="line">        maximumPoolSize &lt;= <span class="number">0</span> ||</span><br><span class="line">        maximumPoolSize &lt; corePoolSize ||</span><br><span class="line">        keepAliveTime &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">if</span> (workQueue == <span class="keyword">null</span> || threadFactory == <span class="keyword">null</span> || handler == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    <span class="keyword">this</span>.corePoolSize = corePoolSize;</span><br><span class="line">    <span class="keyword">this</span>.maximumPoolSize = maximumPoolSize;</span><br><span class="line">    <span class="keyword">this</span>.workQueue = workQueue;</span><br><span class="line">    <span class="keyword">this</span>.keepAliveTime = unit.toNanos(keepAliveTime);</span><br><span class="line">    <span class="keyword">this</span>.threadFactory = threadFactory;</span><br><span class="line">    <span class="keyword">this</span>.handler = handler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>corePoolSize：核心池的大小，在创建了线程池后，默认情况下，线程池中并没有任何线程，而是等待有任务到来才创建线程去执行任务，当有任务来之后，就会创建一个线程去执行任务，当线程池中的线程数目达到corePoolSize后，就会把到达的任务放到缓存队列当中</p>
-<p>maximumPoolSize：线程池最大线程数最大线程数</p>
-<p>keepAliveTime：表示线程没有任务执行时最多保持多久时间会终止</p>
-<p>unit：参数keepAliveTime的时间单位TimeUtil类的枚举类（DAYS、HOURS、MINUTES、SECONDS 等）</p>
-<p>workQueue：阻塞队列，用来存储等待执行的任务</p>
-<p>threadFactory：线程工厂，主要用来创建线程</p>
-<p>handler：拒绝处理任务的策略</p>
-<p>AbortPolicy：丢弃任务并抛出 RejectedExecutionException 异常。（默认这种）</p>
-<p>DiscardPolicy：也是丢弃任务，但是不抛出异常</p>
-<p>DiscardOldestPolicy：丢弃队列最前面的任务，然后重新尝试执行任务（重复此过程）</p>
-<p>CallerRunsPolicy：由调用线程处理该任务</p>
-<h4 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h4><p>当有任务进入时，线程池创建线程去执行任务，直到核心线程数满为止<br>核心线程数量满了之后，任务就会进入一个缓冲的任务队列中</p>
-<p>当任务队列为无界队列时，任务就会一直放入缓冲的任务队列中，不会和最大线程数量进行比较<br>当任务队列为有界队列时，任务先放入缓冲的任务队列中，当任务队列满了之后，才会将任务放入线程池，此时会拿当前线程数与线程池允许的最大线程数进行比较，如果超出了，则默认会抛出异常。如果没超出，然后线程池才会创建线程并执行任务，当任务执行完，又会将缓冲队列中的任务放入线程池中，然后重复此操作。</p>
-<h2 id="JVM相关"><a href="#JVM相关" class="headerlink" title="JVM相关"></a>JVM相关</h2><p>说一下对jvm的理解，jvm的组成部分，各个部分的存储内容以及常见的jvm的问题排查步骤。</p>
-<p>对JVM熟不熟悉？简单说说类加载过程，里面执行的那些操作？</p>
-<p>JVM方法区存储内容 是否会动态扩展 是否会出现内存溢出 出现的原因有哪些。</p>
-<p>介绍介绍CMS。</p>
-<p>介绍介绍G1。</p>
-<p>为什么jdk8用metaspace数据结构用来替代perm？</p>
-<p>简单谈谈堆外内存以及你的理解和认识。</p>
-<p>JVM的内存模型的理解，threadlocal使用场景及注意事项？</p>
-<p>JVM老年代和新生代的比例？</p>
-<p>jstack,jmap,jutil分别的意义？如何线上排查JVM的相关问题？</p>
-<p>Java虚拟机中，数据类型可以分为哪几类？</p>
-<p>怎么理解栈、堆？堆中存什么？栈中存什么？</p>
-<p>为什么要把堆和栈区分出来呢？栈中不是也可以存储数据吗？</p>
-<p>在Java中，什么是是栈的起始点，同是也是程序的起始点？</p>
-<p>为什么不把基本类型放堆中呢？</p>
-<p>Java中的参数传递时传值呢？还是传引用？</p>
-<p>Java中有没有指针的概念？</p>
-<p>Java中，栈的大小通过什么参数来设置？</p>
-<p>一个空Object对象的占多大空间？</p>
-<p>对象引用类型分为哪几类？</p>
-<p>讲一讲垃圾回收算法。</p>
-<p>如何解决内存碎片的问题？</p>
-<p>如何解决同时存在的对象创建和对象回收问题？</p>
-<p>讲一讲内存分代及生命周期。</p>
-<p>什么情况下触发垃圾回收？</p>
-<p>如何选择合适的垃圾收集算法？</p>
-<p>JVM中最大堆大小有没有限制？</p>
-<p>堆大小通过什么参数设置？</p>
-<p>JVM有哪三种垃圾回收器？</p>
-<p>吞吐量优先选择什么垃圾回收器？响应时间优先呢？</p>
-<p>如何进行JVM调优？有哪些方法？</p>
-<p>如何理解内存泄漏问题？有哪些情况会导致内存泄露？如何解决？</p>
-<ul>
-<li><p>dubbo的底层负载均衡，容错机制都是怎么实现的？<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/juncaoit/p/7691411.html">https://www.cnblogs.com/juncaoit/p/7691411.html</a></p>
-</li>
-<li><p>Dubbo实现了远端rpc调用，请手写一个rpc调用</p>
-</li>
-<li><p>Redis为什么可以实现分布式锁，memcached可以实现分布式锁么?实现分布式锁的方式有很多种，为什么选择redis分布式锁?</p>
-</li>
-<li><p>in-jvm(必考)以及jmm缓存模型如何调优?</p>
-</li>
-<li><p>Concurrenthashmap为什么要用红黑树？为何不用其他的树，平衡二叉树，b+?<br>因为平衡二叉是高度平衡的树, 而每一次对树的修改, 都要 rebalance, 这里的开销会比红黑树大. 如果插入一个node引起了树的不平衡，平衡二叉树和红黑树都是最多只需要2次旋转操作，即两者都是O(1)；但是在删除node引起树的不平衡时，最坏情况下，平衡二叉树需要维护从被删node到root这条路径上所有node的平衡性，因此需要旋转的量级O(logN)，而红黑树最多只需3次旋转，只需要O(1)的复杂度, 所以平衡二叉树需要rebalance的频率会更高，因此红黑树在大量插入和删除的场景下效率更高。<br><a target="_blank" rel="noopener" href="http://www.importnew.com/23621.html">http://www.importnew.com/23621.html</a></p>
-</li>
-<li><p>栈的特性先进后出。手写实现入栈出栈，获取栈的长度，栈是否为空。</p>
-</li>
-<li><p>一个树，从根节点往下走，每条路径的节点值为某一数值，不管最后节点是不是叶子节点。写出具体实现方法。</p>
-</li>
-<li><p>数据库的隔离级别<br>核心理解间隙锁的实现。</p>
-</li>
-<li><p>数据库是怎么搭建集群的，主从数据同步怎么做的?<br>数据库binlog</p>
-</li>
-<li><p>如何给hashmap的key对象设计他的hashcode?<br>巧妙的设计hash算法可以使的索引尽量分布均匀，提供查找效率。<br><a target="_blank" rel="noopener" href="http://blog.csdn.net/o9109003234/article/details/44107811">http://blog.csdn.net/o9109003234/article/details/44107811</a></p>
-</li>
-<li><p>场景式的问题:秒杀,能列出常见的排队、验证码、库存扣减方式对系统高并发的影响?</p>
-</li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/hiIBQu6mAPzYa7QgTNacUA">https://mp.weixin.qq.com/s/hiIBQu6mAPzYa7QgTNacUA</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/27339390">https://www.zhihu.com/question/27339390</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/zuoxiaolong/p/life51.html">http://www.cnblogs.com/zuoxiaolong/p/life51.html</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/22/spark/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/22/spark/" class="post-title-link" itemprop="url">spark组件简介</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-03-22 12:07:16" itemprop="dateCreated datePublished" datetime="2018-03-22T12:07:16+08:00">2018-03-22</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spark/" itemprop="url" rel="index"><span itemprop="name">Spark</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="Spark-SQL"><a href="#Spark-SQL" class="headerlink" title="Spark SQL"></a>Spark SQL</h2><p>Spark SQL是一个处理结构化数据的Spark模块。</p>
-<p>Spark SQL is a Spark module for structured data processing. Unlike the basic Spark RDD API, the interfaces provided by Spark SQL provide Spark with more information about the structure of both the data and the computation being performed. Internally, Spark SQL uses this extra information to perform extra optimizations. There are several ways to interact with Spark SQL including SQL and the Dataset API. When computing a result the same execution engine is used, independent of which API/language you are using to express the computation. This unification means that developers can easily switch back and forth between different APIs based on which provides the most natural way to express a given transformation.</p>
-<p>All of the examples on this page use sample data included in the Spark distribution and can be run in the spark-shell, pyspark shell, or sparkR shell.</p>
-<h2 id="Spark-Streaming"><a href="#Spark-Streaming" class="headerlink" title="Spark Streaming"></a>Spark Streaming</h2><p>Spark Streaming makes it easy to build scalable fault-tolerant streaming applications.</p>
-<p>Spark Streaming is an extension of the core Spark API that enables scalable, high-throughput, fault-tolerant stream processing of live data streams. Data can be ingested from many sources like Kafka, Flume, Kinesis, or TCP sockets, and can be processed using complex algorithms expressed with high-level functions like map, reduce, join and window. Finally, processed data can be pushed out to filesystems, databases, and live dashboards. In fact, you can apply Spark’s machine learning and graph processing algorithms on data streams.</p>
-<p>实时流处理框架，常常和Storm，Flink对比。</p>
-<h2 id="Spark-MLlib"><a href="#Spark-MLlib" class="headerlink" title="Spark MLlib"></a>Spark MLlib</h2><p>MLlib is Spark’s machine learning (ML) library. Its goal is to make practical machine learning scalable and easy. At a high level, it provides tools such as:</p>
-<p>ML Algorithms: common learning algorithms such as classification, regression, clustering, and collaborative filtering<br>Featurization: feature extraction, transformation, dimensionality reduction, and selection<br>Pipelines: tools for constructing, evaluating, and tuning ML Pipelines<br>Persistence: saving and load algorithms, models, and Pipelines<br>Utilities: linear algebra, statistics, data handling, etc.</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="http://spark.apache.org/sql/">http://spark.apache.org/sql/</a></li>
-<li><a target="_blank" rel="noopener" href="https://spark.apache.org/docs/latest/ml-guide.html">https://spark.apache.org/docs/latest/ml-guide.html</a></li>
-<li><a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/sql-programming-guide.html#overview">http://spark.apache.org/docs/latest/sql-programming-guide.html#overview</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1687,13 +1560,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">252k</span>
+    <span title="站点总字数">253k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:49</span>
+    <span title="站点阅读时长">3:50</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
