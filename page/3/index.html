@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">74</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">75</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">40</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">41</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-count">87</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">41</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-count">75</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,110 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/04/03/saga/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/04/03/saga/" class="post-title-link" itemprop="url">Saga的意义</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-04-03 15:06:01" itemprop="dateCreated datePublished" datetime="2019-04-03T15:06:01+08:00">2019-04-03</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>874</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="什么是Saga？"><a href="#什么是Saga？" class="headerlink" title="什么是Saga？"></a>什么是Saga？</h2><p>Saga 这个名词最早是由Hector Garcia-Molina和Kenneth Salem写的Sagas这篇论文里提出来的，但其实Saga并不是什么新事物，在我们传统的系统设计中，它有个更熟悉的名字——“ProcessManager”，只是换了个马甲，还是干同样的事——组合一组逻辑处理复杂流程。<br>但它与我们平常理解的“ProgressManager”又有不同，它的提出，最早是是为了解决分布式系统中长时间运行事务(long-running business process)的问题，把单一的transaction按照步骤分成一组若干子transaction，通过补偿机制实现最终一致性。</p>
+<p>Saga的概念使得强一致性的分布式事务不再是唯一的解决方案，通过保证事务中每一步都可以一个补偿机制，在发生错误后执行补偿事务来保证系统的可用性和最终一致性。</p>
+<h2 id="Saga的意义，优缺点"><a href="#Saga的意义，优缺点" class="headerlink" title="Saga的意义，优缺点"></a>Saga的意义，优缺点</h2><p>Saga通过业务补偿的方式，达到最终一致性</p>
+<h2 id="Saga和2PC、TCC的区别"><a href="#Saga和2PC、TCC的区别" class="headerlink" title="Saga和2PC、TCC的区别"></a>Saga和2PC、TCC的区别</h2><p>Saga是柔性事务的实现，最终一致性<br>2PC是基于XA刚性事务，强一致性<br>TCC属于业务上的分段提交，Try，confirm，cancel都是对应的一段业务逻辑的操作，先预留资源，预留成功后进行确认，不成功就取消，例如转账先冻结资金，进行一系列的余额各方面的检查，发现符合条件就对账户对应的资金状态改为冻结，确认阶段修改状态为扣除，取消的话就把冻结的资金加回原账户，其对应的数据库的操作每段都是一个完整的事物；2PC是属于数据库层面的，先进行prepare，然后逐个进行commit或者rollback，不和具体业务逻辑挂钩，TCC的应用范围更广，不一定是事物关系数据库，也可能操作的KV数据库，文档数据库，粒度也可以随着具体业务灵活调整，性能更好。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj591569(v%3dpandp.10)">https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj591569(v%3dpandp.10)</a></li>
+<li><a target="_blank" rel="noopener" href="http://edisonxu.com/2017/03/31/axon-saga.html">http://edisonxu.com/2017/03/31/axon-saga.html</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1472,122 +1576,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/02/28/redis-key/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/02/28/redis-key/" class="post-title-link" itemprop="url">大Key多Key分拆方案</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-02-28 21:29:30" itemprop="dateCreated datePublished" datetime="2019-02-28T21:29:30+08:00">2019-02-28</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>业务场景中经常会有各种大key多key的情况， 比如：<br>1： 单个简单的key存储的value很大<br>2： hash，set，zset，list中存储过多的元素（以万为单位）<br>3：一个集群存储了上亿的key，Key 本身过多也带来了更多的空间占用</p>
-<p>由于redis是单线程运行的，如果一次操作的value很大会对整个redis的响应时间造成负面影响，所以，业务上能拆则拆，下面举几个典型的分拆方案。</p>
-<h2 id="单个简单的key存储的value很大"><a href="#单个简单的key存储的value很大" class="headerlink" title="单个简单的key存储的value很大"></a>单个简单的key存储的value很大</h2><ul>
-<li><p>该对象需要每次都整存整取<br>可以尝试将对象分拆成几个key-value， 使用multiGet获取值，这样分拆的意义在于分拆单次操作的压力。<br>将操作压力平摊到多个redis实例中，降低对单个redis的IO影响。</p>
-</li>
-<li><p>该对象每次只需要存取部分数据<br>可以像第一种做法一样，分拆成几个key-value，也可以将这个存储在一个hash中，每个field代表一个具体的属性，使用hget,hmget来获取部分的value，使用hset，hmset来更新部分属性。</p>
-<h2 id="hash，-set，zset，list-中存储过多的元素"><a href="#hash，-set，zset，list-中存储过多的元素" class="headerlink" title="hash， set，zset，list 中存储过多的元素"></a>hash， set，zset，list 中存储过多的元素</h2><p>类似于场景一种的第一个做法，可以将这些元素分拆。<br>以hash为例，原先的正常存取流程是  hget(hashKey, field); hset(hashKey, field, value)<br>现在，固定一个桶的数量，比如 10000， 每次存取的时候，先在本地计算field的hash值，模除 10000， 确定了该field落在哪个key上。</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">newHashKey &#x3D; hashKey + (hash(field) % 10000);  </span><br><span class="line">hset(newHashKey, field, value);</span><br><span class="line">hget(newHashKey, field)</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line">set, zset, list 也可以类似上述做法。但有些不适合的场景，比如，要保证 lpop 的数据的确是最早push到list中去的，这个就需要一些附加的属性，或者是在key的拼接上做一些工作（比如list按照时间来分拆）。</span><br><span class="line"></span><br><span class="line">## 一个集群存储了上亿的key</span><br><span class="line">如果key的个数过多会带来更多的内存空间占用，</span><br><span class="line">- key本身的占用（每个key 都会有一个Category前缀）</span><br><span class="line">- 集群模式中，服务端需要建立一些slot2key的映射关系，这其中的指针占用在key多的情况下也是浪费巨大空间</span><br><span class="line">这两个方面在key个数上亿的时候消耗内存十分明显（Redis 3.2及以下版本均存在这个问题，4.0有优化）；</span><br><span class="line"></span><br><span class="line">所以减少key的个数可以减少内存消耗，可以参考的方案是转Hash结构存储，即原先是直接使用Redis String的结构存储，现在将多个key存储在一个Hash结构中，具体场景参考如下：</span><br><span class="line"></span><br><span class="line">一： key 本身就有很强的相关性，比如多个key 代表一个对象，每个key是对象的一个属性，这种可直接按照特定对象的特征来设置一个新Key——Hash结构， 原先的key则作为这个新Hash 的field。</span><br><span class="line">举例说明： 原先存储的三个key，user.zhangsan-id &#x3D; 123;   user.zhangsan-age &#x3D; 18;  user.zhangsan-country &#x3D; china;</span><br><span class="line">这三个key本身就具有很强的相关特性，转成Hash存储就像这样</span><br></pre></td></tr></table></figure>
-<p>key =  user.zhangsan<br>field:id = 123;<br>field:age = 18;<br>field:country = china;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">即redis中存储的是一个key ：user.zhangsan， 他有三个 field， 每个field + key 就对应原先的一个key。</span><br><span class="line"></span><br><span class="line">二： key 本身没有相关性，预估一下总量，采取和上述第二种场景类似的方案，预分一个固定的桶数量</span><br><span class="line">比如现在预估key的总数为 2亿，按照一个hash存储100个field来算，需要 2亿 &#x2F; 100 &#x3D; 200W 个桶 (200W 个key占用的空间很少，2亿可能有将近 20G )</span><br><span class="line">原先比如有三个key：</span><br></pre></td></tr></table></figure>
-<p>user.123456789, user.987654321, user.678912345</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">现在按照200W 固定桶分就是先计算出桶的序号hash(123456789) % 200W，这里最好保证这个hash算法的值是个正数，否则需要调整下模除的规则；</span><br><span class="line">这样算出三个key 的桶分别是1，2，2。所以存储的时候调用hset(key,  field, value)，读取的时候使用hget(key， field)</span><br></pre></td></tr></table></figure>
-<p>key1:  hset(user.1,123456789,value);<br>       hget(user.1,123456789);<br>key2:  hset(user.2,987654321,value);<br>       hget(user.2,987654321);<br>key3:  hset(user.2,678912345,value);<br>       hget(user.2,678912345);</p>
-<pre><code>注意两个地方：
-1，hash取模对负数的处理；
-2，预分桶的时候，一个hash中存储的值最好不要超过512，100左右较为合适
-
-## 大Bitmap或布隆过滤器（Bloom）拆分
-使用bitmap或布隆过滤器的场景，往往是数据量极大的情况，在这种情况下，Bitmap和布隆过滤器使用空间也比较大，比如用于userid匹配的布隆过滤器，就需要512MB的大小，这对redis来说是绝对的大value了。
-这种场景下，我们就需要对其进行拆分，拆分为足够小的Bitmap，比如将512MB的大Bitmap拆分为1024个512KB的Bitmap。不过拆分的时候需要注意，要将每个key落在一个Bitmap上。有些业务只是把Bitmap拆开，但还是当做一个整体的bitmap看，所以一个key还是落在多个Bitmap上，这样就有可能导致一个key请求需要查询多个节点、多个Bitmap。被请求的值被hash到多个Bitmap上，也就是redis的多个key上，这些key还有可能在不同节点上，这样拆分显然大大降低了查询的效率。
-
-因此我们所要做的是把所有拆分后的Bitmap当作独立的bitmap，然后通过hash将不同的key分配给不同的bitmap上，而不是把所有的小Bitmap当作一个整体。这样做后每次请求都只要取redis中一个key即可。
-
-有同学可能会问，通过这样拆分后，相当于Bitmap变小了，会不会增加布隆过滤器的误判率？实际上是不会的，布隆过滤器的误判率是哈希函数个数k，集合元素个数n，以及Bitmap大小m所决定的，其约等于。因此如果我们在第一步，也就是在分配key给不同Bitmap时，能够尽可能均匀的拆分，那么n／m的值几乎是一样的，误判率也就不会改变。
-同时，客户端也提供便利的api setBits/getBits用于一次操作同一个key的多个bit值 。
-
-建议：k取13个，单个bloomfilter控制在512KB以下</code></pre>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1643,13 +1631,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:50</span>
+    <span title="站点阅读时长">3:51</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

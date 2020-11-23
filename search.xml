@@ -3337,14 +3337,41 @@ spring相关组件完整提供了这种能力，资料很多，就不赘述了</
   <entry>
     <title>enode错误排查历程</title>
     <url>/2020/11/14/enode-bug/</url>
-    <content><![CDATA[<h1 id="消息返回类型选择"><a href="#消息返回类型选择" class="headerlink" title="消息返回类型选择"></a>消息返回类型选择</h1><h1 id="为什么一定要是顺序消息"><a href="#为什么一定要是顺序消息" class="headerlink" title="为什么一定要是顺序消息"></a>为什么一定要是顺序消息</h1><h1 id="间接模拟-async-await-语法糖"><a href="#间接模拟-async-await-语法糖" class="headerlink" title="间接模拟 async/await 语法糖"></a>间接模拟 async/await 语法糖</h1><p>Java 中模拟async的执行时<br>如果是循环执行一个异步方法时，还要保证执行的顺序，这时可能就要借住递归的方式来实现</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-<h1 id="命令冲突的定义"><a href="#命令冲突的定义" class="headerlink" title="命令冲突的定义"></a>命令冲突的定义</h1><h1 id="published-version表的作用"><a href="#published-version表的作用" class="headerlink" title="published_version表的作用"></a>published_version表的作用</h1><h1 id="命令消息的顺序执行机制"><a href="#命令消息的顺序执行机制" class="headerlink" title="命令消息的顺序执行机制"></a>命令消息的顺序执行机制</h1><h1 id="事件消息的顺序执行机制"><a href="#事件消息的顺序执行机制" class="headerlink" title="事件消息的顺序执行机制"></a>事件消息的顺序执行机制</h1>]]></content>
+    <content><![CDATA[<h2 id="enode的整体线程模型的思考"><a href="#enode的整体线程模型的思考" class="headerlink" title="enode的整体线程模型的思考"></a>enode的整体线程模型的思考</h2><p>技术选型采用了vert.x 实现异步反应式JDBC客户端，同时代码实现中存在大量的异步操作<br>如果不使用协程，会涉及到频繁的线程切换。由于C#中有好用的async/await语法<br>Java的实现要如何改造才好呢？这是个困扰我好久的问题，目前性能上不去我觉得和这个也有很大原因</p>
+<p>另外，接口的实现，提供一个异步化的接口暴露出去是否合适，接口的设计需要优化，对应用中暴露的接口不应该出现Future之类的字样</p>
+<p>现有mailbox的实现，为了支持聚合根的批量提交消息，实现的有点复杂，我在想着能不能换成akka实现，同时使用disruptor<br>目前的策略，一个聚合根有一个command mailbox和一个 event mailbox，多个聚合根公用一批event commit mailbox<br>如果把这部分逻辑交给akka托管，整体的实现是不是就会更加简洁些</p>
+<h2 id="消息返回类型选择"><a href="#消息返回类型选择" class="headerlink" title="消息返回类型选择"></a>消息返回类型选择</h2><p>什么时候返回，<br>三种模式，</p>
+<ul>
+<li>command消息发送完成</li>
+<li>command消息执行完成</li>
+<li>event消息消费完成</li>
+</ul>
+<h2 id="为什么一定要是顺序消息"><a href="#为什么一定要是顺序消息" class="headerlink" title="为什么一定要是顺序消息"></a>为什么一定要是顺序消息</h2><p>对同一个聚合根的修改要路由到同一个队列中，如果rebalance或者不在同一个队列，会有并发冲突问题</p>
+<h2 id="间接模拟-async-await-语法糖"><a href="#间接模拟-async-await-语法糖" class="headerlink" title="间接模拟 async/await 语法糖"></a>间接模拟 async/await 语法糖</h2><p>Java 中模拟async的执行时<br>如果是循环执行一个异步方法时，还要保证执行的顺序，这时可能就要借住递归的方式来实现</p>
+<h2 id="命令冲突的定义"><a href="#命令冲突的定义" class="headerlink" title="命令冲突的定义"></a>命令冲突的定义</h2><h2 id="published-version表的作用"><a href="#published-version表的作用" class="headerlink" title="published_version表的作用"></a>published_version表的作用</h2><p>记录对事件消息的消费进度</p>
+<h2 id="命令消息的顺序执行机制"><a href="#命令消息的顺序执行机制" class="headerlink" title="命令消息的顺序执行机制"></a>命令消息的顺序执行机制</h2><p>command mailbox，类似actor，保证顺序消费</p>
+<h2 id="并发创建、修改同一个聚合根"><a href="#并发创建、修改同一个聚合根" class="headerlink" title="并发创建、修改同一个聚合根"></a>并发创建、修改同一个聚合根</h2>]]></content>
       <categories>
         <category>enode</category>
       </categories>
       <tags>
         <tag>issues</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>kotlin入门</title>
+    <url>/2020/11/23/kotlin-start/</url>
+    <content><![CDATA[<h2 id="对suspend的理解"><a href="#对suspend的理解" class="headerlink" title="对suspend的理解"></a>对suspend的理解</h2><p>suspend 标记只是一个提醒，作用在方法上只是表明“该方法会比较耗时，建议在协程中运行”<br>如果要实现程序的运行，需要将方法包装在这个结构中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CoroutineScope(Dispatchers.Default).launch&#123; &#125;</span><br><span class="line">CoroutineScope(Dispatchers.Default).async&#123; &#125;</span><br></pre></td></tr></table></figure>
+<p>async/await做为库函数提供了<br>async的返回结果是个Deferred，类似CompletableFuture<br>kotlin提供了一个库可以将两者互转</p>
+<h2 id="详细资料"><a href="#详细资料" class="headerlink" title="详细资料"></a>详细资料</h2><p><a href="https://kaixue.io/kotlin-coroutines-1/">https://kaixue.io/kotlin-coroutines-1/</a><br><a href="https://kaixue.io/kotlin-coroutines-2/">https://kaixue.io/kotlin-coroutines-2/</a><br><a href="https://kaixue.io/kotlin-coroutines-3/">https://kaixue.io/kotlin-coroutines-3/</a></p>
+<h2 id="kotlin-coroutine的实现"><a href="#kotlin-coroutine的实现" class="headerlink" title="kotlin coroutine的实现"></a>kotlin coroutine的实现</h2><p>CPS，stackless</p>
+]]></content>
+      <categories>
+        <category>kotlin</category>
+      </categories>
+      <tags>
+        <tag>kotlin</tag>
       </tags>
   </entry>
 </search>

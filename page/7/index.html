@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">74</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">75</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">40</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">41</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-count">87</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">41</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-count">75</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,114 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/23/cache-nolock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/23/cache-nolock/" class="post-title-link" itemprop="url">高并发下的无锁缓存</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-23 19:44:29" itemprop="dateCreated datePublished" datetime="2018-03-23T19:44:29+08:00">2018-03-23</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>753</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="描述两个场景"><a href="#描述两个场景" class="headerlink" title="描述两个场景"></a>描述两个场景</h2><p>1、为了反作弊，我们需要实时的统计某个用户访问某个url的次数，每次用户访问这个url，访问次数就会增加，如果这个用户访问的url次数超过一定的数量限制，就挑选出这样的用户，认为这个用户有作弊的可能</p>
+<p>2、现在有很多跑步软件，可以记录你步行的轨迹，实时的记录你的位置，类似这样的试试的在地图上标注你位置的应用，都需要实时通过GPS记录经纬度，从而知道你在什么位置，离目的地还有多远</p>
+<p>这两个场景有一个共同点，就是都需要实时的计算某个值，然后保存在缓存中，其实就是一个map（key和value）</p>
+<p>但是会出现一个问题，因为一个应用可能存在大量的用户同时访问，这样就会产生高并发的场景，假设有大量的用户同时访问了map，map就成了争用的资源（临界资源），为了解决这种冲突，传统的做法就是对这个map加锁，如下：</p>
+<p>读</p>
+<p>read_lock(map)</p>
+<p>read_map(map)</p>
+<p>un_read_lock(map)</p>
+<p>写</p>
+<p>write_lock(map)</p>
+<p>write_map(map)</p>
+<p>un_write_lock(map)</p>
+<p>由于加锁，消耗资源高，访问map就成了应用或者系统的性能瓶颈<br>怎么解决这种问题呢？</p>
+<p>想到了三种方法：</p>
+<p>1、map分段加锁<br>分段map加锁，大致机理类似concurrenthashmap，不做过多介绍，大家可以自己了解，可以一定程度上缓解问题，但是还是对map加锁</p>
+<p>2、按记录加锁<br>把map转变为数组，数组的索引就是用户id，对每条记录加锁，这样虽然性能得到了大幅的提高，但是锁资源消耗严重，不适合高并发</p>
+<p>3、无锁缓存（重点介绍）</p>
+<p>对数据进行签名验证，例如类似数据库版本控制，这种情况要通过数据库辅助解决cache miss的情况</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s/bu86p2IcOFmHW5TJ9Xc_2A">http://mp.weixin.qq.com/s/bu86p2IcOFmHW5TJ9Xc_2A</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1524,134 +1632,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/02/24/raft/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/02/24/raft/" class="post-title-link" itemprop="url">理解Raft</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-02-24 10:18:58" itemprop="dateCreated datePublished" datetime="2018-02-24T10:18:58+08:00">2018-02-24</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="什么是Raft？"><a href="#什么是Raft？" class="headerlink" title="什么是Raft？"></a>什么是Raft？</h2><p>Raft是用于管理日志复制的一致性算法。它的性能和功能跟Paxos一样，但它比Paxos更易于理解并且更易于实现。</p>
-<p>Raft将一致性算法分成几个部分：</p>
-<blockquote>
-<p>领导选举，即Leader Election。<br>日志复制，即Log Replication。<br>安全性，即Safety。<br>减少状态（state space reduction）</p>
-</blockquote>
-<p>Raft的新特性：</p>
-<p>强领导者（strong leader）：Raft 使用一种其他算法更强的领导形式。eg：日志条目只从领导者发送向其他服务器。这样就简化了对日志复制的管理。</p>
-<p>领导选取（leader selection）：Raft 使用随机定时器来选取领导者。这种方式仅仅是在所有算法都需要实现的心跳极值上增加了一点变化，在解决冲突时更简单快速</p>
-<p>成员变化（Membership change）：Raft 为了调整集群中成员关系使用了新的联合一致性（joint consensus）的方法，这种方法中大多数不同配置的机器在转换关系的时候会交迭（overlap）。这使得在配置改变的时候，集群能够继续操作。<br>除此之外，Raft还采用一种新的机制-Overlapping Majorities，用于动态改变集群成员。</p>
-<h2 id="Why-Raft？"><a href="#Why-Raft？" class="headerlink" title="Why Raft？"></a>Why Raft？</h2><p>论文中说Paxos算法是所有一致性算法的起点，但是难以理解、实现困难。<br>Raft的初衷就是设计一个既利于理解又易于实现的一致性算法，Raft目标：</p>
-<ul>
-<li>必须提供完整、实际的基础，减少开发者工作，方便系统构建；</li>
-<li>必须在所有情况下都保证安全可用；</li>
-<li>支持高效的常规操作；</li>
-<li>最重要的目标：易于理解；</li>
-<li>它必须能让开发者对算法有一个直观的认识，方便扩展开发(在实际开发中必不可少)；</li>
-</ul>
-<h2 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h2><p>它是指多个服务器在状态达成一致，但是在一个分布式系统中，因为各种意外可能，有的服务器可能会崩溃或变得不可靠，它就不能和其他服务器达成一致状态。这样就需要一种Consensus协议，一致性协议是为了确保容错性，也就是即使系统中有一两个服务器当机，也不会影响其处理过程。</p>
-<h2 id="动画演示"><a href="#动画演示" class="headerlink" title="动画演示"></a>动画演示</h2><ul>
-<li><a target="_blank" rel="noopener" href="http://thesecretlivesofdata.com/raft/">http://thesecretlivesofdata.com/raft/</a></li>
-</ul>
-<h2 id="各语言实现"><a href="#各语言实现" class="headerlink" title="各语言实现"></a>各语言实现</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/Waqee/Raft-php">https://github.com/Waqee/Raft-php</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/etcd-io/etcd">https://github.com/etcd-io/etcd</a></li>
-</ul>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ul>
-<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/raft-paper">http://www.infoq.com/cn/articles/raft-paper</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md">https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md</a></li>
-<li><a target="_blank" rel="noopener" href="https://raft.github.io/">https://raft.github.io/</a></li>
-<li><a target="_blank" rel="noopener" href="https://raft.github.io/raft.pdf">https://raft.github.io/raft.pdf</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/36648084">https://www.zhihu.com/question/36648084</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1707,13 +1687,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:50</span>
+    <span title="站点阅读时长">3:51</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

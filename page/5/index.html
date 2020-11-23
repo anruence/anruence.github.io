@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">74</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">75</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">40</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">41</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-count">87</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">41</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-count">75</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,210 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/09/18/catastrophic-backtracking/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/09/18/catastrophic-backtracking/" class="post-title-link" itemprop="url">正则表达式灾难性回溯</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-09-18 12:27:24" itemprop="dateCreated datePublished" datetime="2018-09-18T12:27:24+08:00">2018-09-18</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 22:56:38" itemprop="dateModified" datetime="2020-10-26T22:56:38+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/backtracking/" itemprop="url" rel="index"><span itemprop="name">backtracking</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>正则表达式导致CPU Load 100%<br>导致CPU使用率高的关键原因就是：Java 正则表达式使用的引擎实现是 NFA 自动机，这种正则表达式引擎在进行字符匹配时会发生回溯（backtracking）。而一旦发生回溯，那其消耗的时间就会变得很长，有可能是几分钟，也有可能是几个小时，时间长短取决于回溯的次数和复杂度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String\[\] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    String badRegex = <span class="string">&quot;^(\[hH\]\[tT\]&#123;2&#125;\[pP\]://|\[hH\]\[tT\]&#123;2&#125;\[pP\]\[sS\]://)((\[A-Za-z0-9-~\]+).)+(\[A-Za-z0-9-~\\\\\\/\])+$&quot;</span>;</span><br><span class="line"></span><br><span class="line">    String bugUrl = <span class="string">&quot;[http://www.fapiao.com/dddp-web/pdf/download?request=6e7JGxxxxx4ILd-kExxxxxxxqJ4-CHLmqVnenXC692m74H38sdfdsazxcUmfcOH2fAfY1Vw__%5EDadIfJgiEf&quot;</span>;](http:<span class="comment">//www.fapiao.com/dddp-web/pdf/download?request=6e7JGxxxxx4ILd-kExxxxxxxqJ4-CHLmqVnenXC692m74H38sdfdsazxcUmfcOH2fAfY1Vw__%5EDadIfJgiEf)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (bugUrl.matches(badRegex)) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;match!!&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;no match!!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么如何来防止这样的安全漏洞呢。其实正则表达式，我们在代码规范里面，通常都会推荐尽量少用，尽量简单。因为其效率，本身就不高，再则加上如果无法控制匹配字符串的来源，很容易造成问题。解决的方案首选当然是尽量少用正则表达式，尽量少用带有.*?等复杂表达式，如果一定要用，则必须控制匹配字符串的来源，进行来源验证或者是长度控制。</p>
+<h2 id="转载文章记录"><a href="#转载文章记录" class="headerlink" title="转载文章记录"></a>转载文章记录</h2><p>前几天有小伙伴来求救说页面上有一个 input 框，随着用户不断输入内容，页面响应会越来越慢直到完全失去响应。</p>
+<p>简单沟通过后得知具体场景是这样的：</p>
+<p>input 框中允许用户输入一连串逗号分隔的商品id</p>
+<p>在用户输入的过程中实时检测用户输入的内容是否符合规则，若不符合则给出提示信息</p>
+<p>小伙伴的解决方案也很直接：</p>
+<p>给 input 框绑定 keyup 事件。</p>
+<p>在 keyup 事件回调函数中通过正则表达式判断是否符合规则，决定是否展示提示信息。</p>
+<p>经过反复验证得到如下规律：</p>
+<p>用户在输入商品 id 的过程中（连续输入多个数字）不会卡顿</p>
+<p>当用户输入逗号时，出现卡顿。随着输入商品 id 的数量增加，卡顿越来越明显，直至浏览器失去响应。</p>
+<p>于是打开 Chrome 开发者工具，选择 Performance (原 Timeline) 标签页。将整个过程记录下来，得到如下时间线：</p>
+<p><img src="images/backtracking/6.png"></p>
+<p>其中黄色宽条表示 JavaScript 主线程的执行情况。连续的黄条越长，表示单次 JavaScript 运行的时间越长。也就意味着 UI 失去响应的时间越长。这一点从截图中的蓝色框中也可以得到印证。蓝色框中的红色长条表示浏览器一帧（一次渲染）所需要的时间。</p>
+<p>那么到底是 JavaScript 中的哪些代码占中了这么长 CPU 时间呢？我们在底部的选项卡中选中 Bottom-Up ，按 Total Time 降序排列。得到如下结果：</p>
+<p><img src="images/backtracking/1.png"></p>
+<p>可以看出，72.% 的 CPU 时间用在了一条正则表达式上。你肯定想到了，这就是小伙伴用来检查用户输入是否合法的正则表达式。</p>
+<p>完整的正则表达式是这样的：</p>
+<p>/^\s*((\d+(\,|，)\d+)<em>|(\d+))\s</em>$/</p>
+<p>接着去 <a target="_blank" rel="noopener" href="https://regex101.com/">regex101</a> 上测试一下，测试数据如下，由 10 个商品 ID 组成的字符串：</p>
+<p>123456789,123456789,123456789,123456789,123456789,123456789,123456789,123456789,123456789,123456789</p>
+<p>执行结果如下：</p>
+<p><img src="images/backtracking/4.png"></p>
+<p>可以看到执行速度非常快，只用了不到 1ms。</p>
+<p>接下来在测试数据结尾加一个逗号，以模拟不符合规则的情况：</p>
+<p><img src="images/backtracking/5.png"></p>
+<p>正则表达式执行的时间暴增到 4.15s。</p>
+<p>经过多次测试发现：每次正常匹配执行的时间都很短。每次不匹配时，执行的时间都很长，且随着字符串长度的增加，时间成倍的增长。</p>
+<p>接下来让我们认真的观察一下这个正则表达式：</p>
+<p>/^\s*((\d+(\,|，)\d+)<em>|(\d+))\s</em>$/</p>
+<p>去掉匹配首尾的空白字符，其核心结构只有两部分 ((\d+(\,|，)\d+)* 与 (\d+)。前者用于匹配多个商品 ID 的情况，后者匹配只有一个商品 ID 的情况。</p>
+<p>前者的基本模式是这样的 商品ID,商品ID，然后把该模式重复多次。仔细观察后很快我就发现了第一个问题，假设用户输入的内容是 商品ID,商品ID,商品ID 。你会发现它符合输入规则，但是不与该正则表达式匹配。因为第一次匹配后剩余的字符串部分 ,商品ID 无法与基本模式形成匹配。</p>
+<p>这的是这样吗？</p>
+<p><img src="images/backtracking/2.png"></p>
+<p>测试发现，依然可以匹配。但匹配的内容和我们预期的并不一致。</p>
+<p><img src="images/backtracking/3.png"></p>
+<p>最后一次匹配的内容是，9,123456789。不难想象第一次的匹配结果就是 123456789,12345678。</p>
+<p>这里可以看出小伙伴编写的正则有两个问题：</p>
+<p>逻辑错误。通过测试结果可以看出无法匹配出正确的商品 ID。如果商品 ID 运行只有 1 位数字，则匹配失败。</p>
+<p>性能差。</p>
+<p>在了解需求后，我给小伙伴提供了一种正则写法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^\\s*(\\d+(,|，))*\\d+\\s*$</span><br></pre></td></tr></table></figure>
+<p>经过测试，这种写法在保证逻辑无误的前提下还保证了执行效率(在有数百个商品 ID 的情况下依然可以在几毫秒内执行完毕)。</p>
+<p>讲到这里，你可能会有两个问题：</p>
+<p>为何第一种写法的正则表达式匹配结果和我们预想的不一致。</p>
+<p>为何两种写法的性能差别如此之大。</p>
+<p>要回答这个问题，还要从正则表达式中 * 符号的执行逻辑说起。</p>
+<h2 id="回溯"><a href="#回溯" class="headerlink" title="回溯"></a>回溯</h2><p>大家都知道 * 表示匹配前面的子表达式 0 次或多次（且尽可能多的匹配）。但这个逻辑具体是如何执行的呢？让我们通过几个小例子来看一下。</p>
+<h3 id="Round-1"><a href="#Round-1" class="headerlink" title="Round 1"></a>Round 1</h3><p>假设有正则表达式 /^(a*)b$/ 和字符串 aaaaab。如果用该正则匹配这个字符串会得到什么呢？</p>
+<p>答案很简单。两者匹配，且捕获组捕获到字符串 aaaaa。</p>
+<h3 id="Round-2"><a href="#Round-2" class="headerlink" title="Round 2"></a>Round 2</h3><p>这次让我们把正则改写成 /^(a*)ab$/。再次和字符串 aaaaab 匹配。结果如何呢？</p>
+<p>两者依然匹配，但捕获组捕获到字符串 aaaa。因为捕获组后续的表达式占用了 1 个 a 字符。但是你有没有考虑过这个看似简单结果是经过何种过程得到的呢？</p>
+<p>让我们一步一步来看：</p>
+<p>匹配开始 (a*) 捕获尽可能多的字符 a。</p>
+<p>(a*) 一直捕获，直到遇到字符 b。这时 (a*) 已经捕获了 aaaaa。</p>
+<p>正则表达式继续执行 (a*) 之后的 ab 匹配。但此时由于字符串仅剩一个 b 字符。导致无法完成匹配。</p>
+<p>(a*) 从已捕获的字符串中“吐”出一个字符 a。这时捕获结果为 aaaa，剩余字符串为 ab。</p>
+<p>重新执行正则中 ab的匹配。发现正好与剩余字符串匹配。整个匹配过程结束。返回捕获结果 aaaa。</p>
+<p>从第3，4步可以看到，暂时的无法匹配并不会立即导致整体匹配失败。而是会从捕获组中“吐出”字符以尝试。这个“吐出”的过程就叫回溯。</p>
+<p>回溯并不仅执行一次，而是会一直回溯到另一个极端。对于 * 符号而言，就是匹配 0 次的情况。</p>
+<h3 id="Round-3"><a href="#Round-3" class="headerlink" title="Round 3"></a>Round 3</h3><p>这次我们把正则改为 /^(a*)aaaab$/。字符串依然为 aaaaab。根据前边的介绍很容易直到。此次要回溯 4 次才可以完成匹配。具体执行过程不再赘述。</p>
+<h2 id="悲观回溯"><a href="#悲观回溯" class="headerlink" title="悲观回溯"></a>悲观回溯</h2><p>了解了回溯的工作原理，再来看悲观回溯就很容易理解了。</p>
+<h3 id="Round-4"><a href="#Round-4" class="headerlink" title="Round 4"></a>Round 4</h3><p>这次我们的正则改为 /^(a*)b$/。但是把要匹配的字符串改为 aaaaa。去掉了结尾的字符 b。</p>
+<p>让我们看看此时的执行流程：</p>
+<p>(a*) 首先匹配了所有 aaaaa。</p>
+<p>尝试匹配 b。但是匹配失败。</p>
+<p>回溯 1 个字符。此时剩余字符串为 a。依然无法匹配字符 b。</p>
+<p>回溯一直进行。直到匹配 0 次的情况。此时剩余字符串为 aaaaa。依然无法匹配 b。</p>
+<p>所有的可能性均已尝试过，依然无法匹配。最终导致整体匹配失败。</p>
+<p>可以看到，虽然我们可以一眼看出二者无法匹配。但正则表达式在执行时还要“傻傻的”逐一回溯所有可能性，才能确定最终结果。这个“傻傻的”回溯过程就叫悲观回溯。</p>
+<p>虽然这个过程看起来有点傻，但是不是感觉也没什么大问题？为何会有性能问题呢？让我们回到最初的那个正则表达式。</p>
+<h3 id="Round-5"><a href="#Round-5" class="headerlink" title="Round 5"></a>Round 5</h3><p>这次正则表达式回到 ^\s*((\d+(\,|，)\d+)<em>|(\d+))\s</em>$。字符串为123456789,123456789,123456789, 执行的结果依然为不匹配。这点毫无疑问。但问题是，执行的过程中，进行了多少次回溯呢？</p>
+<p>让我们统计一下：</p>
+<p>首轮执行过后的捕获结果是 123456789,12345678，9,123456789。但这时剩余字符串仅剩 , 一个字符。于是开始悲观回溯。</p>
+<p>首先看第一个匹配不变的情况下，第二个匹配组回溯的情况。</p>
+<p>a. 回退 1 个字符。剩余字符串为 9,。不匹配。共回溯 1 次。</p>
+<p>b. 回退 2 个字符。剩余字符串为 89,。不匹配。但是 89 又进行一次回溯。共回溯 2 次。</p>
+<p>c. 以此类推。最多回退 8 个字符。此时剩余字符串为 23456789,。共可以回溯 8 次。</p>
+<p>d. 累计回溯 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 = 36 次。</p>
+<p>接着，第一个捕获组回溯 1 个字符。捕获结果变为 123456789,1234567，89,123456789。此时又将循环一遍 2 中的所有逻辑。累计回溯 36 + 1次。</p>
+<p>以此类推，全部回溯完成，需要回溯 324 次。<br>假设我们增加一个商品 ID，字符串变为 123456789,123456789,123456789,123456789,。此时的回溯次数增加到 2628 次。<br>以此类推可得。</p>
+<p>可见问题在于，随着商品 ID 个数的增长，回溯次数会成指数级增长。最终导致 JavaScript 主进程忙于进行计算，使页面失去响应。</p>
+<p>但是我当时给出的解决方案：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^\\s*(\\d+(,|，))*\\d+\\s*$</span><br></pre></td></tr></table></figure>
+<p>也使用了 * 符号，按说也会进行悲观回溯。为何没有性能问题呢？</p>
+<p>答案在于，对于同一字符串是否有多种可行的匹配模式。也就是说对于某个固定的字符串，你的正则表达式是否有“唯一解”。</p>
+<p>举例对于我给出的正则，对于字符串 123456789,123456789,123456789 只可能有 1 种匹配结果。那就是 123456789,，123456789, 和 123456789。因此，在回溯时只需进行一次线性的回溯即可（24 次）。而不会像前面分析的第一种正则一样，有多种“可能”的匹配方式。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>在了解了悲观回溯为何会导致性能问题后，就可以考虑如何解决这个问题。要解决这个问题，大概有以下几个思路：</p>
+<h3 id="思路一：-禁止回溯"><a href="#思路一：-禁止回溯" class="headerlink" title="思路一： 禁止回溯"></a>思路一： 禁止回溯</h3><p>这个思路很直接，既然回溯可能有性能问题，那我们是否可以禁止正则表达式进行回溯呢。</p>
+<p>答案是：可以。</p>
+<p>有两种语法可以防止回溯：</p>
+<p>有限量词（Possessive Quantifiers）</p>
+<p>原子分组（Atomic Grouping）</p>
+<p>关于这两种语法，感兴趣的同学可以自行 Google。在此不详细解释。因为这两种语法在 JavaScript 中均不被支持。</p>
+<h3 id="思路二：避免导致性能问题的回溯"><a href="#思路二：避免导致性能问题的回溯" class="headerlink" title="思路二：避免导致性能问题的回溯"></a>思路二：避免导致性能问题的回溯</h3><p>这个思路也比较容易想到。其实经过思考不难想到。两种模式的正则表达式很可能会导致有性能问题的回溯。</p>
+<p>前后重复的模式。 例如 /x*x*/。虽然这个例子看起来很“弱智”，但是当规则变复杂时，每一个 x 又可能是由多个子表达式组成的。当这些子表达式存在逻辑上的交集时，就可能会出现性能问题。</p>
+<p>嵌套的量词。例如 /(x*)*/。包括文中提到的第一个正则也属于这种模式。</p>
+<p>当我们在编写正则表达式时写出了这种模式的时候，大家就要谨慎起来。考虑一下是否有潜在的性能问题，是否有更好的写法了。</p>
+<h3 id="思路三：不使用正则表达式"><a href="#思路三：不使用正则表达式" class="headerlink" title="思路三：不使用正则表达式"></a>思路三：不使用正则表达式</h3><p>其实像文中举的这个例子，甚至都没必要使用正则表达式。直接写一个 JavaScript 函数，按逗号切分字符串，逐个字符判断即可。而且可以保证代码的性能是线性的。</p>
+<p>求正则回溯分析工具，借助工具，更好的优化正则</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/secretx/article/details/72844509">https://blog.csdn.net/secretx/article/details/72844509</a></li>
+<li><a target="_blank" rel="noopener" href="https://regex101.com/">https://regex101.com</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/study-everyday/p/7426862.html">http://www.cnblogs.com/study-everyday/p/7426862.html</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1264,113 +1468,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/05/08/cqrs/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/05/08/cqrs/" class="post-title-link" itemprop="url">初涉cqrs</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-05-08 16:54:38" itemprop="dateCreated datePublished" datetime="2018-05-08T16:54:38+08:00">2018-05-08</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>692</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="CQRS简介"><a href="#CQRS简介" class="headerlink" title="CQRS简介"></a>CQRS简介</h2><p>CQRS全称为Command Query Responsibility Segregation，顾名思义“命令与查询职责分离”。“职责分离”我们理解，但怎么区分“命令”与“查询”，他们的职责又分别是什么？<br>命令与查询的根本区别在于，是否改变数据的状态。例如增、删、改操作即归属于“命令”，因为这些操作会导致数据被修改；而查询操作只求返回结果，并不修改数据，所以归属于“查询”（查询归属于“查询”，好吧，听上去像废话）。另一个区别在于，“命令”操作不需要返回值（当然我们在编码时需要有返回来告诉我们修改是否成功），而“查询”需要。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25383827">https://zhuanlan.zhihu.com/p/25383827</a></li>
-<li><a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/jj554200.aspx">https://msdn.microsoft.com/en-us/library/jj554200.aspx</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/555855/Introduction-to-CQRS">https://www.codeproject.com/Articles/555855/Introduction-to-CQRS</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/netfocus/p/5184182.html">http://www.cnblogs.com/netfocus/p/5184182.html</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.techweb.com.cn/network/system/2017-07-07/2553563.shtml">http://www.techweb.com.cn/network/system/2017-07-07/2553563.shtml</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs">https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.uml.org.cn/zjjs/201609221.asp">http://www.uml.org.cn/zjjs/201609221.asp</a></li>
-<li><a target="_blank" rel="noopener" href="http://edisonxu.com/2017/03/30/axon-cqrs-example.html">http://edisonxu.com/2017/03/30/axon-cqrs-example.html</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1426,13 +1523,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:50</span>
+    <span title="站点阅读时长">3:51</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">74</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">75</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">40</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">41</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-count">87</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">41</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-count">75</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,124 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2020/03/13/retry-in-distributed-system/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/13/retry-in-distributed-system/" class="post-title-link" itemprop="url">分布式系统中一种无限重试的机制</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-13 17:50:05" itemprop="dateCreated datePublished" datetime="2020-03-13T17:50:05+08:00">2020-03-13</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/mq/" itemprop="url" rel="index"><span itemprop="name">mq</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="前言：为什么需要重试"><a href="#前言：为什么需要重试" class="headerlink" title="前言：为什么需要重试"></a>前言：为什么需要重试</h1><h2 id="重试的场景"><a href="#重试的场景" class="headerlink" title="重试的场景"></a>重试的场景</h2><p>什么场景需要重试？就是我们认为的暂时的失败，比如说，系统繁忙，网络失败，请求被限流，插入数据时版本失败或者是被调用端返回的可重试的错误码，这个时候可以进行重试。而有些失败是不需要重试的，例如用户权限错误、内容被反垃圾系统拦截、非法数据等等，这些失败，一般是重试多少次都是不可能成功的。</p>
+<h2 id="重试的策略"><a href="#重试的策略" class="headerlink" title="重试的策略"></a>重试的策略</h2><p>重试需要注意哪些事情呢？是否只需要简单的重复调用几次就行？最近我就遇到这样一个场景。有一个业务，并发量非常的大，特别在每天早上8，9点的时候，很多用户都会使用这个功能，这个公司会盘路去写一些数据，有一次底层的数据库系统压力非常大，所以有些请求就会写失败，然后立马重试，最后造成雪崩！这是重试设计中一个比较大的误区，如果是因为资源不够，那么立马不停的重试非常容易压垮系统。所以，在重试设计中，我们有限地进行重试，重试不应该是无限次数的，其次，便是要间歇地进行重试，即每次失败都需要休息一会，并且每次休息的时间逐渐加长。例如有个系统开始限流保护到熔断了，那么连续重试多少次也没用，还不如休息一段时间，这种做法在TCP的拥塞控制中也被应用到。</p>
+<h2 id="重试设计的要点"><a href="#重试设计的要点" class="headerlink" title="重试设计的要点"></a>重试设计的要点</h2><p>我觉得写代码，只要每次远程调用的时候，多思考以下几个点即可：</p>
+<ul>
+<li>是否需要重试，哪些错误需要重试，哪些错误可以直接返回。这个也跟业务相关，有时候虽然可以后台重试，但是还是会返回失败让用户在操作一次，这样可以保证代码的简洁。</li>
+<li>重试的次数与频率，哪些失败可以立马重试的（更新数据库版本失败），哪些失败需要异步去重试。</li>
+<li>重试的时候，任务是否是幂等的。这是非常关键的一点，比如说退款任务，有可能只是网络繁忙，实际上结算系统已经把钱退还给用户。这也是我们设计接口中重要的一点，尽量去保证消息的幂等性。</li>
+</ul>
+<h1 id="重试的实现"><a href="#重试的实现" class="headerlink" title="重试的实现"></a>重试的实现</h1><h2 id="实时重试"><a href="#实时重试" class="headerlink" title="实时重试"></a>实时重试</h2><ul>
+<li>spring-retry<br>自定义超时异常，重试策略，50ms重试，依次递增<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Retryable(value = &#123;RetryException.class&#125;, backoff = @Backoff(delay = 50, multiplier = 1))</span></span><br></pre></td></tr></table></figure>
+spring相关组件完整提供了这种能力，资料很多，就不赘述了</li>
+</ul>
+<h2 id="异步重试"><a href="#异步重试" class="headerlink" title="异步重试"></a>异步重试</h2><p>异步重试的实现方法也多种多样，这里简单介绍一种思路，基于队列的一种重试机制</p>
+<blockquote>
+<ol>
+<li>开始流程处理，当捕获到可重试异常时将参数信息发送到一个队列</li>
+<li>队列消费者异步消费消息进行重试补偿，当重试失败次数超过某个阈值时，将消息转移到队列对应的死信队列中</li>
+<li>死信队列在消费逻辑中同时可以增加一些额外的操作，限流，白名单功能</li>
+</ol>
+</blockquote>
+<p>基于对队列消费情况的监控，我们同时可可以对异常数据进行异构分析</p>
+<h1 id="额外引申"><a href="#额外引申" class="headerlink" title="额外引申"></a>额外引申</h1><p>基于最近疫情，对人员各数据进行报表统计的需求层出不穷（紧急），从零到一构建一套系统投入使用成本就有点高了，但公司使用了一种策略，快速实现了功能，基于现有问卷系统能力，对统计的数据进行解析，异构出一套统计数据库。思路还是很清新的<del>~</del></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1406,110 +1524,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/04/03/saga/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/04/03/saga/" class="post-title-link" itemprop="url">Saga的意义</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-04-03 15:06:01" itemprop="dateCreated datePublished" datetime="2019-04-03T15:06:01+08:00">2019-04-03</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>874</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="什么是Saga？"><a href="#什么是Saga？" class="headerlink" title="什么是Saga？"></a>什么是Saga？</h2><p>Saga 这个名词最早是由Hector Garcia-Molina和Kenneth Salem写的Sagas这篇论文里提出来的，但其实Saga并不是什么新事物，在我们传统的系统设计中，它有个更熟悉的名字——“ProcessManager”，只是换了个马甲，还是干同样的事——组合一组逻辑处理复杂流程。<br>但它与我们平常理解的“ProgressManager”又有不同，它的提出，最早是是为了解决分布式系统中长时间运行事务(long-running business process)的问题，把单一的transaction按照步骤分成一组若干子transaction，通过补偿机制实现最终一致性。</p>
-<p>Saga的概念使得强一致性的分布式事务不再是唯一的解决方案，通过保证事务中每一步都可以一个补偿机制，在发生错误后执行补偿事务来保证系统的可用性和最终一致性。</p>
-<h2 id="Saga的意义，优缺点"><a href="#Saga的意义，优缺点" class="headerlink" title="Saga的意义，优缺点"></a>Saga的意义，优缺点</h2><p>Saga通过业务补偿的方式，达到最终一致性</p>
-<h2 id="Saga和2PC、TCC的区别"><a href="#Saga和2PC、TCC的区别" class="headerlink" title="Saga和2PC、TCC的区别"></a>Saga和2PC、TCC的区别</h2><p>Saga是柔性事务的实现，最终一致性<br>2PC是基于XA刚性事务，强一致性<br>TCC属于业务上的分段提交，Try，confirm，cancel都是对应的一段业务逻辑的操作，先预留资源，预留成功后进行确认，不成功就取消，例如转账先冻结资金，进行一系列的余额各方面的检查，发现符合条件就对账户对应的资金状态改为冻结，确认阶段修改状态为扣除，取消的话就把冻结的资金加回原账户，其对应的数据库的操作每段都是一个完整的事物；2PC是属于数据库层面的，先进行prepare，然后逐个进行commit或者rollback，不和具体业务逻辑挂钩，TCC的应用范围更广，不一定是事物关系数据库，也可能操作的KV数据库，文档数据库，粒度也可以随着具体业务灵活调整，性能更好。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj591569(v%3dpandp.10)">https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj591569(v%3dpandp.10)</a></li>
-<li><a target="_blank" rel="noopener" href="http://edisonxu.com/2017/03/31/axon-saga.html">http://edisonxu.com/2017/03/31/axon-saga.html</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1565,13 +1579,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:50</span>
+    <span title="站点阅读时长">3:51</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
