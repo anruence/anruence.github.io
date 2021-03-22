@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://anruence.com/2021/03/22/mind-key/</loc>
+    <loc>http://anruence.com/2020/11/26/uml/</loc>
     
     <lastmod>2021-03-22</lastmod>
     
@@ -16,16 +16,16 @@
   </url>
   
   <url>
-    <loc>http://anruence.com/2020/06/21/DDD/</loc>
+    <loc>http://anruence.com/2021/03/22/mind-key/</loc>
     
-    <lastmod>2020-12-16</lastmod>
+    <lastmod>2021-03-22</lastmod>
     
   </url>
   
   <url>
-    <loc>http://anruence.com/2020/11/26/uml/</loc>
+    <loc>http://anruence.com/2020/06/21/DDD/</loc>
     
-    <lastmod>2020-12-03</lastmod>
+    <lastmod>2020-12-16</lastmod>
     
   </url>
   
@@ -1208,13 +1208,6 @@
   </url>
   
   <url>
-    <loc>http://anruence.com/tags/uml/</loc>
-    <lastmod>2021-03-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://anruence.com/tags/tracing/</loc>
     <lastmod>2021-03-22</lastmod>
     <changefreq>daily</changefreq>
@@ -1223,6 +1216,13 @@
   
   <url>
     <loc>http://anruence.com/tags/design/</loc>
+    <lastmod>2021-03-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://anruence.com/tags/plantuml/</loc>
     <lastmod>2021-03-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
