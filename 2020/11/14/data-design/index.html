@@ -24,15 +24,15 @@
     var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta name="description" content="数据分类 业务数据 索引数据 计算数据  设计思路在做数据库设计时应该考虑几个点索引和数据分离数据和计算分离 做面向CQRS的业务系统设计是和这个思路完美契合的 场景分析当我们的传统的MySQL无法满足 多样化的查询需求时，我们一般会引入lucene，elastic search类似的搜索引擎那么在设计时有个问题，是将业务中所有的数据都异构到搜索引擎中，还是只把索引字段的数据存储进去 只查询出id">
+  <meta name="description" content="数据分类 业务数据 索引数据 计算数据  设计思路在做数据库设计时应该考虑几个点索引和数据分离数据和计算分离 做面向CQRS的业务系统设计是和这个思路完美契合的 场景分析当我们的传统的MySQL无法满足 多样化的查询需求时，我们一般会引入lucene，elastic search类似的搜索引擎那么在设计时有个问题，是将业务中所有的数据都异构到搜索引擎中，还是只把索引字段的数据存储进去只查询出id">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面向数据系统的设计">
 <meta property="og:url" content="http://anruence.com/2020/11/14/data-design/index.html">
 <meta property="og:site_name" content="安然写字的地方">
-<meta property="og:description" content="数据分类 业务数据 索引数据 计算数据  设计思路在做数据库设计时应该考虑几个点索引和数据分离数据和计算分离 做面向CQRS的业务系统设计是和这个思路完美契合的 场景分析当我们的传统的MySQL无法满足 多样化的查询需求时，我们一般会引入lucene，elastic search类似的搜索引擎那么在设计时有个问题，是将业务中所有的数据都异构到搜索引擎中，还是只把索引字段的数据存储进去 只查询出id">
+<meta property="og:description" content="数据分类 业务数据 索引数据 计算数据  设计思路在做数据库设计时应该考虑几个点索引和数据分离数据和计算分离 做面向CQRS的业务系统设计是和这个思路完美契合的 场景分析当我们的传统的MySQL无法满足 多样化的查询需求时，我们一般会引入lucene，elastic search类似的搜索引擎那么在设计时有个问题，是将业务中所有的数据都异构到搜索引擎中，还是只把索引字段的数据存储进去只查询出id">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-11-14T11:21:44.000Z">
-<meta property="article:modified_time" content="2020-11-17T17:13:36.598Z">
+<meta property="article:modified_time" content="2020-11-27T06:14:49.329Z">
 <meta property="article:author" content="anruence">
 <meta property="article:tag" content="data">
 <meta name="twitter:card" content="summary">
@@ -143,17 +143,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">75</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">79</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">41</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">45</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -218,7 +218,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">数据分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">设计思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">场景分析</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">数据分类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.</span> <span class="nav-text">设计思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">场景分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B%E9%80%89%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">实际案例选型</span></a></li></ol></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -232,20 +232,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-count">79</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -327,7 +327,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-11-18 01:13:36" itemprop="dateModified" datetime="2020-11-18T01:13:36+08:00">2020-11-18</time>
+        <time title="修改时间：2020-11-27 14:14:49" itemprop="dateModified" datetime="2020-11-27T14:14:49+08:00">2020-11-27</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -347,7 +347,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>453</span>
+      <span>946</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -370,11 +370,11 @@
 <li>索引数据</li>
 <li>计算数据</li>
 </ul>
-<h1 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h1><p>在做数据库设计时应该考虑几个点<br>索引和数据分离<br>数据和计算分离</p>
+<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><p>在做数据库设计时应该考虑几个点<br>索引和数据分离<br>数据和计算分离</p>
 <p>做面向CQRS的业务系统设计是和这个思路完美契合的</p>
-<h1 id="场景分析"><a href="#场景分析" class="headerlink" title="场景分析"></a>场景分析</h1><p>当我们的传统的MySQL无法满足 多样化的查询需求时，我们一般会引入lucene，elastic search类似的搜索引擎<br>那么在设计时有个问题，是将业务中所有的数据都异构到搜索引擎中，还是只把索引字段的数据存储进去 只查询出id</p>
+<h2 id="场景分析"><a href="#场景分析" class="headerlink" title="场景分析"></a>场景分析</h2><p>当我们的传统的MySQL无法满足 多样化的查询需求时，我们一般会引入lucene，elastic search类似的搜索引擎<br>那么在设计时有个问题，是将业务中所有的数据都异构到搜索引擎中，还是只把索引字段的数据存储进去只查询出id</p>
 <p>看似简单的选择后面其实会完全走向不同的设计</p>
-<p>一股脑的把业务数据全部异构到搜索引擎里面 我能想到的优点就是</p>
+<p>一股脑的把业务数据全部异构到搜索引擎里面，我能想到的优点就是</p>
 <ul>
 <li>依赖数据源只有一个，不需要回源数据</li>
 <li>代码实现简单</li>
@@ -392,6 +392,8 @@
 <li>修改索引时，对业务数据不影响</li>
 <li>计算和数据分离，数据和索引分离</li>
 </ul>
+<h2 id="实际案例选型"><a href="#实际案例选型" class="headerlink" title="实际案例选型"></a>实际案例选型</h2><p>es在数据量很大的情况下（数十亿级别）提高查询效率<br>性能优化离不开filesystem cache，比如说你现在有一行数据。id,name,age …. 30 个字段。但是你现在搜索，只需要根据 id,name,age 三个字段来搜索。如果你傻乎乎往 es 里写入一行数据所有的字段，就会导致说 90% 的数据是不用来搜索的，结果硬是占据了 es 机器上的 filesystem cache 的空间，单条数据的数据量越大，就会导致 filesystem cahce 能缓存的数据就越少。其实，仅仅写入 es 中要用来检索的少数几个字段就可以了，比如说就写入 es id,name,age 三个字段，然后你可以把其他的字段数据存在 mysql/hbase 里，我们一般是建议用 es + hbase 这么一个架构。</p>
+<p>hbase 的特点是适用于海量数据的在线存储，就是对 hbase 可以写入海量数据，但是不要做复杂的搜索，做很简单的一些根据 id 或者范围进行查询的这么一个操作就可以了。从 es 中根据 name 和 age 去搜索，拿到的结果可能就 20 个 doc id，然后根据 doc id 到 hbase 里去查询每个 doc id 对应的完整的数据，给查出来，再返回。</p>
 
     </div>
 
@@ -482,7 +484,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -493,13 +495,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">254k</span>
+    <span title="站点总字数">264k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:51</span>
+    <span title="站点阅读时长">4:01</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

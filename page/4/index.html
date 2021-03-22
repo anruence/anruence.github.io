@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">75</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">79</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">41</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">45</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-count">79</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,571 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/03/18/distributed-lock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/18/distributed-lock/" class="post-title-link" itemprop="url">分布式锁的实现方式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-18 17:30:33" itemprop="dateCreated datePublished" datetime="2019-03-18T17:30:33+08:00">2019-03-18</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>11k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="基于数据库实现分布式锁"><a href="#基于数据库实现分布式锁" class="headerlink" title="基于数据库实现分布式锁"></a>基于数据库实现分布式锁</h2><p>可通过数据库乐观锁和悲观锁来实现，通常指的数据库是关系型数据库。</p>
+<h2 id="通过乐观锁实现"><a href="#通过乐观锁实现" class="headerlink" title="通过乐观锁实现"></a>通过乐观锁实现</h2><p>乐观锁（ Optimistic Locking ） 相对悲观锁而言，乐观锁假设认为数据一般情况下不会造成冲突，所以在数据进行提交更新的时候，才会正式对数据的冲突与否进行检测，如果发现冲突了，则让返回用户错误的信息，让用户决定如何去做。那么我们如何实现乐观锁呢，一般来说有以下2种方式：</p>
+<p>1.使用数据版本（Version）记录机制实现，这是乐观锁最常用的一种实现方式。何谓数据版本？即为数据增加一个版本标识，一般是通过为数据库表增加一个数字类型的 “version” 字段来实现。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。当我们提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的version值进行比对，如果数据库表当前版本号与第一次取出来的version值相等，则予以更新，否则认为是过期数据。</p>
+<p>2.乐观锁定的第二种实现方式和第一种差不多，同样是在需要乐观锁控制的table中增加一个字段，名称无所谓，字段类型使用时间戳（timestamp）, 和上面的version类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致则OK，否则就是版本冲突。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">-- 线程1查询，当前left_count为1，则有记录，当前版本号为1234 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> left_count, <span class="keyword">version</span> <span class="keyword">from</span> t_bonus <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">10001</span> <span class="keyword">and</span> left_count &gt; <span class="number">0</span>  </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 线程2查询，当前left_count为1，有记录，当前版本号为1234 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> left_count, <span class="keyword">version</span> <span class="keyword">from</span> t_bonus <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">10001</span> <span class="keyword">and</span> left_count &gt; <span class="number">0</span>  </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 线程1,更新完成后当前的version为1235，update状态为1，更新成功 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">update</span> t_bonus <span class="keyword">set</span> <span class="keyword">version</span> = <span class="number">1235</span>, left_count = left_count<span class="number">-1</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">10001</span> <span class="keyword">and</span> <span class="keyword">version</span> = <span class="number">1234</span>  </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 线程2,更新由于当前的version为1235，udpate状态为0，更新失败，再针对相关业务做异常处理 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">update</span> t_bonus <span class="keyword">set</span> <span class="keyword">version</span> = <span class="number">1235</span>, left_count = left_count<span class="number">-1</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">10001</span> <span class="keyword">and</span> <span class="keyword">version</span> = <span class="number">1234</span></span><br></pre></td></tr></table></figure>
+<p>数据库乐观锁类似于各种语言和cpu原子指令中的CAS操作，不通过加锁来实现并发控制</p>
+<h2 id="通过悲观锁实现"><a href="#通过悲观锁实现" class="headerlink" title="通过悲观锁实现"></a>通过悲观锁实现</h2><p>通过悲观锁来实现分布式锁相对于简单，通过粗暴的数据库加锁来实现，根据不同的数据库、存储引擎可实现表锁、页锁、行锁，通过它们可实现性能不同的。可利用数据库共享锁来实现读锁，排它锁来实现写锁。</p>
+<ol>
+<li><p>在oracle:数据库中，可使用以下语句打开表锁。<br>LOCK TABLE 表 IN EXCLUSIVE MODE ；<br>加锁后其它人不可操作，直到加锁用户解锁，用commit或rollback解锁  。</p>
+</li>
+<li><p>页锁是某些数据库支持，如mysql的innodb引擎25个行锁直接升级为页锁。</p>
+</li>
+<li><p>基于MySQL的InnoDB引擎，可以使用以下方法来实现加锁操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">lock</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Connection.setAutoCommit(<span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            result = select * from MethodLock where methodName = <span class="string">&#x27;xxxx&#x27;</span> <span class="keyword">for</span> update;</span><br><span class="line">            <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    returnType <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>在查询语句后面增加for update，数据库会在查询过程中给数据库表增加排他锁（这里再多提一句，InnoDB引擎在加锁的时候，只有通过索引进行检索的时候才会使用行级锁，否则会使用表级锁。这里我们希望使用行级锁，就要给method_name添加索引，值得注意的是，这个索引一定要创建成唯一索引，否则会出现多个重载方法之间无法同时被访问的问题。重载方法的话建议把参数类型也加上）。当某条记录被加上排他锁之后，其他线程无法再在该行记录上增加排他锁。</p>
+<p>我们可以认为获得排它锁的线程即可获得分布式锁，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过以下方法解锁：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span></span>&#123;</span><br><span class="line">    connection.commit();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过connection.commit()操作来释放锁。</p>
+<h2 id="基于缓存的实现分布式锁"><a href="#基于缓存的实现分布式锁" class="headerlink" title="基于缓存的实现分布式锁"></a>基于缓存的实现分布式锁</h2><blockquote>
+<p>相比较于基于数据库实现分布式锁的方案来说，基于缓存来实现在性能方面会表现的更好一点。而且很多缓存是可以集群部署的，可以解决单点问题。</p>
+</blockquote>
+<h2 id="使用redis实现分布式锁"><a href="#使用redis实现分布式锁" class="headerlink" title="使用redis实现分布式锁"></a>使用redis实现分布式锁</h2><p>1、选用Redis实现分布式锁原因：</p>
+<ul>
+<li>Redis有很高的性能； </li>
+<li>Redis命令对此支持较好，实现起来比较方便</li>
+</ul>
+<p>2、使用命令介绍：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// SETNX</span><br><span class="line">SETNX key val：当且仅当key不存在时，<span class="keyword">set</span>一个<span class="keyword">key</span>为val的字符串，返回<span class="number">1</span>；若<span class="keyword">key</span>存在，则什么都不做，返回<span class="number">0</span>。<span class="number">1</span></span><br><span class="line">// <span class="keyword">expire</span></span><br><span class="line"><span class="keyword">expire</span> <span class="keyword">key</span> <span class="keyword">timeout</span>：为<span class="keyword">key</span>设置一个超时时间，单位为<span class="keyword">second</span>，超过这个时间锁会自动释放，避免死锁。<span class="number">1</span></span><br><span class="line">// <span class="keyword">delete</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">key</span>：删除<span class="keyword">key</span></span><br></pre></td></tr></table></figure>
+<p>在使用Redis实现分布式锁的时候，主要就会使用到这三个命令。<br>3、实现思想：</p>
+<ul>
+<li>获取锁的时候，使用setnx加锁，并使用expire命令为锁添加一个超时时间，超过该时间则自动释放锁，锁的value值为一个随机生成的UUID，通过此在释放锁的时候进行判断。</li>
+<li>获取锁的时候还设置一个获取的超时时间，若超过这个时间则放弃获取锁。</li>
+<li>释放锁的时候，通过UUID判断是不是该锁，若是该锁，则执行delete进行锁释放。</li>
+</ul>
+<p>问题：<br>不加过期时间会潜在死锁</p>
+<ul>
+<li><p>不能保证释放锁</p>
+<blockquote>
+<p>存在一个问题，就是如果加锁和解锁中间执行的业务中断，比如服务器挂了，或者线程被杀掉，那么就可能会导致 del 指令没有被调用，这样就会陷入死锁，锁永远得不到释放</p>
+</blockquote>
+</li>
+<li><p>操作非原子性</p>
+<blockquote>
+<p>由于 setnx 和 expire 非原子性，如果在 setnx 和 expire 之间出现机器挂掉或者是被人为杀掉，就会导致死锁。</p>
+</blockquote>
+</li>
+</ul>
+<p>不能解决超时问题<br>考虑如下场景，加锁和解锁之间的业务非常耗时，那么就可能存在：</p>
+<ul>
+<li><p>线程一拿到锁之后执行业务</p>
+</li>
+<li><p>还没执行完锁就超时过期了</p>
+</li>
+<li><p>线程二此时拿到锁乘虚而入，开始执行业务…</p>
+</li>
+</ul>
+<p>当然这是 redis 分布式锁在死锁和超时问题之间做出的妥协，没办法完全避免，但是需要业务在使用时，衡量加锁的粒度及过期时间</p>
+<p>解决超时问题</p>
+<p>Redis 的分布式锁不能解决超时问题，如果在加锁和释放锁之间的逻辑执行的太长，以至于超出了锁的超时限制，就会出现问题。</p>
+<p>因为这时候锁过期了，第二个线程重新持有了这把锁，但是紧接着第一个线程执行完了业务逻辑，就把锁给释放了，第三个线程就会在第二个线程逻辑执行完之间拿到了锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * redis分布式锁的简单实现代码</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DistributedLock</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> JedisPool jedisPool;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DistributedLock</span><span class="params">(JedisPool jedisPool)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.jedisPool = jedisPool;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 加锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockName       锁的key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> acquireTimeout 获取超时时间</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> timeout        锁的超时时间</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 锁标识</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">lockWithTimeout</span><span class="params">(String lockName, <span class="keyword">long</span> acquireTimeout, <span class="keyword">long</span> timeout)</span> </span>&#123;</span><br><span class="line">        Jedis conn = <span class="keyword">null</span>;</span><br><span class="line">        String retIdentifier = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 获取连接</span></span><br><span class="line">            conn = jedisPool.getResource();</span><br><span class="line">            <span class="comment">// 随机生成一个value</span></span><br><span class="line">            String identifier = UUID.randomUUID().toString();</span><br><span class="line">            <span class="comment">// 锁名，即key值</span></span><br><span class="line">            String lockKey = <span class="string">&quot;lock:&quot;</span> + lockName;</span><br><span class="line">            <span class="comment">// 超时时间，上锁后超过此时间则自动释放锁</span></span><br><span class="line">            <span class="keyword">int</span> lockExpire = (<span class="keyword">int</span>) (timeout / <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取锁的超时时间，超过这个时间则放弃获取锁</span></span><br><span class="line">            <span class="keyword">long</span> end = System.currentTimeMillis() + acquireTimeout;</span><br><span class="line">            <span class="keyword">while</span> (System.currentTimeMillis() &lt; end) &#123;</span><br><span class="line">                <span class="keyword">if</span> (conn.setnx(lockKey, identifier) == <span class="number">1</span>) &#123;</span><br><span class="line">                    conn.expire(lockKey, lockExpire);</span><br><span class="line">                    <span class="comment">// 返回value值，用于释放锁时间确认</span></span><br><span class="line">                    retIdentifier = identifier;</span><br><span class="line">                    <span class="keyword">return</span> retIdentifier;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 返回-1代表key没有设置超时时间，为key设置一个超时时间</span></span><br><span class="line">                <span class="keyword">if</span> (conn.ttl(lockKey) == -<span class="number">1</span>) &#123;</span><br><span class="line">                    conn.expire(lockKey, lockExpire);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">10</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    Thread.currentThread().interrupt();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JedisException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line">                conn.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> retIdentifier;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 释放锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockName   锁的key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> identifier 释放锁的标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">releaseLock</span><span class="params">(String lockName, String identifier)</span> </span>&#123;</span><br><span class="line">        Jedis conn = <span class="keyword">null</span>;</span><br><span class="line">        String lockKey = <span class="string">&quot;lock:&quot;</span> + lockName;</span><br><span class="line">        <span class="keyword">boolean</span> retFlag = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            conn = jedisPool.getResource();</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="comment">// 监视lock，准备开始事务</span></span><br><span class="line">                conn.watch(lockKey);</span><br><span class="line">                <span class="comment">// 通过前面返回的value值判断是不是该锁，若是该锁，则删除，释放锁</span></span><br><span class="line">                <span class="keyword">if</span> (identifier.equals(conn.get(lockKey))) &#123;</span><br><span class="line">                    Transaction transaction = conn.multi();</span><br><span class="line">                    transaction.del(lockKey);</span><br><span class="line">                    List&lt;Object&gt; results = transaction.exec();</span><br><span class="line">                    <span class="keyword">if</span> (results == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    retFlag = <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                conn.unwatch();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JedisException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line">                conn.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> retFlag;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="基于ZooKeeper的实现方式"><a href="#基于ZooKeeper的实现方式" class="headerlink" title="基于ZooKeeper的实现方式"></a>基于ZooKeeper的实现方式</h2><p>ZooKeeper是一个为分布式应用提供一致性服务的开源组件，它内部是一个分层的文件系统目录树结构，规定同一个目录下只能有一个唯一文件名。基于ZooKeeper实现分布式锁的步骤如下：</p>
+<h2 id="利用节点名称的唯一性来实现独占锁"><a href="#利用节点名称的唯一性来实现独占锁" class="headerlink" title="利用节点名称的唯一性来实现独占锁"></a>利用节点名称的唯一性来实现独占锁</h2><p>ZooKeeper机制规定同一个目录下只能有一个唯一的文件名，zookeeper上的一个znode看作是一把锁，通过createznode的方式来实现。所有客户端都去创建/lock/${lock_name}_lock节点，最终成功创建的那个客户端也即拥有了这把锁，创建失败的可以选择监听继续等待，还是放弃抛出异常实现独占锁。</p>
+<h2 id="利用临时顺序节点控制时序实现"><a href="#利用临时顺序节点控制时序实现" class="headerlink" title="利用临时顺序节点控制时序实现"></a>利用临时顺序节点控制时序实现</h2><p>（1）创建一个目录mylock；<br>（2）线程A想获取锁就在mylock目录下创建临时顺序节点；<br>（3）获取mylock目录下所有的子节点，然后获取比自己小的兄弟节点，如果不存在，则说明当前线程顺序号最小，获得锁；<br>（4）线程B获取所有节点，判断自己不是最小节点，设置监听比自己次小的节点；<br>（5）线程A处理完，删除自己的节点，线程B监听到变更事件，判断自己是不是最小的节点，如果是则获得锁。</p>
+<p>这里推荐一个Apache的开源库Curator，它是一个ZooKeeper客户端，Curator提供的InterProcessMutex是分布式锁的实现，acquire方法用于获取锁，release方法用于释放锁。</p>
+<p>优点：具备高可用、可重入、阻塞锁特性，可解决失效死锁问题。</p>
+<p>缺点：因为需要频繁的创建和删除节点，性能上不如Redis方式</p>
+<p>当然，zk的API接口中创建节点、删除节点、监听的操作都是原子的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DistributedLock</span> <span class="keyword">implements</span> <span class="title">Lock</span>, <span class="title">Watcher</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ZooKeeper zk;</span><br><span class="line">    <span class="keyword">private</span> String root = <span class="string">&quot;/locks&quot;</span>;<span class="comment">//根</span></span><br><span class="line">    <span class="keyword">private</span> String lockName;<span class="comment">//竞争资源的标志</span></span><br><span class="line">    <span class="keyword">private</span> String waitNode;<span class="comment">//等待前一个锁</span></span><br><span class="line">    <span class="keyword">private</span> String myZnode;<span class="comment">//当前锁</span></span><br><span class="line">    <span class="keyword">private</span> CountDownLatch latch;<span class="comment">//计数器</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> sessionTimeout = <span class="number">30000</span>;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Exception&gt; exception = <span class="keyword">new</span> ArrayList&lt;Exception&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建分布式锁,使用前请确认config配置的zookeeper服务可用</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> config 127.0.0.1:2181</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockName 竞争资源标志,lockName中不能包含单词lock</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DistributedLock</span><span class="params">(String config, String lockName)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.lockName = lockName;</span><br><span class="line">        <span class="comment">// 创建一个与服务器的连接</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            zk = <span class="keyword">new</span> ZooKeeper(config, sessionTimeout, <span class="keyword">this</span>);</span><br><span class="line">            Stat stat = zk.exists(root, <span class="keyword">false</span>);</span><br><span class="line">            <span class="keyword">if</span>(stat == <span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="comment">// 创建根节点</span></span><br><span class="line">                zk.create(root, <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>], ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            exception.add(e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (KeeperException e) &#123;</span><br><span class="line">            exception.add(e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            exception.add(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * zookeeper节点的监视器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.latch != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.latch.countDown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(exception.size() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> LockException(exception.get(<span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.tryLock())&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;Thread &quot;</span> + Thread.currentThread().getId() + <span class="string">&quot; &quot;</span> +myZnode + <span class="string">&quot; get lock true&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                waitForLock(waitNode, sessionTimeout);<span class="comment">//等待锁</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (KeeperException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> LockException(e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> LockException(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String splitStr = <span class="string">&quot;_lock_&quot;</span>;</span><br><span class="line">            <span class="keyword">if</span>(lockName.contains(splitStr))</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> LockException(<span class="string">&quot;lockName can not contains \\u000B&quot;</span>);</span><br><span class="line">            <span class="comment">//创建临时子节点</span></span><br><span class="line">            myZnode = zk.create(root + <span class="string">&quot;/&quot;</span> + lockName + splitStr, <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>], ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.EPHEMERAL_SEQUENTIAL);</span><br><span class="line">            System.out.println(myZnode + <span class="string">&quot; is created &quot;</span>);</span><br><span class="line">            <span class="comment">//取出所有子节点</span></span><br><span class="line">            List&lt;String&gt; subNodes = zk.getChildren(root, <span class="keyword">false</span>);</span><br><span class="line">            <span class="comment">//取出所有lockName的锁</span></span><br><span class="line">            List&lt;String&gt; lockObjNodes = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">            <span class="keyword">for</span> (String node : subNodes) &#123;</span><br><span class="line">                String _node = node.split(splitStr)[<span class="number">0</span>];</span><br><span class="line">                <span class="keyword">if</span>(_node.equals(lockName))&#123;</span><br><span class="line">                    lockObjNodes.add(node);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            Collections.sort(lockObjNodes);</span><br><span class="line">            System.out.println(myZnode + <span class="string">&quot;==&quot;</span> + lockObjNodes.get(<span class="number">0</span>));</span><br><span class="line">            <span class="keyword">if</span>(myZnode.equals(root+<span class="string">&quot;/&quot;</span>+lockObjNodes.get(<span class="number">0</span>)))&#123;</span><br><span class="line">                <span class="comment">//如果是最小的节点,则表示取得锁</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//如果不是最小的节点，找到比自己小1的节点</span></span><br><span class="line">            String subMyZnode = myZnode.substring(myZnode.lastIndexOf(<span class="string">&quot;/&quot;</span>) + <span class="number">1</span>);</span><br><span class="line">            waitNode = lockObjNodes.get(Collections.binarySearch(lockObjNodes, subMyZnode) - <span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (KeeperException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> LockException(e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> LockException(e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">(<span class="keyword">long</span> time, TimeUnit unit)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.tryLock())&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> waitForLock(waitNode,time);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">waitForLock</span><span class="params">(String lower, <span class="keyword">long</span> waitTime)</span> <span class="keyword">throws</span> InterruptedException, KeeperException </span>&#123;</span><br><span class="line">        Stat stat = zk.exists(root + <span class="string">&quot;/&quot;</span> + lower,<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//判断比自己小一个数的节点是否存在,如果不存在则无需等待锁,同时注册监听</span></span><br><span class="line">        <span class="keyword">if</span>(stat != <span class="keyword">null</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Thread &quot;</span> + Thread.currentThread().getId() + <span class="string">&quot; waiting for &quot;</span> + root + <span class="string">&quot;/&quot;</span> + lower);</span><br><span class="line">            <span class="keyword">this</span>.latch = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">this</span>.latch.await(waitTime, TimeUnit.MILLISECONDS);</span><br><span class="line">            <span class="keyword">this</span>.latch = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;unlock &quot;</span> + myZnode);</span><br><span class="line">            zk.delete(myZnode,-<span class="number">1</span>);</span><br><span class="line">            myZnode = <span class="keyword">null</span>;</span><br><span class="line">            zk.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (KeeperException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lockInterruptibly</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.lock();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Condition <span class="title">newCondition</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockException</span> <span class="keyword">extends</span> <span class="title">RuntimeException</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">LockException</span><span class="params">(String e)</span></span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">LockException</span><span class="params">(Exception e)</span></span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="redis官方解决方案-RedLock"><a href="#redis官方解决方案-RedLock" class="headerlink" title="redis官方解决方案 RedLock"></a>redis官方解决方案 RedLock</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://redis.io/topics/distlock">https://redis.io/topics/distlock</a><br>集群环境如何保证锁的安全，Redlock 算法就是为了解决这个问题，他的原理是在加锁时，向过半节点发送 set 指令，只要过半节点返回成功，那就认为加锁成功。释放锁时，再向所有节点发送 del 指令。</li>
+</ul>
+<p>代价也很明显，跟tomcat 的 session 共享机制一样，随着集群机器的增加，势必会有损性能。Redlock 算法还需要考虑出错重试、时钟漂移等很多细节问题。</p>
+<p>所以一般这种由于主从节点同步时间差导致的锁不安全问题，业务系统一般都是选择忍受的，生产上这种场景发生的概率也不大。</p>
+<p><a target="_blank" rel="noopener" href="http://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html">http://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html</a></p>
+<p>我们要锁来干啥呢？两个原因：<br>1.提升效率，用锁来保证一个任务没有必要被执行两次。比如（很昂贵的计算）<br>2.保证正确，使用锁来保证任务按照正常的步骤执行，防止两个节点同时操作一份数据，造成文件冲突，数据丢失</p>
+<p>RedLock问题：<br>1.RedLock 只是保证了锁的高可用性，并没有保证锁的正确性<br>2.RedLock 是一个严重依赖系统时钟的分布式系统</p>
+<p>Martin 对 RedLock 的批评：</p>
+<p>对于提升效率的场景下，RedLock 太重。</p>
+<p>对于对正确性要求极高的场景下，RedLock 并不能保证正确性。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/03/17/insert-deadlock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/17/insert-deadlock/" class="post-title-link" itemprop="url">插入死锁的问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-17 19:32:06" itemprop="dateCreated datePublished" datetime="2019-03-17T19:32:06+08:00">2019-03-17</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>一个事务内大量的insert语句导致事务出现死锁的问题，为什么单纯的insert语句会导致死锁呢？<br>首先，我们数据库有两种锁，一种叫S锁，也就是sharable lock，共享锁，可以理解为读锁就是共享锁；<br>一种叫X锁，也就是exclusive lock，排它锁。故名思议，排它锁与其他任何锁都不兼容，而共享锁之间是兼容的，可以理解为写锁就是排它锁。<br>第二个，还有一种锁，叫意向锁，intend lock，意向锁也分为共享锁和排它锁。用于加在所要加S锁或X锁对象的所有父节点上，也就是说你要获取Y（Y代表S或者X）锁，你先要（在父节点）成功获取IY锁。加锁的顺序是从上往下的，任何一个节点加锁失败，事务都处于等待状态。所谓父子节点可以参考以下图：<br>你可以理解为意向锁总是要加的，但是除非你被加上了S锁或者X锁，意向锁总是能成功的。</p>
+<p>另外第三个概念：隐式锁和显式锁，又是令人蛋碎的概念，隐式锁你可以理解为乐观锁，也就是正常来说不加锁或共享锁，但是遇到冲突则加锁或升级为排它锁。显式锁，那就是真的锁上了。不明白为什么总是要用这么晦涩的术语来描述。</p>
+<p>OK，言归正传，我们基于上面这些介绍开始分析为什么会insert出现死锁。</p>
+<p>先看看这个表，注意token字段是一个唯一索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE `deadlocktest` (</span><br><span class="line">    -&gt;   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,</span><br><span class="line">    -&gt;   `token` varchar(255) NOT NULL,</span><br><span class="line">    -&gt;   PRIMARY KEY (`id`),</span><br><span class="line">    -&gt;   UNIQUE KEY `ux_token` (`token`)</span><br><span class="line">    -&gt; ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</span><br><span class="line">Query OK, 0 rows affected (0.10 sec)</span><br></pre></td></tr></table></figure>
+<p>然后，开启三个TRX执行简单的插入操作：</p>
+<p>step1：s1-s3 开始，查看锁等待和上锁状态</p>
+<p>step2:  s1插入一条记录</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into deadlocktest (token) values (&#x27;token1&#x27;);</span><br><span class="line">Query OK, 1 row affected (0.03 sec)</span><br></pre></td></tr></table></figure>
+<p>这时的锁、锁等待和事务状态如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from performance_schema.data_locks\G</span><br><span class="line">Empty <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">select</span> * <span class="keyword">from</span> performance_schema.data_lock_waits\G</span><br><span class="line"><span class="keyword">Empty</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>SHOW ENGINE INNODB STATUS</p>
+<p>注意看，表里面并没有显示加锁（这就是传说的隐式锁），但是实际上，s1加了两个锁：一个是表级别的IX锁，一个是行级别的S锁</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from performance_schema.data_locks\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">               ENGINE: INNODB</span><br><span class="line">       ENGINE_LOCK_ID: 15922:1079</span><br><span class="line">ENGINE_TRANSACTION_ID: 15922</span><br><span class="line">            THREAD_ID: 51</span><br><span class="line">             EVENT_ID: 15</span><br><span class="line">        OBJECT_SCHEMA: tech</span><br><span class="line">          OBJECT_NAME: deadlocktest</span><br><span class="line">       PARTITION_NAME: NULL</span><br><span class="line">    SUBPARTITION_NAME: NULL</span><br><span class="line">           INDEX_NAME: NULL</span><br><span class="line">OBJECT_INSTANCE_BEGIN: 140497454685400</span><br><span class="line">            LOCK_TYPE: TABLE</span><br><span class="line">            LOCK_MODE: IX</span><br><span class="line">          LOCK_STATUS: GRANTED</span><br><span class="line">            LOCK_DATA: NULL</span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from performance_schema.data_locks;</span><br><span class="line">+<span class="comment">--------+----------------+-----------------------+-----------+----------+---------------+--------------+----------------+-------------------+------------+-----------------------+-----------+-----------+-------------+-----------+</span></span><br><span class="line">| ENGINE | ENGINE_LOCK_ID | ENGINE_TRANSACTION_ID | THREAD_ID | EVENT_ID | OBJECT_SCHEMA | OBJECT_NAME  | PARTITION_NAME | SUBPARTITION_NAME | INDEX_NAME | OBJECT_INSTANCE_BEGIN | LOCK_TYPE | LOCK_MODE | LOCK_STATUS | LOCK_DATA |</span><br><span class="line">+<span class="comment">--------+----------------+-----------------------+-----------+----------+---------------+--------------+----------------+-------------------+------------+-----------------------+-----------+-----------+-------------+-----------+</span></span><br><span class="line">| INNODB | 15924:1079     |                 15924 |        53 |       13 | tech          | deadlocktest | NULL           | NULL              | NULL       |       140497454689368 | TABLE     | IX        | GRANTED     | NULL      |</span><br><span class="line">| INNODB | 15924:22:5:2   |                 15924 |        53 |       13 | tech          | deadlocktest | NULL           | NULL              | ux_token   |       140497507137048 | RECORD    | S         | WAITING     | &#x27;token1&#x27;  |</span><br><span class="line">| INNODB | 15923:1079     |                 15923 |        52 |       13 | tech          | deadlocktest | NULL           | NULL              | NULL       |       140497454687368 | TABLE     | IX        | GRANTED     | NULL      |</span><br><span class="line">| INNODB | 15923:22:5:2   |                 15923 |        52 |       13 | tech          | deadlocktest | NULL           | NULL              | ux_token   |       140497507132440 | RECORD    | S         | WAITING     | &#x27;token1&#x27;  |</span><br><span class="line">| INNODB | 15922:1079     |                 15922 |        51 |       15 | tech          | deadlocktest | NULL           | NULL              | NULL       |       140497454685400 | TABLE     | IX        | GRANTED     | NULL      |</span><br><span class="line">| INNODB | 15922:22:5:2   |                 15922 |        52 |       13 | tech          | deadlocktest | NULL           | NULL              | ux_token   |       140497507127832 | RECORD    | X         | GRANTED     | &#x27;token1&#x27;  |</span><br><span class="line">+<span class="comment">--------+----------------+-----------------------+-----------+----------+---------------+--------------+----------------+-------------------+------------+-----------------------+-----------+-----------+-------------+-----------+</span></span><br><span class="line">6 rows in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">select</span> * <span class="keyword">from</span> performance_schema.data_lock_waits;</span><br><span class="line">Empty <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<p>step3：s2/s3插入相同的token。</p>
+<p>这时的锁、锁等待和事务状态如下：</p>
+<p>这里第一个关键：事务1，也就是S1的S锁，原来是看不到的锁，变成X锁，这就是所谓的隐式锁转换为显式锁。<br>第二个：S2和S3，在相同的记录上等待获取S锁。这就是死锁的关键，如果没有这一步就不会死锁。至于为什么，这里先按下不表，我们先解释下为毛一个插入操作会加入一个S锁：因为在事务被唤醒后，需要检测冲突，没错，因为被挂起的事务知道这一行数据被X锁锁住了，一旦事务被唤醒，那么被锁住的数据就可能被更改，所以需要检测冲突。而冲突检测是通过读取是否存在类似的记录实现的，所以这货加了个S锁请求。从上文的兼容性中我们可以知道，S锁之间是兼容的，所以，一旦S2-S3被唤醒，那么他们都可以得到这个锁。</p>
+<p>进入关键的步骤第四步：</p>
+<p>s1 rollback;</p>
+<p>这时，s2(或者s3)能成功，而剩下的一个因为死锁检测被重置。当然，前者能成功就是因为后者被重置了。</p>
+<p>s2</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into deadlocktest (token) values (&#x27;token1&#x27;);</span><br><span class="line">Query OK, 1 row affected (14.86 sec)</span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<p>s3</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into deadlocktest (token) values (&#x27;token1&#x27;);</span><br><span class="line">ERROR 1213 (40001): Deadlock found when trying to get <span class="keyword">lock</span>; try restarting transaction</span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+
+<p>顺理成章地，数据库爆出了死锁和成功者的加锁信息：</p>
+<p>OK，答案显而易见了。</p>
+<p>首先，由于冲突检测，后面的家伙都申请了兼容的S锁，导致他们被唤醒后都获取到了这个S锁，经过冲突检测，他们惊喜的发现可以继续了，然后尝试加上不兼容的锁(IX锁)，于是杯具发生了，要成功获取(IX)锁，都要等待对方先释放不兼容的S锁，于是死锁发生了。</p>
+<p>commit就不会失败，因为commit后数据落地，两边拿到S锁发现冲突，自然就插入失败了，没有后续加IX锁的行为，也就没有死锁了</p>
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5c774114f265da2d993d9908">https://juejin.im/post/5c774114f265da2d993d9908</a> 记一次神奇的Mysql死锁排查</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/03/11/redis-check/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/11/redis-check/" class="post-title-link" itemprop="url">Redis一致性检测调研</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-11 19:16:43" itemprop="dateCreated datePublished" datetime="2019-03-11T19:16:43+08:00">2019-03-11</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h2><p>1、Mysql一致性校验工具(pt-table-checksum)：<br><a target="_blank" rel="noopener" href="https://www.percona.com/doc/percona-toolkit/LATEST/pt-table-checksum.html">https://www.percona.com/doc/percona-toolkit/LATEST/pt-table-checksum.html</a></p>
+<p>binlog replication的校验。对应于redis就是aof。</p>
+<p>2、Mysql一致性校验方案(Baron Schwartz)：</p>
+<p><a target="_blank" rel="noopener" href="https://www.xaprb.com/blog/2007/04/07/how-to-know-if-a-mysql-slave-is-identical-to-its-master/">https://www.xaprb.com/blog/2007/04/07/how-to-know-if-a-mysql-slave-is-identical-to-its-master/</a></p>
+<p>3、Mysql一致性校验方案工具(mysqlrplsyn）：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-utilities-1.6-en/utils-task-rplsync.html">https://docs.oracle.com/cd/E17952_01/mysql-utilities-1.6-en/utils-task-rplsync.html</a></p>
+<p>1与3类似，但对redis不适用，因为它们都需要：lock tables，perform then checksum，get information about the master status.</p>
+<p>而redis只有一个db，这样做，就不允许期间有写入了。另外，这样的工具，并不能保证结果100%正确，还是有可能会失败的。</p>
+<h2 id="PostgreSQL"><a href="#PostgreSQL" class="headerlink" title="PostgreSQL"></a>PostgreSQL</h2><p>1、9.3+版本新增了checksum：</p>
+<p><a target="_blank" rel="noopener" href="https://wiki.postgresql.org/wiki/What&#39;s_new_in_PostgreSQL_9.3#Data_Checksums">https://wiki.postgresql.org/wiki/What&#39;s_new_in_PostgreSQL_9.3#Data_Checksums</a></p>
+<p>缺点：</p>
+<p>a. 只能在集群模式下使用。</p>
+<p>b. 开启该功能会导致性能损耗。</p>
+<p>c. 必须在启动时开启，不支持动态调整。</p>
+<p>2、官方回复：</p>
+<p><a target="_blank" rel="noopener" href="https://www.postgresql-archive.org/replication-consistency-checking-td5852406.html">https://www.postgresql-archive.org/replication-consistency-checking-td5852406.html</a></p>
+<p>Stream Replication已经保证了数据的一致性。</p>
+<p>反对者：mysql有replication synchronization问题，需要一致性校验工具，但Postgres没有该问题，根本不需要一致性校验工具。</p>
+<p>DB2的HADR（similar to PG replication）也是不需要一致性校验工具的。</p>
+<p>支持者：Postgres曾经发生过主从不一致的问题：</p>
+<p><a target="_blank" rel="noopener" href="https://wiki.postgresql.org/wiki/Nov2013ReplicationIssue">https://wiki.postgresql.org/wiki/Nov2013ReplicationIssue</a></p>
+<p><a target="_blank" rel="noopener" href="https://thebuild.com/presentations/worst-day-fosdem-2014.pdf">https://thebuild.com/presentations/worst-day-fosdem-2014.pdf</a></p>
+<p>解决该问题的方案一般有2种：</p>
+<p>a. checksum.（比较重，需要锁住，防止新写入）</p>
+<p>b. Keep things monitored. (比较轻)</p>
+<p>redis可以在准备写aof那里嵌入一个函数：</p>
+<p>a. 针对写入流，做checksum。(db级别）</p>
+<p>b. 将写入流，发送给监听的client。（redis只提供数据，由第三方进行具体的一致性校验，以及查找不一致key的工作）</p>
+<h2 id="Oracle"><a href="#Oracle" class="headerlink" title="Oracle"></a>Oracle</h2><p>1、Oracle VeriData：</p>
+<p><a target="_blank" rel="noopener" href="http://www.oracle.com/us/products/middleware/059493.pdf">http://www.oracle.com/us/products/middleware/059493.pdf</a></p>
+<p>介绍了Oracle VeriData的功能与特性，没有具体设计。我们的最终实现效果可以参考这个。</p>
+<h2 id="Redislabs"><a href="#Redislabs" class="headerlink" title="Redislabs"></a>Redislabs</h2><p>1、<a target="_blank" rel="noopener" href="https://redislabs.com/blog/fast-and-efficient-parallelized-comparison-of-redis-databases/">https://redislabs.com/blog/fast-and-efficient-parallelized-comparison-of-redis-databases/</a></p>
+<p>主要是用SCAN系列命令，进行比较。缺点：1）对redis性能有影响；2）假如SCAN过程中key更新了，可能结果是不一致的。</p>
+<p>用于比较的python脚本：<a target="_blank" rel="noopener" href="https://gist.github.com/yoav-steinberg/10589500">https://gist.github.com/yoav-steinberg/10589500</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/03/01/java-base/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/01/java-base/" class="post-title-link" itemprop="url">待实现</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-01 12:35:49" itemprop="dateCreated datePublished" datetime="2019-03-01T12:35:49+08:00">2019-03-01</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="Java中的锁"><a href="#Java中的锁" class="headerlink" title="Java中的锁"></a>Java中的锁</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&amp;mid=2651749434&amp;idx=3&amp;sn=5ffa63ad47fe166f2f1a9f604ed10091&amp;chksm=bd12a5778a652c61509d9e718ab086ff27ad8768586ea9b38c3dcf9e017a8e49bcae3df9bcc8&amp;mpshare=1&amp;scene=1&amp;srcid=1115jvICJcVZifIl9LDMCCNR&amp;pass_ticket=TEWuKu03YaaJcf+cw6OUwaV4HYWPa4tCawTYhSOpArpUQqk0eB2tdozxZ7kgoFiH#rd">https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&amp;mid=2651749434&amp;idx=3&amp;sn=5ffa63ad47fe166f2f1a9f604ed10091&amp;chksm=bd12a5778a652c61509d9e718ab086ff27ad8768586ea9b38c3dcf9e017a8e49bcae3df9bcc8&amp;mpshare=1&amp;scene=1&amp;srcid=1115jvICJcVZifIl9LDMCCNR&amp;pass_ticket=TEWuKu03YaaJcf%2Bcw6OUwaV4HYWPa4tCawTYhSOpArpUQqk0eB2tdozxZ7kgoFiH#rd</a></li>
+</ul>
+<h2 id="分布式锁实现选型"><a href="#分布式锁实现选型" class="headerlink" title="分布式锁实现选型"></a>分布式锁实现选型</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/y2HPj2ji2KLS_eTR5nBnDA">https://mp.weixin.qq.com/s/y2HPj2ji2KLS_eTR5nBnDA</a></li>
+</ul>
+<h2 id="基于redis"><a href="#基于redis" class="headerlink" title="基于redis"></a>基于redis</h2><h2 id="基于zookeeper"><a href="#基于zookeeper" class="headerlink" title="基于zookeeper"></a>基于zookeeper</h2><h2 id="官方实现"><a href="#官方实现" class="headerlink" title="官方实现"></a>官方实现</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://redis.io/topics/distlock">https://redis.io/topics/distlock</a></li>
+</ul>
+<h2 id="kafka高性能的原因"><a href="#kafka高性能的原因" class="headerlink" title="kafka高性能的原因"></a>kafka高性能的原因</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/d9KIz0xvp5I9rqnDAlZvXw">https://mp.weixin.qq.com/s/d9KIz0xvp5I9rqnDAlZvXw</a></p>
+<ul>
+<li>Broker NIO异步消息处理，实现了IO线程与业务线程分离</li>
+<li>磁盘顺序写，文件追加写</li>
+<li>零拷贝，避免二次拷贝以及内核态到用户态的切换，详情见：<blockquote>
+<p><a target="_blank" rel="noopener" href="https://developer.ibm.com/articles/j-zerocopy/">https://developer.ibm.com/articles/j-zerocopy/</a><br><a target="_blank" rel="noopener" href="https://github.com/javagrowing/JGrowing/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/IO/%E8%B5%B0%E8%BF%9B%E7%A7%91%E5%AD%A6%E4%B9%8B%E6%8F%AD%E5%BC%80%E7%A5%9E%E7%A7%98%E7%9A%84%E9%9B%B6%E6%8B%B7%E8%B4%9D.md">https://github.com/javagrowing/JGrowing/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/IO/%E8%B5%B0%E8%BF%9B%E7%A7%91%E5%AD%A6%E4%B9%8B%E6%8F%AD%E5%BC%80%E7%A5%9E%E7%A7%98%E7%9A%84%E9%9B%B6%E6%8B%B7%E8%B4%9D.md</a></p>
+</blockquote>
+</li>
+</ul>
+<h2 id="奇数偶数排序"><a href="#奇数偶数排序" class="headerlink" title="奇数偶数排序"></a>奇数偶数排序</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lemon_tree12138/article/details/50605563">https://blog.csdn.net/lemon_tree12138/article/details/50605563</a></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/d9KIz0xvp5I9rqnDAlZvXw">https://mp.weixin.qq.com/s/d9KIz0xvp5I9rqnDAlZvXw</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ssJV6wnH7fE2arZ07_Og4w">https://mp.weixin.qq.com/s/ssJV6wnH7fE2arZ07_Og4w</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/csdn_9527666/article/details/82709198">https://blog.csdn.net/csdn_9527666/article/details/82709198</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5c8e7893f265da682b2e2a4e">https://juejin.im/post/5c8e7893f265da682b2e2a4e</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1022,468 +1587,10 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/12/10/tomcat-classloader/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/12/10/tomcat-classloader/" class="post-title-link" itemprop="url">双亲委派机制</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-12-10 16:34:30" itemprop="dateCreated datePublished" datetime="2018-12-10T16:34:30+08:00">2018-12-10</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:03:33" itemprop="dateModified" datetime="2020-10-26T23:03:33+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>5.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h2><h3 id="什么是类加载机制？"><a href="#什么是类加载机制？" class="headerlink" title="什么是类加载机制？"></a>什么是类加载机制？</h3><p>代码编译的结果从本地机器码转变成字节码，是存储格式的一小步，却是编程语言发展的一大步。</p>
-<p>Java虚拟机把描述类的数据从Class文件加载进内存，并对数据进行校验，转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。</p>
-<p>虚拟机设计团队把类加载阶段中的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己决定如何去获取所需要的类。实现这动作的代码模块成为“类加载器”。</p>
-<h3 id="什么是双亲委任模型？"><a href="#什么是双亲委任模型？" class="headerlink" title="什么是双亲委任模型？"></a>什么是双亲委任模型？</h3><p>从Java虚拟机的角度来说，只存在两种不同类加载器：一种是启动类加载器(Bootstrap ClassLoader)，这个类加载器使用C++语言实现（只限HotSpot），是虚拟机自身的一部分；另一种就是所有其他的类加载器，这些类加载器都由Java语言实现，独立于虚拟机外部，并且全都继承自抽象类java.lang.ClassLoader.</p>
-<p>从Java开发人员的角度来看，类加载还可以划分的更细致一些，绝大部分Java程序员都会使用以下3种系统提供的类加载器：</p>
-<p>启动类加载器（Bootstrap ClassLoader）：这个类加载器复杂将存放在 JAVA_HOME/lib 目录中的，或者被-Xbootclasspath 参数所指定的路径种的，并且是虚拟机识别的（仅按照文件名识别，如rt.jar，名字不符合的类库即使放在lib目录下也不会重载）。<br>扩展类加载器（Extension ClassLoader）：这个类加载器由sun.misc.Launcher$ExtClassLoader实现，它负责夹杂JAVA_HOME/lib/ext 目录下的，或者被java.ext.dirs 系统变量所指定的路径种的所有类库。开发者可以直接使用扩展类加载器。<br>应用程序类加载器（Application ClassLoader）：这个类加载器由sun.misc.Launcher$AppClassLoader 实现。由于这个类加载器是ClassLoader 种的getSystemClassLoader方法的返回值，所以也成为系统类加载器。它负责加载用户类路径（ClassPath）上所指定的类库。开发者可以直接使用这个类加载器，如果应用中没有定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</p>
-<p>图中各个类加载器之间的关系成为 类加载器的双亲委派模型（Parents Dlegation Mode）。双亲委派模型要求除了顶层的启动类加载器之外，其余的类加载器都应当由自己的父类加载器加载，这里类加载器之间的父子关系一般不会以继承的关系来实现，而是都使用组合关系来复用父加载器的代码。</p>
-<p>类加载器的双亲委派模型在JDK1.2 期间被引入并被广泛应用于之后的所有Java程序中，但他并不是个强制性的约束模型，而是Java设计者推荐给开发者的一种类加载器实现方式。</p>
-<p>双亲委派模型的工作过程是：如果一个类加载器收到了类加载的请求，他首先不会自己去尝试加载这个类，而是把这个请求委派父类加载器去完成。每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，只有当父加载器反馈自己无法完成这个请求（他的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去加载。</p>
-<p>为什么这么做呢？</p>
-<p>如果没有使用双亲委派模型，由各个类加载器自行加载的话，如果用户自己编写了一个称为java.lang.Object的类，<br>并放在程序的ClassPath中，那系统将会出现多个不同的Object类， Java类型体系中最基础的行为就无法保证。应用程序也将会变得一片混乱。</p>
-<p>双亲委派是如何实现的呢？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">synchronized</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)   <span class="keyword">throws</span> ClassNotFoundException&#123;  </span><br><span class="line">    <span class="comment">// First, check if the class has already been loaded  </span></span><br><span class="line">    Class c = findLoadedClass(name);  </span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;  </span><br><span class="line">        <span class="keyword">try</span> &#123;  </span><br><span class="line">            <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;  </span><br><span class="line">                c = parent.loadClass(name, <span class="keyword">false</span>);  </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">                c = findBootstrapClassOrNull(name);  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;  </span><br><span class="line">            <span class="comment">// ClassNotFoundException thrown if class not found  </span></span><br><span class="line">            <span class="comment">// from the non-null parent class loader  </span></span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;  </span><br><span class="line">            <span class="comment">// If still not found, then invoke findClass in order  </span></span><br><span class="line">            <span class="comment">// to find the class.  </span></span><br><span class="line">            c = findClass(name);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span> (resolve) &#123;  </span><br><span class="line">        resolveClass(c);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> c;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>逻辑清晰：先检查是否已经被加载过，若没有加载则调用父加载器的loadClass方法， 如父加载器为空则默认使用启动类加载器作为父加载器。如果父类加载失败，抛出ClassNotFoundException 异常后，再调用自己的findClass方法进行加载。</p>
-<h3 id="如何破坏双亲委任模型？"><a href="#如何破坏双亲委任模型？" class="headerlink" title="如何破坏双亲委任模型？"></a>如何破坏双亲委任模型？</h3><p>双亲委任模型不是一个强制性的约束模型，而是一个建议型的类加载器实现方式。在Java的世界中大部分的类加载器都遵循者模型，但也有例外，到目前为止，双亲委派模型有过3次大规模的“被破坏”的情况。 <br>第一次：在双亲委派模型出现之前—–即JDK1.2发布之前。<br>第二次：是这个模型自身的缺陷导致的。我们说，双亲委派模型很好的解决了各个类加载器的基础类的统一问题（越基础的类由越上层的加载器进行加载），基础类之所以称为“基础”，是因为它们总是作为被用户代码调用的API， 但没有绝对，如果基础类调用会用户的代码怎么办呢？</p>
-<p>这不是没有可能的。一个典型的例子就是JNDI服务，JNDI现在已经是Java的标准服务，它的代码由启动类加载器去加载（在JDK1.3时就放进去的rt.jar）,但它需要调用由独立厂商实现并部署在应用程序的ClassPath下的JNDI接口提供者（SPI， Service Provider Interface）的代码，但启动类加载器不可能“认识“这些代码啊。因为这些类不在rt.jar中，但是启动类加载器又需要加载。怎么办呢？</p>
-<p>为了解决这个问题，Java设计团队只好引入了一个不太优雅的设计：线程上下文类加载器（Thread Context ClassLoader）。这个类加载器可以通过java.lang.Thread类的setContextClassLoader方法进行设置。如果创建线程时还未设置，它将会从父线程中继承一个，如果在应用程序的全局范围内都没有设置过多的话，那这个类加载器默认即使应用程序类加载器。</p>
-<p>嘿嘿，有了线程上下文加载器，JNDI服务使用这个线程上下文加载器去加载所需要的SPI代码，也就是父类加载器请求子类加载器去完成类加载的动作，这种行为实际上就是打通了双亲委派模型的层次结构来逆向使用类加载器，实际上已经违背了双亲委派模型的一般性原则。但这无可奈何，Java中所有涉及SPI的加载动作基本胜都采用这种方式。例如JNDI，JDBC，JCE，JAXB，JBI等。</p>
-<p>第三次：为了实现热插拔，热部署，模块化，意思是添加一个功能或减去一个功能不用重启，只需要把这模块连同类加载器一起换掉就实现了代码的热替换。</p>
-<h3 id="Tomcat-的类加载器是怎么设计的？"><a href="#Tomcat-的类加载器是怎么设计的？" class="headerlink" title="Tomcat 的类加载器是怎么设计的？"></a>Tomcat 的类加载器是怎么设计的？</h3><p>Tomcat 如果使用默认的类加载机制行不行？<br>我们思考一下：Tomcat是个web容器， 那么它要解决什么问题：</p>
-<ol>
-<li>一个web容器可能需要部署两个应用程序，不同的应用程序可能会依赖同一个第三方类库的不同版本，不能要求同一个类库在同一个服务器只有一份，因此要保证每个应用程序的类库都是独立的，保证相互隔离。 </li>
-<li>部署在同一个web容器中相同的类库相同的版本可以共享。否则，如果服务器有10个应用程序，那么要有10份相同的类库加载进虚拟机，这是扯淡的。 </li>
-<li>web容器也有自己依赖的类库，不能于应用程序的类库混淆。基于安全考虑，应该让容器的类库和程序的类库隔离开来。 </li>
-<li>web容器要支持jsp的修改，我们知道，jsp 文件最终也是要编译成class文件才能在虚拟机中运行，但程序运行后修改jsp已经是司空见惯的事情，否则要你何用？ 所以，web容器需要支持 jsp 修改后不用重启。</li>
-</ol>
-<p>再看看我们的问题：Tomcat 如果使用默认的类加载机制行不行？ </p>
-<p>答案是不行的。为什么？我们看，第一个问题，如果使用默认的类加载器机制，那么是无法加载两个相同类库的不同版本的，默认的累加器是不管你是什么版本的，只在乎你的全限定类名，并且只有一份。第二个问题，默认的类加载器是能够实现的，因为他的职责就是保证唯一性。第三个问题和第一个问题一样。我们再看第四个问题，我们想我们要怎么实现jsp文件的热修改（楼主起的名字），jsp 文件其实也就是class文件，那么如果修改了，但类名还是一样，类加载器会直接取方法区中已经存在的，修改后的jsp是不会重新加载的。那么怎么办呢？我们可以直接卸载掉这jsp文件的类加载器，所以你应该想到了，每个jsp文件对应一个唯一的类加载器，当一个jsp文件修改了，就直接卸载这个jsp类加载器。重新创建类加载器，重新加载jsp文件。</p>
-<p>Tomcat 如何实现自己独特的类加载机制？</p>
-<p>我们看到，前面3个类加载和默认的一致，CommonClassLoader、CatalinaClassLoader、SharedClassLoader和WebappClassLoader则是Tomcat自己定义的类加载器，它们分别加载/common/*、/server/*、/shared/*（在tomcat 6之后已经合并到根目录下的lib目录下）和/WebApp/WEB-INF/*中的Java类库。其中WebApp类加载器和Jsp类加载器通常会存在多个实例，每一个Web应用程序对应一个WebApp类加载器，每一个JSP文件对应一个Jsp类加载器。</p>
-<p>commonLoader：Tomcat最基本的类加载器，加载路径中的class可以被Tomcat容器本身以及各个Webapp访问；<br>catalinaLoader：Tomcat容器私有的类加载器，加载路径中的class对于Webapp不可见；<br>sharedLoader：各个Webapp共享的类加载器，加载路径中的class对于所有Webapp可见，但是对于Tomcat容器不可见；<br>WebappClassLoader：各个Webapp私有的类加载器，加载路径中的class只对当前Webapp可见；<br>CommonClassLoader能加载的类都可以被Catalina ClassLoader和SharedClassLoader使用，从而实现了公有类库的共用，而CatalinaClassLoader和Shared ClassLoader自己能加载的类则与对方相互隔离。</p>
-<p>WebAppClassLoader可以使用SharedClassLoader加载到的类，但各个WebAppClassLoader实例之间相互隔离。</p>
-<p>而JasperLoader的加载范围仅仅是这个JSP文件所编译出来的那一个.Class文件，它出现的目的就是为了被丢弃：当Web容器检测到JSP文件被修改时，会替换掉目前的JasperLoader的实例，并通过再建立一个新的Jsp类加载器来实现JSP文件的HotSwap功能。</p>
-<p>tomcat 违背了java 推荐的双亲委派模型了吗？</p>
-<p>答案是：违背了。 我们前面说过：</p>
-<p>双亲委派模型要求除了顶层的启动类加载器之外，其余的类加载器都应当由自己的父类加载器加载。</p>
-<p>很显然，tomcat 不是这样实现，tomcat 为了实现隔离性，没有遵守这个约定，每个webappClassLoader加载自己的目录下的class文件，不会传递给父类加载器。</p>
-<p>我们扩展出一个问题：如果tomcat 的 Common ClassLoader 想加载 WebApp ClassLoader 中的类，该怎么办？<br>看了前面的关于破坏双亲委派模型的内容，我们心里有数了，我们可以使用线程上下文类加载器实现，使用线程上下文加载器，可以让父类加载器请求子类加载器去完成类加载的动作。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dangwanma6489/article/details/80244981">https://blog.csdn.net/dangwanma6489/article/details/80244981</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/12/04/bloom-filter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/12/04/bloom-filter/" class="post-title-link" itemprop="url">布隆过滤器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-12-04 19:18:34" itemprop="dateCreated datePublished" datetime="2018-12-04T19:18:34+08:00">2018-12-04</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 22:29:28" itemprop="dateModified" datetime="2020-10-26T22:29:28+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>608</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>如果想判断一个元素是不是在一个集合里，一般想到的是将集合中所有元素保存起来，然后通过比较确定。链表、树、散列表（又叫哈希表，Hash table）等等数据结构都是这种思路。但是随着集合中元素的增加，我们需要的存储空间越来越大。同时检索速度也越来越慢，上述三种结构的检索时间复杂度分别为 {\displaystyle O(n),O(\log n),O(n/k)} O(n),O(\log n),O(n/k)。</p>
-<p>布隆过滤器的原理是，当一个元素被加入集合时，通过K个散列函数将这个元素映射成一个位数组中的K个点，把它们置为1。检索时，我们只要看看这些点是不是都是1就（大约）知道集合中有没有它了：如果这些点有任何一个0，则被检元素一定不在；如果都是1，则被检元素很可能在。这就是布隆过滤器的基本思想。</p>
-<p>本质上布隆过滤器是一种数据结构，比较巧妙的概率型数据结构（probabilistic data structure），特点是高效地插入和查询，可以用来告诉你 “某样东西一定不存在或者可能存在”。</p>
-<p>相比于传统的 List、Set、Map 等数据结构，它更高效、占用空间更少，但是缺点是其返回的结果是概率性的，而不是确切的。</p>
-<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>判断一个值必定不存在</p>
-<ul>
-<li>避免缓存穿透时的高级用法<blockquote>
-<p>缓存穿透是指缓存和数据库中都没有的数据，而用户（黑客）不断发起请求，导致db压力倍增<br>提前判断当前请求过滤id存不存在，拦截非系统用户异常请求</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jasondavies.com/bloomfilter/">Bloom Filters</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/11/08/task-executor/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/11/08/task-executor/" class="post-title-link" itemprop="url">任务执行引擎设计</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-11-08 15:19:28" itemprop="dateCreated datePublished" datetime="2018-11-08T15:19:28+08:00">2018-11-08</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="一个简单的任务执行引擎设计（转）"><a href="#一个简单的任务执行引擎设计（转）" class="headerlink" title="一个简单的任务执行引擎设计（转）"></a>一个简单的任务执行引擎设计（转）</h2><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近做的一个项目是一个数据库服务化的管控平台，用时髦一点的名词来说是一个DBaaS产品。这种面向云化的产品，呈现给最终用户的体验是提供一个管理页面，把数据库的生命周期，监控等功能通过WEB页面或者Open API暴露给用户或者第三方的程序，常见的产品类似于阿里云或者AWS的RDS。而我们的做的产品实际上是一个分布式的数据库服务平台，除了底层的存储，还有上层的proxy去完成分库分表，读写分离等操作。</p>
-<p>对于终端用户来说，使用的是一个数据库连接，但实际上在后面，会有很多系统一同工作。例如当用户创建一个RDS的时候，会去创建底层的数据库实例（MySQL，SQL Server等），Loader Blance，Proxy等，而这些组件其实也是由其他系统通过Open API或者RPC的方式暴露给上层应用。作为Paas或者DBaaS的最上层的产品，免不了会调用其他的系统接口去申请资源。那么在代码实现上会碰到一个问题，当依赖多个系统的时候，依次调用各个系统的的过程中，如果中途出错，错误处理比较难。</p>
-<h2 id="之前状况："><a href="#之前状况：" class="headerlink" title="之前状况："></a>之前状况：</h2><p>之前的项目代码中，没有统一的任务执行框架，由各个开发人员自行去编码，那么经常看到这种代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    resultA = call_system_a;</span><br><span class="line">    resultB = call_system_b;</span><br><span class="line">&#125; <span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">    <span class="keyword">if</span> ( ! resultA )&#123;</span><br><span class="line">         do_some_clean_work_sysytem_a;</span><br><span class="line">    &#125; <span class="keyword">else</span> ( result &amp;&amp; ! reusltB ) &#123;</span><br><span class="line">　　     do_some_clean_word_system_a;</span><br><span class="line">         do_some_clean_work_system_b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;        </span><br></pre></td></tr></table></figure>
-<p>为什么要这么写呢，是因为当出了异常以后，你需要判断是a系统调用失败了，还是b系统调用失败了。并且把之前调用其他系统的资源给及时释放掉。</p>
-<p>上面这段代码只是大致演示了当流程涉及到两个系统的时候，代码是怎么样，实际上，完成一个云资源的申请，会涉及到 5 6 个系统，如果中间一步出错，需要在代码里面控制如何回滚，是非常难的。因为系统间的调用多数是通过HTTP或者RPC的方式，而不像数据库可用事物控制。</p>
-<h2 id="统一的任务执行API"><a href="#统一的任务执行API" class="headerlink" title="统一的任务执行API"></a>统一的任务执行API</h2><p>为了在新的项目里面规避之前实现不合理的带来的问题，我新写了一个package，将原来树形的流程控制（即多个if else嵌套去判断是否系统调用出问题），改成了线性的流程控制，这样简化的编程模型，统一了项目组成员编写代码的风格。</p>
-<p>对于要执行的任务，抽象出任务和步骤两个核心领域模型，对于每一次任务的执行抽象出任务执行实例这个模型，整个系统的模型如下图所示：<br><img src="images/task/api.png"><br>这样，之前在一个方法里面去调用多个系统，变成多个方法的组合，各个方法只关注单个系统的调用和出错处理，简化了编程模型。</p>
-<p>为了实现错误处理，在step中还定义了onError接口，在出错的时候，框架按照先入后出的顺序会调用各个step的onError方法。Step的接口定义如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span>  <span class="title">Step</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">String <span class="title">getStepName</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">beforeExecute</span><span class="params">(TaskExecution taskExecution)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 该步骤主要的业务逻辑实现，如果抛出任何异常，表示改步骤执行失败，会调用该步骤和已经执行完的步骤的onError方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> taskExecution</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onExecute</span><span class="params">(TaskExecution taskExecution)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onComplete</span><span class="params">(TaskExecution taskExecution)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 该步骤出错时会调用，如果抛出异常，会被框架给忽略掉。已完成其他步骤的onError方法调用。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> execution</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> throwable</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onError</span><span class="params">(TaskExecution execution, Throwable throwable)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>之前提到了按照先入后出的顺序去回调onError方法，自然就想到用stack去保存已经执行过的步骤，任务执行引擎的主要过程和代码如下：<br> <img src="images/task/schedule.png"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> TaskExecution <span class="title">doExecute</span><span class="params">(Task Task, TaskExecution taskExecution)</span> </span>&#123;</span><br><span class="line">    Stack&lt;Step&gt; StepStack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (Step step : Task.getSteps()) &#123;</span><br><span class="line">        StepStack.push(step);</span><br><span class="line">        StepExecution StepExecution = executeSingleStep(taskExecution, step);</span><br><span class="line">        <span class="keyword">if</span> (StepExecution.getStatus() == StepStatus.FAILED) &#123;</span><br><span class="line">            rollBack(StepStack, taskExecution);</span><br><span class="line">            taskExecution = taskExecutionRepository.updateStatus(taskExecution, FAILED);</span><br><span class="line">            <span class="keyword">return</span> taskExecution;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            taskExecution.setPercent(calculatePercent(StepStack.size(), Task.getSteps().size()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> taskExecutionRepository.updateStatus(taskExecution, COMPLETED);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> 其中TaskExecutionRepository主要用来做任务执行状态的持久化。</p>
-<h2 id="其他："><a href="#其他：" class="headerlink" title="其他："></a>其他：</h2><p>除去统一了任务执行的编程模型，在整个系统的领域层，也抽取出Task这个领域对象，前端通过rest接口的方式暴露一个统一的任务提交接口，返回一个TaskExecution对象之后由后端去异步执行任务。前端根据该对象的唯一ID可以查询当前任务执行的状态，耗时时间，完成百分比等信息。这类信息对于云产品的运维提供了方便。在以后新加业务功能的时候，只要新加任务类型即可。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/javanerd/p/6412787.html">https://www.cnblogs.com/javanerd/p/6412787.html</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/11/07/design/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/11/07/design/" class="post-title-link" itemprop="url">装饰器模式</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-11-07 11:18:30" itemprop="dateCreated datePublished" datetime="2018-11-07T11:18:30+08:00">2018-11-07</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>708</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h2><h2 id="模式动机"><a href="#模式动机" class="headerlink" title="模式动机"></a>模式动机</h2><p>一般有两种方式可以实现给一个类或对象增加行为：</p>
-<ul>
-<li>继承机制，使用继承机制是给现有类添加功能的一种有效途径，通过继承一个现有类可以使得子类在拥有自身方法的同时还拥有父类的方法。但是这种方法是静态的，用户不能控制增加行为的方式和时机。</li>
-<li>关联机制，即将一个类的对象嵌入另一个对象中，由另一个对象来决定是否调用嵌入对象的行为以便扩展自己的行为，我们称这个嵌入的对象为装饰器(Decorator)</li>
-</ul>
-<p>装饰模式以对客户透明的方式动态地给一个对象附加上更多的责任，换言之，客户端并不会觉得对象在装饰前和装饰后有什么不同。装饰模式可以在不需要创造更多子类的情况下，将对象的功能加以扩展。这就是装饰模式的模式动机。</p>
-<h2 id="模式定义"><a href="#模式定义" class="headerlink" title="模式定义"></a>模式定义</h2><p>装饰模式(Decorator Pattern) ：动态地给一个对象增加一些额外的职责(Responsibility)，就增加对象功能来说，装饰模式比生成子类实现更为灵活。其别名也可以称为包装器(Wrapper)，与适配器模式的别名相同，但它们适用于不同的场合。根据翻译的不同，装饰模式也有人称之为“油漆工模式”，它是一种对象结构型模式。</p>
-<h2 id="模式分析"><a href="#模式分析" class="headerlink" title="模式分析"></a>模式分析</h2><p>与继承关系相比，关联关系的主要优势在于不会破坏类的封装性，而且继承是一种耦合度较大的静态关系，无法在程序运行时动态扩展。在软件开发阶段，关联关系虽然不会比继承关系减少编码量，但是到了软件维护阶段，由于关联关系使系统具有较好的松耦合性，因此使得系统更加容易维护。当然，关联关系的缺点是比继承关系要创建更多的对象。<br>使用装饰模式来实现扩展比继承更加灵活，它以对客户透明的方式动态地给一个对象附加更多的责任。装饰模式可以在不需要创造更多子类的情况下，将对象的功能加以扩展。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1524,7 +1631,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1535,13 +1642,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">254k</span>
+    <span title="站点总字数">264k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:51</span>
+    <span title="站点阅读时长">4:01</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

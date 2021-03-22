@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">75</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">79</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">41</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">45</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-count">79</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,553 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/29/reactor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/29/reactor/" class="post-title-link" itemprop="url">reactor模式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-29 18:18:58" itemprop="dateCreated datePublished" datetime="2018-03-29T18:18:58+08:00">2018-03-29</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/netty/" itemprop="url" rel="index"><span itemprop="name">netty</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="什么是reactor设计模式"><a href="#什么是reactor设计模式" class="headerlink" title="什么是reactor设计模式"></a>什么是reactor设计模式</h2><p>reactor设计模式，是一种基于事件驱动的设计模式。Reactor框架是ACE各个框架中最基础的一个框架，其他框架都或多或少地用到了Reactor框架。 在事件驱动的应用中，将一个或多个客户的服务请求分离（demultiplex）和调度（dispatch）给应用程序。在事件驱动的应用中，同步地、有序地处理同时接收的多个服务请求。<br>reactor模式与外观模式有点像。不过，观察者模式与单个事件源关联，而反应器模式则与多个事件源关联 。当一个主体发生改变时，所有依属体都得到通知。</p>
+<p>反应器设计模式(Reactor pattern)是一种为处理并发服务请求，并将请求提交到一个或者多个服务处理程序的事件设计模式。当客户端请求抵达后，服务处理程序使用多路分配策略，由一个非阻塞的线程来接收所有的请求，然后派发这些请求至相关的工作线程进行处理。 Reactor模式主要包含下面几部分内容。</p>
+<ul>
+<li><p>初始事件分发器(Initialization Dispatcher)：用于管理Event Handler，定义注册、移除EventHandler等。它还作为Reactor模式的入口调用Synchronous Event Demultiplexer的select方法以阻塞等待事件返回，当阻塞等待返回时，根据事件发生的Handle将其分发给对应的Event Handler处理，即回调EventHandler中的handle_event()方法</p>
+</li>
+<li><p>同步（多路）事件分离器(Synchronous Event Demultiplexer)：无限循环等待新事件的到来，一旦发现有新的事件到来，就会通知初始事件分发器去调取特定的事件处理器。</p>
+</li>
+<li><p>系统处理程序(Handles)：操作系统中的句柄，是对资源在操作系统层面上的一种抽象，它可以是打开的文件、一个连接(Socket)、Timer等。由于Reactor模式一般使用在网络编程中，因而这里一般指Socket Handle，即一个网络连接（Connection，在Java NIO中的Channel）。这个Channel注册到Synchronous Event Demultiplexer中，以监听Handle中发生的事件，对ServerSocketChannnel可以是CONNECT事件，对SocketChannel可以是READ、WRITE、CLOSE事件等。</p>
+</li>
+<li><p>事件处理器(Event Handler)： 定义事件处理方法，以供Initialization Dispatcher回调使用。</p>
+</li>
+</ul>
+<p>对于Reactor模式，可以将其看做由两部分组成，一部分是由Boss组成，另一部分是由worker组成。Boss就像老板一样，主要是拉活儿、谈项目，一旦Boss接到活儿了，就下发给下面的work去处理。也可以看做是项目经理和程序员之间的关系。</p>
+<h2 id="标准定义两种I-O多路复用模式："><a href="#标准定义两种I-O多路复用模式：" class="headerlink" title="标准定义两种I/O多路复用模式："></a>标准定义两种I/O多路复用模式：</h2><p>Reactor和Proactor一般地，I/O多路复用机制都依赖于一个事件多路分离器(Event Demultiplexer)。<br>分离器对象可将来自事件源的I/O事件分离出来，并分发到对应的read/write事件处理器(Event Handler)。<br>开发人员预先注册需要处理的事件及其事件处理器（或回调函数）；<br>事件分离器负责将请求事件传递给事件处理器。两个与事件分离器有关的模式是Reactor和Proactor。<br>Reactor模式采用同步IO，而Proactor采用异步IO。</p>
+<p>在Reactor中，事件分离器负责等待文件描述符或socket为读写操作准备就绪，然后将就绪事件传递给对应的处理器，最后由处理器负责完成实际的读写工作。<br>而在Proactor模式中，处理器–或者兼任处理器的事件分离器，只负责发起异步读写操作。IO操作本身由操作系统来完成。传递给操作系统的参数需要包括用户定义的数据缓冲区地址和数据大小，操作系统才能从中得到写出操作所需数据，或写入从socket读到的数据。事件分离器捕获IO操作完成事件，然后将事件传递给对应处理器。比如，在windows上，处理器发起一个异步IO操作，再由事件分离器等待IOCompletion事件。典型的异步模式实现，都建立在操作系统支持异步API的基础之上，我们将这种实现称为“系统级”异步或“真”异步，因为应用程序完全依赖操作系统执行真正的IO工作。</p>
+<p>举个例子，将有助于理解Reactor与Proactor二者的差异，以读操作为例（类操作类似）。<br>在Reactor中实现读：</p>
+<ul>
+<li>注册读就绪事件和相应的事件处理器</li>
+<li>事件分离器等待事件</li>
+<li>事件到来，激活分离器，分离器调用事件对应的处理器。</li>
+<li>事件处理器完成实际的读操作，处理读到的数据，注册新的事件，然后返还控制权。</li>
+</ul>
+<p>在Proactor中实现读：</p>
+<ul>
+<li>处理器发起异步读操作（注意：操作系统必须支持异步IO）。在这种情况下，处理器无视IO就绪事件，它关注的是完成事件。</li>
+<li>事件分离器等待操作完成事件。</li>
+<li>在分离器等待过程中，操作系统利用并行的内核线程执行实际的读操作，并将结果数据存入用户自定义缓冲区，最后通知事件分离器读操作完成。</li>
+<li>事件分离器呼唤处理器。</li>
+<li>事件处理器处理用户自定义缓冲区中的数据，然后启动一个新的异步操作，并将控制权返回事件分离器。<br>可以看出，两个模式的相同点，都是对某个IO事件的事件通知(即告诉某个模块，这个IO操作可以进行或已经完成)。在结构上，两者也有相同点：demultiplexor负责提交IO操作(异步)、查询设备是否可操作(同步)，然后当条件满足时，就回调handler；不同点在于，异步情况下(Proactor)，当回调handler时，表示IO操作已经完成；同步情况下(Reactor)，回调handler时，表示IO设备可以进行某个操作(can read or can write)。2、通俗理解使用Proactor框架和Reactor框架都可以极大的简化网络应用的开发，但它们的重点却不同。Reactor框架中用户定义的操作是在实际操作之前调用的。比如你定义了操作是要向一个SOCKET写数据，那么当该SOCKET可以接收数据的时候，你的操作就会被调用；而Proactor框架中用户定义的操作是在实际操作之后调用的。比如你定义了一个操作要显示从SOCKET中读入的数据，那么当读操作完成以后，你的操作才会被调用。Proactor和Reactor都是并发编程中的设计模式。在我看来，他们都是用于派发/分离IO操作事件的。这里所谓的IO事件也就是诸如read/write的IO操作。”派发/分离”就是将单独的IO事件通知到上层模块。两个模式不同的地方在于，Proactor用于异步IO，而Reactor用于同步IO。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/pistolove/article/details/53152708">https://blog.csdn.net/pistolove/article/details/53152708</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010168160/article/details/53019039">https://blog.csdn.net/u010168160/article/details/53019039</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/24322387">https://www.zhihu.com/question/24322387</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/26943938/answer/68773398">https://www.zhihu.com/question/26943938/answer/68773398</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/reactor/reactor">https://github.com/reactor/reactor</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/28/io/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/28/io/" class="post-title-link" itemprop="url">理解I/O</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-28 18:18:58" itemprop="dateCreated datePublished" datetime="2018-03-28T18:18:58+08:00">2018-03-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 23:01:24" itemprop="dateModified" datetime="2020-10-26T23:01:24+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/I-O/" itemprop="url" rel="index"><span itemprop="name">I/O</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="IO模式"><a href="#IO模式" class="headerlink" title="IO模式"></a>IO模式</h1><p>对于一次IO访问（以read举例），数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。所以说，当一个read操作发生时，它会经历两个阶段：</p>
+<ol>
+<li>等待数据准备 (Waiting for the data to be ready)</li>
+<li>将数据从内核拷贝到进程中 (Copying the data from the kernel to the process)</li>
+</ol>
+<blockquote>
+<p>换句话说，BIO里用户最关心“我要读”，NIO里用户最关心”我可以读了”，在AIO模型里用户更需要关注的是“读完了”。</p>
+</blockquote>
+<blockquote>
+<p>NIO一个重要的特点是：socket主要的读、写、注册和接收函数，在等待就绪阶段都是非阻塞的，真正的I/O操作是同步阻塞的（消耗CPU但性能非常高）<br>注意，select是阻塞的，无论是通过操作系统的通知（epoll）还是不停的轮询(select，poll)，这个函数是阻塞的。所以你可以放心大胆地在一个while(true)里面调用这个函数而不用担心CPU空转。<br>NIO的主要事件有几个：读就绪、写就绪、有新连接到来</p>
+</blockquote>
+<p>NIO给我们带来了些什么：</p>
+<ul>
+<li>事件驱动模型</li>
+<li>避免多线程</li>
+<li>单线程处理多任务</li>
+<li>非阻塞I/O，I/O读写不再阻塞，而是返回0</li>
+<li>基于block的传输，通常比基于流的传输更高效</li>
+<li>更高级的IO函数，zero-copy</li>
+<li>IO多路复用大大提高了Java网络应用的可伸缩性和实用性</li>
+</ul>
+<h1 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h1><h2 id="复用技术和I-O复用"><a href="#复用技术和I-O复用" class="headerlink" title="复用技术和I/O复用"></a>复用技术和I/O复用</h2><h3 id="复用的概念"><a href="#复用的概念" class="headerlink" title="复用的概念"></a>复用的概念</h3><p>复用技术(multiplexing)并不是新技术而是一种设计思想，在通信和硬件设计中存在频分复用、时分复用、波分复用、码分复用等，在日常生活中复用的场景也非常多，因此不要被专业术语所迷惑。从本质上来说，复用就是为了解决有限资源和过多使用者的不平衡问题，且此技术的理论基础是资源的可释放性。</p>
+<h3 id="资源的可释放性"><a href="#资源的可释放性" class="headerlink" title="资源的可释放性"></a>资源的可释放性</h3><p>举个实际生活的例子：不可释放场景：ICU病房的呼吸机作为有限资源，病人一旦占用且在未脱离危险之前是无法放弃占用的，因此不可能几个情况一样的病人轮流使用。可释放场景：对于一些其他资源比如医护人员就可以实现对多个病人的同时监护，理论上不存在一个病人占用医护人员资源不释放的场景。</p>
+<h3 id="理解IO复用"><a href="#理解IO复用" class="headerlink" title="理解IO复用"></a>理解IO复用</h3><h4 id="I-O的含义"><a href="#I-O的含义" class="headerlink" title="I/O的含义"></a>I/O的含义</h4><p>在计算机领域常说的IO包括磁盘IO和网络IO，我们所说的IO复用主要是指网络IO，在Linux中一切皆文件，因此网络IO也经常用文件描述符FD来表示。</p>
+<h4 id="复用的含义"><a href="#复用的含义" class="headerlink" title="复用的含义"></a>复用的含义</h4><p>那么这些文件描述符FD要复用什么呢？在网络场景中复用的就是任务处理线程，所以简单理解就是多个IO共用1个线程。</p>
+<h4 id="IO复用的可行性"><a href="#IO复用的可行性" class="headerlink" title="IO复用的可行性"></a>IO复用的可行性</h4><p>IO请求的基本操作包括read和write，由于网络交互的本质性，必然存在等待，换言之就是整个网络连接中FD的读写是交替出现的，时而可读可写，时而空闲，所以IO复用是可用实现的。</p>
+<p>综上认为，IO复用技术就是协调多个可释放资源的FD交替共享任务处理线程完成通信任务，实现多个fd对应1个任务处理线程。</p>
+<p>现实生活中IO复用就像一只边牧管理几百只绵羊一样。</p>
+<h1 id="epoll的实现原理"><a href="#epoll的实现原理" class="headerlink" title="epoll的实现原理"></a>epoll的实现原理</h1><p>从kernel层面来说，事件产生有可能不是由硬件中断触发的，在一定情况下kernel的确会轮询，因为响应硬件中断是一个成本比较高的操作。以网卡为例，当数据量很少的时候，每来一个数据包网卡都回产生一个中断，kernel响应这个中断，从网卡缓冲区中读出数据放进协议栈处理，当满足一定条件时，kernel回调用户代码，这里的“回调”一般情况下是指从一个kernel syscall中返回(在此之前用户代码一直处于block状态)。当数据量很大时，每个包都产生一个中断就划不来了，此时kernel可以启动interrupt coalescing机制，让网卡做中断合并，也就是说来足够多的数据包或者等待一个timeout才会产生一个中断，kernel在响应中断时会把所有数据一起读出来处理，这样可以有效的降低中断次数。当数据量更大时，网卡缓冲区里几乎总是有未处理的数据，此时kernel干脆会禁掉网卡的中断，切换到轮询处理的模式，说白了就是跑一个忙循环不停地读网卡缓冲区里的数据，这样综合开销更低。</p>
+<h1 id="详细资料"><a href="#详细资料" class="headerlink" title="详细资料"></a>详细资料</h1><ul>
+<li><img src="https://segmentfault.com/a/1190000002715832" alt="IO设计模式：Reactor和Proactor对比"></li>
+<li><img src="https://segmentfault.com/a/1190000003063859" alt="Linux IO模式及 select、poll、epoll详解"></li>
+<li><img src="https://www.zhihu.com/question/20122137" alt="epoll 或者 kqueue 的原理是什么"></li>
+<li><img src="https://zhuanlan.zhihu.com/p/87843750" alt="深入理解IO复用之epoll"></li>
+<li><img src="https://tech.meituan.com/2016/11/04/nio.html" alt="Java NIO浅析"></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/28/reference-in-java/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/28/reference-in-java/" class="post-title-link" itemprop="url">Java语言中的各种引用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-28 11:05:16" itemprop="dateCreated datePublished" datetime="2018-03-28T11:05:16+08:00">2018-03-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object strongReference = <span class="keyword">new</span> Object();</span><br></pre></td></tr></table></figure>
+<p>强引用是我们一般最常的方式。在只要strongReference没有脱离作用域，或没有被设置成null，GC都不会回收它。</p>
+<h2 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h2><p>A soft reference is exactly like a weak reference, except that it is less eager to throw away the object to which it refers. An object which is only weakly reachable (the strongest references to it are WeakReferences) will be discarded at the next garbage collection cycle, but an object which is softly reachable will generally stick around for a while.</p>
+<p>SoftReferences aren’t required to behave any differently than WeakReferences, but in practice softly reachable objects are generally retained as long as memory is in plentiful supply. This makes them an excellent foundation for a cache, such as the image cache described above, since you can let the garbage collector worry about both how reachable the objects are (a strongly reachable object will never be removed from the cache) and how badly it needs the memory they are consuming.<br>使用被做为软引用的对象时，先要用SoftReference的get方法来看对象是否被回收。如果返回值为null，那对象已经被回收了。会尽可能长的保留引用直到 JVM 内存不足时才会被回收。<br>SoftReference 在“弱引用”中属于最强的引用。SoftReference 所指向的对象，当没有强引用指向它时，会在内存中停留一段的时间，垃圾回收器会根据 JVM 内存的使用情况（内存的紧缺程度）以及 SoftReference 的 get() 方法的调用情况来决定是否对其进行回收。</p>
+<p>被这种引用指向的对象，如果此对象没要再被其他Strong Reference引用的话，可能在任何时候被GC。虽然是可能在任何时候被GC，但是通常是在可用内存数比较低的时候，并且在程序抛出OutOfMemoryError之前才发生对此对象的GC。SoftReference通常被用作实现Cache的对象引用，如果这个对象被GC了，那么他可以在任何时候再重新被创建。另外，根据JDK文档中介绍，实际JVM的实现是鼓励不回收最近创建和最近使用的对象。SoftReference 类的一个典型用途就是用于内存敏感的高速缓存。</p>
+<h2 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h2><p>WeakReference 是弱于 SoftReference 的引用类型。弱引用的特性和基本与软引用相似，区别就在于弱引用所指向的对象只要进行系统垃圾回收，不管内存使用情况如何，永远对其进行回收（get() 方法返回 null）。<br>弱引用使用 get() 方法取得对象的强引用从而访问目标对象。<br>一旦系统内存回收，无论内存是否紧张，弱引用指向的对象都会被回收。<br>弱引用也可以避免 Heap 内存不足所导致的异常。<br>弱引用和软引用没有太大的区别，唯一的区别就是不会像软引用那样，在一定时间没有被访问后，才会被回收，而是只要有GC执行，就会回收。<br>如果一个被WeakReference引用的对象，当没要任何SoftReference和StrongReference引用时，立即会被GC。和SoftReference的区别是：WeakReference对象是被eagerly collected，即一旦没要任何SoftReference和StrongReference引用，立即被清楚；而只被SoftReference引用的对象，不回立即被清楚，只有当内存不够，即将发生OutOfMemoryError时才被清除，而且是先清除不常用的。SoftReference适合实现Cache用。WeakReference 类的一个典型用途就是规范化映射（ canonicalized mapping ）</p>
+<h2 id="幽灵引用（虚引用）"><a href="#幽灵引用（虚引用）" class="headerlink" title="幽灵引用（虚引用）"></a>幽灵引用（虚引用）</h2><p>A phantom reference is quite different than either SoftReference or WeakReference. Its grip on its object is so tenuous that you can’t even retrieve the object – its get() method always returns null. The only use for such a reference is keeping track of when it gets enqueued into a ReferenceQueue, as at that point you know the object to which it pointed is dead. How is that different from WeakReference, though?</p>
+<p>The difference is in exactly when the enqueuing happens.WeakReferences are enqueued as soon as the object to which they point becomes weakly reachable. This is beforefinalization or garbage collection has actually happened; in theory the object could even be “resurrected” by an unorthodox finalize() method, but the WeakReference would remain dead. PhantomReferences are enqueued only when the object is physically removed from memory, and theget() method always returns nullspecifically to prevent you from being able to “resurrect” an almost-dead object.</p>
+<p>What good are PhantomReferences? I’m only aware of two serious cases for them: first, they allow you to determine exactly when an object was removed from memory. They are in fact the only way to determine that. This isn’t generally that useful, but might come in handy in certain very specific circumstances like manipulating large images: if you know for sure that an image should be garbage collected, you can wait until it actually is before attempting to load the next image, and therefore make the dreaded OutOfMemoryError less likely.</p>
+<p>Second, PhantomReferences avoid a fundamental problem with finalization: finalize() methods can “resurrect” objects by creating new strong references to them. So what, you say? Well, the problem is that an object which overridesfinalize() must now be determined to be garbage in at least two separate garbage collection cycles in order to be collected. When the first cycle determines that it is garbage, it becomes eligible for finalization. Because of the (slim, but unfortunately real) possibility that the object was “resurrected” during finalization, the garbage collector has to run again before the object can actually be removed. And because finalization might not have happened in a timely fashion, an arbitrary number of garbage collection cycles might have happened while the object was waiting for finalization. This can mean serious delays in actually cleaning up garbage objects, and is why you can getOutOfMemoryErrors even when most of the heap is garbage.</p>
+<p>With PhantomReference, this situation is impossible – when a PhantomReference is enqueued, there is absolutely no way to get a pointer to the now-dead object (which is good, because it isn’t in memory any longer). BecausePhantomReference cannot be used to resurrect an object, the object can be instantly cleaned up during the first garbage collection cycle in which it is found to be phantomly reachable. You can then dispose whatever resources you need to at your convenience.</p>
+<p>Arguably, the finalize() method should never have been provided in the first place. PhantomReferencesare definitely safer and more efficient to use, and eliminatingfinalize() would have made parts of the VM considerably simpler. But, they’re also more work to implement, so I confess to still using finalize() most of the time. The good news is that at least you have a choice.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ReferenceQueue queue = <span class="keyword">new</span> ReferenceQueue();</span><br><span class="line">PhantomReference phantomReference= <span class="keyword">new</span> PhantomReference(<span class="keyword">new</span> Object(), queue);</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<p>虚引用和弱引用非常相似，但不同的一点是，  用PhantomReference的get方法时，返回值永远为null，也就是说你永远无法通过PhantomReference来得到它的引用。而且它必须和ReferenceQueue一起使用，当垃圾收集器确定了某个对象是虚可及对象时， PhantomReference 对象就被放在它的 ReferenceQueue 上。还有一个不同点是，放入RererenceQueue的时机。当弱引用一旦达到可以被回收的状态时，就会被加入到队列里。但这种状态的对象可能会因为对象的finalize()方法里“复活”（或者说回收的更慢）。而PhantomReference对象被放到RererenceQueue的时候，实际上它已经被从物理内存里清除掉了。它的get方法永远返回null，也防止你”复活“它（或者说妨碍它被释放掉）</p>
+<p>问题来了，那我们能用它来做什么呢？看了一些文章，有两个地方可用<br>1，通过ReferenceQueue，跟踪对象什么时候被释放，或者在它被释放后，做一些后续工作。<br>2，避免因为finalize()方法造成很久才能释放。原因如下：实现了finalize()方法的对象，至少要经过两个GC周期才能被释放。<br>值得注意的是，对于引用回收方面，虚引用类似强引用不会自动根据内存情况自动对目标对象回收，Client 需要自己对其进行处理以防 Heap 内存不足异常。<br>不像软引用、弱引用会自动回收内存，虚引用的存在（虽然内存还是会被回收）更倾向于发送通知，当一个对象确定会被回收之后（此时虚引用中的引用对象并不能确定是否已经被回收内存了，而软引用和弱引用一定是被回收内存了的），就会向应用程序发送一个通知（进入队列和出队列），“我要被清理了，你们是否要做些什么事情呢？”。<br>所以，虚引用用来做对象清理工作，比finalize方法再好不过了，不会导致垃圾回收器额外做工作，配合Reference阻塞方法remove就能更及时做清理工作。<br>当没有StrongReference，SoftReference和WeakReference引用时，随时可被GC。通常和ReferenceQueue联合使用，管理和清除与被引用对象（没有finalize方法）相关的本地资源。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/reliveIT/article/details/47664029">https://blog.csdn.net/reliveIT/article/details/47664029</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/java/j-lo-langref/">https://www.ibm.com/developerworks/cn/java/j-lo-langref/</a> 文章中错误很多，</li>
+<li><a target="_blank" rel="noopener" href="https://community.oracle.com/blogs/enicholas/2006/05/04/understanding-weak-references">https://community.oracle.com/blogs/enicholas/2006/05/04/understanding-weak-references</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/jvm-source-code-analysis-finalreference">http://www.infoq.com/cn/articles/jvm-source-code-analysis-finalreference</a></li>
+<li>com.mysql.jdbc.NonRegisteringDriver的内存泄漏</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/26/performance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/26/performance/" class="post-title-link" itemprop="url">Java性能优化</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-26 15:18:58" itemprop="dateCreated datePublished" datetime="2018-03-26T15:18:58+08:00">2018-03-26</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 19:23:54" itemprop="dateModified" datetime="2020-10-26T19:23:54+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="代码级别"><a href="#代码级别" class="headerlink" title="代码级别"></a>代码级别</h2><ul>
+<li>使用JMH做微基准测试，不臆想，不猜测</li>
+<li>更多优化<br>int vs Integer<br>4 byte vs 16 byte<br>Java对象最小16 bytes， 12 bytes的固定header，按8 bytes对齐<br>AtomicIntegerFieldUpdater vs AtomicInteger<br>Netty大量使用此方法，代码非常复杂。<br>海量对象，多个数字属性时:int + 静态的updater vs AtoimicInteger<br>ArrayList vs LinkedList<br>Pointer-Based的容器，每个元素是Node对象，里面含真正对象及前后节点的指针(24 bytes per element)<br>Array-Based的容器，直接在数组里存放对象  (4 bytes per element)，而且是连续性存储的(缓存行预加载)</li>
+<li>StringBuilder扩容复制<br><a target="_blank" rel="noopener" href="http://calvin1978.blogcn.com/articles/stringbuilder.html">http://calvin1978.blogcn.com/articles/stringbuilder.html</a></li>
+</ul>
+<h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><p>数据库的调优，总的来说分为以下三部分：</p>
+<h2 id="SQL调优"><a href="#SQL调优" class="headerlink" title="SQL调优"></a>SQL调优</h2><p>慢查询日志，使用explain、profile等工具。</p>
+<h2 id="架构层面的调优"><a href="#架构层面的调优" class="headerlink" title="架构层面的调优"></a>架构层面的调优</h2><p>读写分离、多从库负载均衡、水平和垂直分库分表</p>
+<h2 id="连接池调优"><a href="#连接池调优" class="headerlink" title="连接池调优"></a>连接池调优</h2><p>我们的应用为了实现数据库连接的高效获取、对数据库连接的限流等目的，通常会采用连接池类的方案，即每一个应用节点都管理了一个到各个数据库的连接池。随着业务访问量或者数据量的增长，原有的连接池参数可能不能很好地满足需求，这个时候就需要结合当前使用连接池的原理、具体的连接池监控数据和当前的业务量作一个综合的判断，通过反复的几次调试得到最终的调优参数。</p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><p>本地缓存（HashMap/ConcurrentHashMap、Ehcache、Guava Cache等），缓存服务（Redis/Tair/Memcache等）。</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><h3 id="什么情况适合用缓存？考虑以下两种场景："><a href="#什么情况适合用缓存？考虑以下两种场景：" class="headerlink" title="什么情况适合用缓存？考虑以下两种场景："></a>什么情况适合用缓存？考虑以下两种场景：</h3><ul>
+<li><p>短时间内相同数据重复查询多次且数据更新不频繁，这个时候可以选择先从缓存查询，查询不到再从数据库加载并回设到缓存的方式。此种场景较适合用单机缓存。</p>
+</li>
+<li><p>高并发查询热点数据，后端数据库不堪重负，可以用缓存来扛。</p>
+<h3 id="选型考虑"><a href="#选型考虑" class="headerlink" title="选型考虑"></a>选型考虑</h3></li>
+<li><p>如果数据量小，并且不会频繁地增长又清空（这会导致频繁地垃圾回收），那么可以选择本地缓存。具体的话，如果需要一些策略的支持（比如缓存满的逐出策略），可以考虑Ehcache；如不需要，可以考虑HashMap；如需要考虑多线程并发的场景，可以考虑ConcurentHashMap。</p>
+</li>
+<li><p>其他情况，可以考虑缓存服务。目前从资源的投入度、可运维性、是否能动态扩容以及配套设施来考虑，我们优先考虑Tair。除非目前Tair还不能支持的场合（比如分布式锁、Hash类型的value），我们考虑用Redis。</p>
+<h3 id="设计关键点"><a href="#设计关键点" class="headerlink" title="设计关键点"></a>设计关键点</h3><h4 id="什么时候更新缓存？如何保障更新的可靠性和实时性？"><a href="#什么时候更新缓存？如何保障更新的可靠性和实时性？" class="headerlink" title="什么时候更新缓存？如何保障更新的可靠性和实时性？"></a>什么时候更新缓存？如何保障更新的可靠性和实时性？</h4><p>更新缓存的策略，需要具体问题具体分析。这里以门店POI的缓存数据为例，来说明一下缓存服务型的缓存更新策略是怎样的？目前约10万个POI数据采用了Tair作为缓存服务，具体更新的策略有两个：</p>
+</li>
+<li><p>接收门店变更的消息，准实时更新。</p>
+</li>
+<li><p>给每一个POI缓存数据设置5分钟的过期时间，过期后从DB加载再回设到DB。这个策略是对第一个策略的有力补充，解决了手动变更DB不发消息、接消息更新程序临时出错等问题导致的第一个策略失效的问题。通过这种双保险机制，有效地保证了POI缓存数据的可靠性和实时性。</p>
+<h4 id="缓存是否会满，缓存满了怎么办？"><a href="#缓存是否会满，缓存满了怎么办？" class="headerlink" title="缓存是否会满，缓存满了怎么办？"></a>缓存是否会满，缓存满了怎么办？</h4><p>对于一个缓存服务，理论上来说，随着缓存数据的日益增多，在容量有限的情况下，缓存肯定有一天会满的。如何应对？<br>① 给缓存服务，选择合适的缓存逐出算法，比如最常见的LRU。<br>② 针对当前设置的容量，设置适当的警戒值，比如10G的缓存，当缓存数据达到8G的时候，就开始发出报警，提前排查问题或者扩容。<br>③ 给一些没有必要长期保存的key，尽量设置过期时间。</p>
+</li>
+</ul>
+<h4 id="缓存是否允许丢失？丢失了怎么办？"><a href="#缓存是否允许丢失？丢失了怎么办？" class="headerlink" title="缓存是否允许丢失？丢失了怎么办？"></a>缓存是否允许丢失？丢失了怎么办？</h4><p>根据业务场景判断，是否允许丢失。如果不允许，就需要带持久化功能的缓存服务来支持，比如Redis或者Tair。更细节的话，可以根据业务对丢失时间的容忍度，还可以选择更具体的持久化策略，比如Redis的RDB或者AOF。</p>
+<h4 id="缓存被“击穿”问题"><a href="#缓存被“击穿”问题" class="headerlink" title="缓存被“击穿”问题"></a>缓存被“击穿”问题</h4><p>对于一些设置了过期时间的key，如果这些key可能会在某些时间点被超高并发地访问，是一种非常“热点”的数据。这个时候，需要考虑另外一个问题：缓存被“击穿”的问题。</p>
+<ul>
+<li>概念：缓存在某个时间点过期的时候，恰好在这个时间点对这个Key有大量的并发请求过来，这些请求发现缓存过期一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮。</li>
+<li>如何解决：业界比较常用的做法，是使用mutex。简单地来说，就是在缓存失效的时候（判断拿出来的值为空），不是立即去load db，而是先使用缓存工具的某些带成功操作返回值的操作（比如Redis的SETNX或者Memcache的ADD）去set一个mutex key，当操作返回成功时，再进行load db的操作并回设缓存；否则，就重试整个get缓存的方法。类似下面的代码：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">get</span><span class="params">(key)</span> </span>&#123;</span><br><span class="line">    String value = redis.get(key);</span><br><span class="line">    <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123; <span class="comment">//代表缓存值过期</span></span><br><span class="line">        <span class="comment">//设置3min的超时，防止del操作失败的时候，下次缓存过期一直不能load db</span></span><br><span class="line">        <span class="keyword">if</span> (redis.setnx(key_mutex, <span class="number">1</span>, <span class="number">3</span> * <span class="number">60</span>) == <span class="number">1</span>) &#123;  <span class="comment">//代表设置成功</span></span><br><span class="line">             value = db.get(key);</span><br><span class="line">                    redis.set(key, value, expire_secs);</span><br><span class="line">                    redis.del(key_mutex);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;  <span class="comment">//这个时候代表同时候的其他线程已经load db并回设到缓存了，这时候重试获取缓存值即可</span></span><br><span class="line">                    sleep(<span class="number">50</span>);</span><br><span class="line">                    get(key);  <span class="comment">//重试</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> value;      </span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h2><h2 id="异步线程池"><a href="#异步线程池" class="headerlink" title="异步线程池"></a>异步线程池</h2><p>guava eventbus</p>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>kafka</p>
+<h2 id="并发与锁"><a href="#并发与锁" class="headerlink" title="并发与锁"></a>并发与锁</h2><h2 id="锁优化"><a href="#锁优化" class="headerlink" title="锁优化"></a>锁优化</h2><p>在并发程序中，对可伸缩性的最主要威胁就是独占方式的资源锁。<br>3种方式降低锁的竞争程度</p>
+<ul>
+<li>减少锁的持有时间<br>synchronized 尽量短的代码块<br>但如果有多个断断续续的同步块，可考虑合并粗化</li>
+<li>降低锁的持有频率。<br>ReadWriteLock<br>多线程并发读锁，单线程写锁<br>BlockingQueue<br>ArrayBlockingQueue : 全局一把锁<br>LinkedBlockingQueue : 队头队尾两把锁</li>
+<li>使用带有协调机制的堵占锁，这些机制允许更高的并发性。<br>缩小锁的范围（同步代码块）<br>减小锁的粒度（）<br>锁分解，锁分段<br>ConcurrentHashMap 分段锁 16<br>避免热点域，降低竞争锁的影响 放弃使用独占锁，使用并发容器，读-写锁。不可变对象和原子变量。</li>
+</ul>
+<h2 id="无锁（lock-free）"><a href="#无锁（lock-free）" class="headerlink" title="无锁（lock-free）"></a>无锁（lock-free）</h2><ul>
+<li>CAS </li>
+</ul>
+<ul>
+<li>Compare And Set 自旋</li>
+<li>Atomic*系列</li>
+<li>ConcurrentLinkedQueue</li>
+</ul>
+<ul>
+<li>ThreadLocal</li>
+<li>不可变对象<br>不修改对象属性  直接替换为新对象<br>CopyOnWriteArrayList</li>
+</ul>
+<p>异步日志和无锁队列的实现</p>
+<h2 id="并发的其他话题"><a href="#并发的其他话题" class="headerlink" title="并发的其他话题"></a>并发的其他话题</h2><ul>
+<li>ThreadLocal的代价<br>没有银弹，开放地址法的HashMap<br>Netty的 FastThreadLocal, index原子自增的数组 </li>
+<li>volatile的代价<br>Happen Before<br>volatile vs Atomic*，可见性 vs 原子性<br>访问开销比同步块小，但也不可忽视  存到临时变量使用，需要确保可见性时再次赋值</li>
+<li>合理设置线程 内存，线程调度的消耗不可忽略</li>
+<li>ForkJoinPool的其他优势:每线程独立任务队列，无锁 Netty的EventLoop， 同样由一组容量为1的线程池组成</li>
+<li>Quasar 协程:少量线程处理大量并发请求<br>遇上阻塞，主动让出线程去做其他事情  阻塞返回，随便拉一条线程来再续前缘<br>Java中的纤程库 - Quasar: <a target="_blank" rel="noopener" href="http://colobu.com/2016/07/14/Java-Fiber-Quasar/">http://colobu.com/2016/07/14/Java-Fiber-Quasar/</a></li>
+</ul>
+<h2 id="JVM调优"><a href="#JVM调优" class="headerlink" title="JVM调优"></a>JVM调优</h2><p>TODO</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><ul>
+<li>JITWatch<br><a target="_blank" rel="noopener" href="https://github.com/AdoptOpenJDK/jitwatch/">https://github.com/AdoptOpenJDK/jitwatch/</a></li>
+<li>Btrace<br><a target="_blank" rel="noopener" href="http://calvin1978.blogcn.com/articles/btrace1.html">http://calvin1978.blogcn.com/articles/btrace1.html</a></li>
+<li>FastUtil,Koloboke<br><a target="_blank" rel="noopener" href="http://java-performance.info/hashmap-overview-jdk-fastutil-goldman-sachs-hppc-koloboke-trove-january-2015/">http://java-performance.info/hashmap-overview-jdk-fastutil-goldman-sachs-hppc-koloboke-trove-january-2015/</a></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>[Java性能优化指南V1.4]</li>
+<li><a target="_blank" rel="noopener" href="http://ifeve.com/disruptor/">http://ifeve.com/disruptor/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.hollischuang.com/archives/1072">http://www.hollischuang.com/archives/1072</a></li>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/%E5%A2%83%E5%A4%96%E4%B8%9A%E5%8A%A1%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5.html">https://tech.meituan.com/境外业务性能优化实践.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/performance_tunning.html">https://tech.meituan.com/performance_tunning.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.hollischuang.com/archives/489">http://www.hollischuang.com/archives/489</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1076,566 +1623,10 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/15/httpcache/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/15/httpcache/" class="post-title-link" itemprop="url">http 缓存</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-03-15 10:32:47" itemprop="dateCreated datePublished" datetime="2018-03-15T10:32:47+08:00">2018-03-15</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:04:52" itemprop="dateModified" datetime="2020-10-26T23:04:52+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>8.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>8 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>重用已获取的资源能够有效的提升网站与应用的性能。Web 缓存能够减少延迟与网络阻塞，进而减少显示某个资源所用的时间。借助 HTTP 缓存，Web 站点变得更具有响应性。</p>
-<h2 id="各种类型的缓存"><a href="#各种类型的缓存" class="headerlink" title="各种类型的缓存"></a>各种类型的缓存</h2><p>缓存是一种保存资源副本并在下次请求时直接使用该副本的技术。当 web 缓存发现请求的资源已经被存储，它会拦截请求，返回该资源的拷贝，而不会去源服务器重新下载。（这部分是浏览器实现的功能）这样带来的好处有：缓解服务器端压力，提升性能(获取资源的耗时更短了)。对于网站来说，缓存是达到高性能的重要组成部分。缓存需要合理配置，因为并不是所有资源都是永久不变的：重要的是对一个资源的缓存应截止到其下一次发生改变（即不能缓存过期的资源）。</p>
-<p>缓存的种类有很多,其大致可归为两类：私有与共享缓存。共享缓存存储的响应能够被多个用户使用。私有缓存只能用于单独用户。本文将主要介绍浏览器与代理缓存，除此之外还有网关缓存、CDN、反向代理缓存和负载均衡器等部署在服务器上，为站点和 web 应用提供更好的稳定性、性能和扩展性。</p>
-<h2 id="私有-浏览器缓存"><a href="#私有-浏览器缓存" class="headerlink" title="(私有)浏览器缓存"></a>(私有)浏览器缓存</h2><p>私有缓存只能用于单独用户。你可能已经见过浏览器设置中的“缓存”选项。浏览器缓存拥有用户通过 HTTP 下载的所有文档。这些缓存为浏览过的文档提供向后/向前导航，保存网页，查看源码等功能，可以避免再次向服务器发起多余的请求。它同样可以提供缓存内容的离线浏览。</p>
-<h2 id="共享-代理缓存"><a href="#共享-代理缓存" class="headerlink" title="(共享)代理缓存"></a>(共享)代理缓存</h2><p>共享缓存可以被多个用户使用。例如，ISP 或你所在的公司可能会架设一个 web 代理来作为本地网络基础的一部分提供给用户。这样热门的资源就会被重复使用，减少网络拥堵与延迟。</p>
-<h2 id="缓存操作的目标"><a href="#缓存操作的目标" class="headerlink" title="缓存操作的目标"></a>缓存操作的目标</h2><p>虽然 HTTP 缓存不是必须的，但重用缓存的资源通常是必要的。然而常见的 HTTP 缓存只能存储 GET 响应，对于其他类型的响应则无能为力。缓存的关键主要包括request method和目标URI（一般只有GET请求才会被缓存）。 普遍的缓存案例:</p>
-<ul>
-<li>一个检索请求的成功响应: 对于 GET请求，响应状态码为：200，则表示为成功。一个包含例如HTML文档，图片，或者文件的响应.</li>
-<li>不变的重定向: 响应状态码：301.</li>
-<li>错误响应: 响应状态码：404 的一个页面.</li>
-<li>不完全的响应: 响应状态码 206，只返回局部的信息.</li>
-<li>除了 GET 请求外，如果匹配到作为一个已被定义的cache键名的响应.<br>针对一些特定的请求，也可以通过关键字区分多个存储的不同响应以组成缓存的内容。具体参考下文关于 Vary 的信息 .</li>
-</ul>
-<h2 id="缓存控制"><a href="#缓存控制" class="headerlink" title="缓存控制"></a>缓存控制</h2><p>通过网络获取内容既速度缓慢又开销巨大。较大的响应需要在客户端与服务器之间进行多次往返通信，这会延迟浏览器获得和处理内容的时间，还会增加访问者的流量费用。因此，缓存并重复利用之前获取的资源的能力成为性能优化的一个关键方面。</p>
-<p>好在每个浏览器都自带了 HTTP 缓存实现功能。您只需要确保每个服务器响应都提供正确的 HTTP 标头指令，以指示浏览器何时可以缓存响应以及可以缓存多久。</p>
-<p>注：如果您在应用中使用 Webview 来获取和显示网页内容，可能需要提供额外的配置标志，以确保 HTTP 缓存得到启用、其大小根据用例进行了合理设置并且缓存将持久保存。务必查看平台文档并确认您的设置！</p>
-<p><img src="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/images/http-request.png?hl=zh-cn" alt="HTTP 请求"></p>
-<p>当服务器返回响应时，还会发出一组 HTTP 标头，用于描述响应的内容类型、长度、缓存指令、验证令牌等。例如，在上图的交互中，服务器返回一个 1024 字节的响应，指示客户端将其缓存最多 120 秒，并提供一个验证令牌（“x234dff”），可在响应过期后用来检查资源是否被修改。</p>
-<h2 id="通过-ETag-验证缓存的响应"><a href="#通过-ETag-验证缓存的响应" class="headerlink" title="通过 ETag 验证缓存的响应"></a>通过 ETag 验证缓存的响应</h2><ul>
-<li>  服务器使用 ETag HTTP 标头传递验证令牌。</li>
-<li>  验证令牌可实现高效的资源更新检查：资源未发生变化时不会传送任何数据。</li>
-</ul>
-<p>假定在首次获取资源 120 秒后，浏览器又对该资源发起了新的请求。首先，浏览器会检查本地缓存并找到之前的响应。遗憾的是，该响应现已过期，浏览器无法使用。此时，浏览器可以直接发出新的请求并获取新的完整响应。不过，这样做效率较低，因为如果资源未发生变化，那么下载与缓存中已有的完全相同的信息就毫无道理可言！</p>
-<p>这正是验证令牌（在 ETag 标头中指定）旨在解决的问题。服务器生成并返回的随机令牌通常是文件内容的哈希值或某个其他指纹。客户端不需要了解指纹是如何生成的，只需在下一次请求时将其发送至服务器。如果指纹仍然相同，则表示资源未发生变化，您就可以跳过下载。</p>
-<p><img src="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/images/http-cache-control.png?hl=zh-cn" alt="HTTP Cache-Control 示例"></p>
-<p>在上例中，客户端自动在“If-None-Match” HTTP 请求标头内提供 ETag 令牌。服务器根据当前资源核对令牌。如果它未发生变化，服务器将返回“304 Not Modified”响应，告知浏览器缓存中的响应未发生变化，可以再延用 120 秒。请注意，您不必再次下载响应，这节约了时间和带宽。</p>
-<p>作为网络开发者，您如何利用高效的重新验证？浏览器会替我们完成所有工作：它会自动检测之前是否指定了验证令牌，它会将验证令牌追加到发出的请求上，并且它会根据从服务器接收的响应在必要时更新缓存时间戳。<strong>我们唯一要做的就是确保服务器提供必要的 ETag 令牌。检查您的服务器文档中有无必要的配置标志。</strong></p>
-<p>注：提示：HTML5 Boilerplate 项目包含所有最流行服务器的<a target="_blank" rel="noopener" href="https://github.com/h5bp/server-configs">配置文件样例</a>，其中为每个配置标志和设置都提供了详细的注解。在列表中找到您喜爱的服务器，查找合适的设置，然后复制/确认您的服务器配置了推荐的设置。</p>
-<ul>
-<li>  每个资源都可通过 Cache-Control HTTP 标头定义其缓存策略</li>
-<li>  Cache-Control 指令控制谁在什么条件下可以缓存响应以及可以缓存多久。</li>
-</ul>
-<p>从性能优化的角度来说，最佳请求是无需与服务器通信的请求：您可以通过响应的本地副本消除所有网络延迟，以及避免数据传送的流量费用。为实现此目的，HTTP 规范允许服务器返回 <a target="_blank" rel="noopener" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9">Cache-Control 指令</a>，这些指令控制浏览器和其他中间缓存如何缓存各个响应以及缓存多久。</p>
-<p>注：Cache-Control 标头是在 HTTP/1.1 规范中定义的，取代了之前用来定义响应缓存策略的标头（例如 Expires）。所有现代浏览器都支持 Cache-Control，因此，使用它就够了。</p>
-<p><img src="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/images/http-cache-control-highlight.png?hl=zh-cn" alt="HTTP Cache-Control 示例"></p>
-<h2 id="Cache-control"><a href="#Cache-control" class="headerlink" title="Cache-control"></a>Cache-control</h2><ul>
-<li>每个资源都可通过 Cache-Control HTTP 标头定义其缓存策略</li>
-<li>Cache-Control 指令控制谁在什么条件下可以缓存响应以及可以缓存多久。</li>
-</ul>
-<p>从性能优化的角度来说，最佳请求是无需与服务器通信的请求：您可以通过响应的本地副本消除所有网络延迟，以及避免数据传送的流量费用。为实现此目的，HTTP 规范允许服务器返回 Cache-Control 指令，这些指令控制浏览器和其他中间缓存如何缓存各个响应以及缓存多久。</p>
-<p>注：Cache-Control 标头是在 HTTP/1.1 规范中定义的，取代了之前用来定义响应缓存策略的标头（例如 Expires）。所有现代浏览器都支持 Cache-Control，因此，使用它就够了。</p>
-<h3 id="禁止进行缓存"><a href="#禁止进行缓存" class="headerlink" title="禁止进行缓存"></a>禁止进行缓存</h3><p>缓存中不得存储任何关于客户端请求和服务端响应的内容。每次由客户端发起的请求都会下载完整的响应内容。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: no-store</span><br><span class="line">Cache-Control: no-cache, no-store, must-revalidate</span><br></pre></td></tr></table></figure>
-<h3 id="强制确认缓存"><a href="#强制确认缓存" class="headerlink" title="强制确认缓存"></a>强制确认缓存</h3><p>如下头部定义，此方式下，每次有请求发出时，缓存会将此请求发到服务器（译者注：该请求应该会带有与本地缓存相关的验证字段），服务器端会验证请求中所描述的缓存是否过期，若未过期（注：实际就是返回304），则缓存才使用本地缓存副本。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: no-cache</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>“no-cache”和“no-store”<br>“no-cache”表示必须先与服务器确认返回的响应是否发生了变化，然后才能使用该响应来满足后续对同一网址的请求。因此，如果存在合适的验证令牌 (ETag)，no-cache 会发起往返通信来验证缓存的响应，但如果资源未发生变化，则可避免下载（服务端返回304）。<br>相比之下，“no-store”则要简单得多。它直接禁止浏览器以及所有中间缓存存储任何版本的返回响应，例如，包含个人隐私数据或银行业务数据的响应。每次用户请求该资产时，都会向服务器发送请求，并下载完整的响应。（可以理解为永不缓存）</p>
-<h3 id="私有缓存和公共缓存"><a href="#私有缓存和公共缓存" class="headerlink" title="私有缓存和公共缓存"></a>私有缓存和公共缓存</h3><p>“public” 指令表示该响应可以被任何中间人（译者注：比如中间代理、CDN等）缓存。若指定了”public”，则一些通常不被中间人缓存的页面（译者注：因为默认是private）（比如 带有HTTP验证信息（帐号密码）的页面 或 某些特定影响状态码的页面），将会被其缓存。</p>
-<p>而 “private” 则表示该响应是专用于某单个用户的，中间人不能缓存此响应，该响应只能应用于浏览器私有缓存中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: private</span><br><span class="line">Cache-Control: public</span><br></pre></td></tr></table></figure>
-<h3 id="缓存过期机制"><a href="#缓存过期机制" class="headerlink" title="缓存过期机制"></a>缓存过期机制</h3><p>“max-age”</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: max-age&#x3D;60</span><br></pre></td></tr></table></figure>
-<p>指令指定从请求的时间开始，允许获取的响应被重用的最长时间（单位：秒）。例如，“max-age=60”表示可在接下来的 60 秒缓存和重用响应。<br>针对应用中那些不会改变的文件，通常可以手动设置一定的时长以保证缓存有效，例如图片、css、js等静态资源。</p>
-<h3 id="缓存验证确认"><a href="#缓存验证确认" class="headerlink" title="缓存验证确认"></a>缓存验证确认</h3><p>当使用了 “must-revalidate” 指令，那就意味着缓存在考虑使用一个陈旧的资源时，必须先验证它的状态，已过期的缓存将不被使用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: must-revalidate</span><br></pre></td></tr></table></figure>
-<h2 id="定义最佳-Cache-Control-策略"><a href="#定义最佳-Cache-Control-策略" class="headerlink" title="定义最佳 Cache-Control 策略"></a>定义最佳 Cache-Control 策略</h2><p><img src="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/images/http-cache-decision-tree.png?hl=zh-cn" alt="缓存决策树"><br>按照以上决策树为您的应用使用的特定资源或一组资源确定最佳缓存策略。在理想的情况下，您的目标应该是在客户端上缓存尽可能多的响应，缓存尽可能长的时间，并且为每个响应提供验证令牌，以实现高效的重新验证。</p>
-<h2 id="废弃和更新缓存的响应"><a href="#废弃和更新缓存的响应" class="headerlink" title="废弃和更新缓存的响应"></a>废弃和更新缓存的响应</h2><ul>
-<li>在资源“过期”之前，将一直使用本地缓存的响应。</li>
-<li>您可以通过在网址中嵌入文件内容指纹，强制客户端更新到新版本的响应。</li>
-<li>为获得最佳性能，每个应用都需要定义自己的缓存层次结构。<br>浏览器发出的所有 HTTP 请求会首先路由到浏览器缓存，以确认是否缓存了可用于满足请求的有效响应。如果有匹配的响应，则从缓存中读取响应，这样就避免了网络延迟和传送产生的流量费用。</li>
-</ul>
-<p>不过，如果您想更新或废弃缓存的响应，该怎么办？例如，假定您已告诉访问者将某个 CSS 样式表缓存长达 24 小时 (max-age=86400)，但设计人员刚刚提交了一个您希望所有用户都能使用的更新。您该如何通知拥有现在“已过时”的 CSS 缓存副本的所有访问者更新其缓存？在不更改资源网址的情况下，您做不到。</p>
-<p>浏览器缓存响应后，缓存的版本将一直使用到过期（由 max-age 或 expires 决定），或一直使用到由于某种其他原因从缓存中删除，例如用户清除了浏览器缓存。因此，构建网页时，不同的用户可能最终使用的是文件的不同版本；刚获取了资源的用户将使用新版本的响应，而缓存了早期（但仍有效）副本的用户将使用旧版本的响应。</p>
-<p>所以，如何才能鱼和熊掌兼得：客户端缓存和快速更新？您可以在资源内容发生变化时更改它的网址，强制用户下载新响应。通常情况下，可以通过在文件名中嵌入文件的指纹或版本号来实现 - 例如 style.x234dff.css。</p>
-<p><img src="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/images/http-cache-hierarchy.png?hl=zh-cn" alt="缓存层次结构"></p>
-<p>因为能够定义每个资源的缓存策略，所以您可以定义“缓存层次结构”，这样不但可以控制每个响应的缓存时间，还可以控制访问者看到新版本的速度。为了进行说明，我们一起分析一下上面的示例：</p>
-<ul>
-<li>  HTML 被标记为“no-cache”，这意味着浏览器在每次请求时都始终会重新验证文档，并在内容变化时获取最新版本。此外，在 HTML 标记内，您在 CSS 和 JavaScript 资产的网址中嵌入指纹：如果这些文件的内容发生变化，网页的 HTML 也会随之改变，并会下载 HTML 响应的新副本。</li>
-<li>  允许浏览器和中间缓存（例如 CDN）缓存 CSS，并将 CSS 设置为 1 年后到期。请注意，您可以放心地使用 1 年的“远期过期”，因为您在文件名中嵌入了文件的指纹：CSS 更新时网址也会随之变化。</li>
-<li>  JavaScript 同样设置为 1 年后到期，但标记为 private，这或许是因为它包含的某些用户私人数据是 CDN 不应缓存的。</li>
-<li>  图像缓存时不包含版本或唯一指纹，并设置为 1 天后到期。</li>
-</ul>
-<p>您可以组合使用 ETag、Cache-Control 和唯一网址来实现一举多得：较长的过期时间、控制可以缓存响应的位置以及随需更新。</p>
-<h2 id="新鲜度"><a href="#新鲜度" class="headerlink" title="新鲜度"></a>新鲜度</h2><p>理论上来讲，当一个资源被缓存存储后，该资源应该可以被永久存储在缓存中。由于缓存只有有限的空间用于存储资源副本，所以缓存会定期地将一些副本删除，这个过程叫做缓存驱逐。另一方面，当服务器上面的资源进行了更新，那么缓存中的对应资源也应该被更新，由于HTTP是C/S模式的协议，服务器更新一个资源时，不可能直接通知客户端及其缓存，所以双方必须为该资源约定一个过期时间，在该过期时间之前，该资源（缓存副本）就是新鲜的，当过了过期时间后，该资源（缓存副本）则变为陈旧的。驱逐算法用于将陈旧的资源（缓存副本）替换为新鲜的，注意，一个陈旧的资源（缓存副本）是不会直接被清除或忽略的，当客户端发起一个请求时，缓存检索到已有一个对应的陈旧资源（缓存副本），则缓存会先将此请求附加一个<code>[If-None-Match](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match)</code>头，然后发给目标服务器，以此来检查该资源副本是否是依然还是算新鲜的，若服务器返回了 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/304" title="The HTTP 304 Not Modified client redirection response code indicates that there is no need to retransmit the requested resources. It is an implicit redirection to a cached resource. This happens when the request method is safe, like a GET or a HEAD request, or when the request is conditional and uses a If-None-Match or a If-Modified-Since header."><code>304</code></a> (Not Modified)（该响应不会有带有实体信息），则表示此资源副本是新鲜的，这样一来，可以节省一些带宽。若服务器通过 If-None-Match 或 If-Modified-Since判断后发现已过期，那么会带有该资源的实体内容返回。<br>下面是上述缓存处理过程的一个图示：<br><img src="https://mdn.mozillademos.org/files/13771/HTTPStaleness.png" alt="Show how a proxy cache acts when a doc is not cache, in the cache and fresh, in the cache and stale."><br>对于含有特定头信息的请求，会去计算缓存寿命。比如Cache-control: max-age=N的请求头，相应的缓存的寿命就是N。通常情况下，对于不含这个属性的请求则会去查看是否包含<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Expires">Expires</a>属性，通过比较Expires的值和头里面<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Date">Date</a>属性的值来判断是否缓存还有效。如果max-age和expires属性都没有，找找头里的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Last-Modified">Last-Modified</a>信息。如果有，缓存的寿命就等于头里面Date的值减去Last-Modified的值除以10（注：根据rfc2626其实也就是乘以10%）。<br>缓存失效时间计算公式如下：</p>
-<pre>`expirationTime = responseTime + freshnessLifetime - currentAge`</pre>
-<p>上式中，<code>responseTime</code> 表示浏览器接收到此响应的那个时间点。</p>
-<h3 id="加速资源"><a href="#加速资源" class="headerlink" title="加速资源"></a>加速资源</h3><p>更多地利用缓存资源，可以提高网站的性能和相应速度。为了优化缓存，过期时间设置得尽量长是一种很好的策略。对于定期或者频繁更新的资源，这么做是比较稳妥的，但是对于那些长期不更新的资源会有点问题。这些固定的资源在一定时间内受益于这种长期保持的缓存策略，但一旦要更新就会很困难。特指网页上引入的一些js/css文件，当它们变动时需要尽快更新线上资源。<br>web开发者发明了一种 Steve Sounders 称作加速（译者注：revving）的技术<sup><a target="_blank" rel="noopener" href="https://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/">[1]</a> </sup>。不频繁更新的文件会使用特定的命名方式：在URL后面（通常是文件名后面）会加上版本号。加上版本号后的资源就被视作一个完全新的独立的资源，同时拥有一年甚至更长的缓存过期时长。但是这么做也存在一个弊端，所有引用这个资源的地方都需要更新链接。web开发者们通常会采用自动化构建工具在实际工作中完成这些琐碎的工作。当低频更新的资源（js/css）变动了，只用在高频变动的资源文件（html）里做入口的改动。<br>这种方法还有一个好处：同时更新两个缓存资源不会造成部分缓存先更新而引起新旧文件内容不一致。对于互相有依赖关系的css和js文件，避免这种不一致性是非常重要的。<br><img src="https://mdn.mozillademos.org/files/13779/HTTPRevved.png"><br>加在加速文件后面的版本号不一定是一个正式的版本号字符串，如1.1.3这样或者其他固定自增的版本数。它可以是任何防止缓存碰撞的标记例如hash或者时间戳。</p>
-<h2 id="缓存验证"><a href="#缓存验证" class="headerlink" title="缓存验证"></a>缓存验证</h2><p>用户点击刷新按钮时会开始缓存验证。如果缓存的响应头信息里含有”Cache-control: must-revalidate”的定义，在浏览的过程中也会触发缓存验证。另外，在浏览器偏好设置里设置Advanced-&gt;Cache为强制验证缓存也能达到相同的效果。<br>当缓存的文档过期后，需要进行缓存验证或者重新获取资源。只有在服务器返回强校验器或者弱校验器时才会进行验证。</p>
-<h2 id="ETags"><a href="#ETags" class="headerlink" title="ETags"></a>ETags</h2><p>作为缓存的一种强校验器，<a href="/zh-CN/docs/Web/HTTP/Headers/ETag" title="ETag HTTP响应头是资源的特定版本的标识符。这可以让缓存更高效，并节省带宽，因为如果内容没有改变，Web服务器不需要发送完整的响应。而如果内容发生了变化，使用ETag有助于防止资源的同时更新相互覆盖（“空中碰撞”）。"><code>ETag</code></a> 响应头是一个对用户代理(User Agent, 下面简称UA)不透明（译者注：UA 无需理解，只需要按规定使用即可）的值。对于像浏览器这样的HTTP UA，不知道ETag代表什么，不能预测它的值是多少。如果资源请求的响应头里含有ETag, 客户端可以在后续的所有请求的头中带上 [<code>If-None-Match</code>](“If-None-Match 是一个条件式请求首部。对于 GETGET 和 HEAD 请求方法来说，当且仅当服务器上没有任何资源的 ETag 属性值与这个首部中列出的相匹配的时候，服务器端会才返回所请求的资源，响应码为  200  。对于其他方法来说，当且仅当最终确认没有已存在的资源的  ETag 属性值与这个首部中所列出的相匹配的时候，才会对请求进行相应的处理。”) 头来验证缓存。<br>[<code>Last-Modified</code>](“The Last-Modified  是一个响应首部，其中包含源头服务器认定的资源做出修改的日期及时间。 它通常被用作一个验证器来判断接收到的或者存储的资源是否彼此一致。由于精确度比  ETag 要低，所以这是一个备用机制。包含有  If-Modified-Since 或 If-Unmodified-Since 首部的条件请求会使用这个字段。”) 响应头可以作为一种弱校验器。说它弱是因为它是一次性的。如果响应头里含有这个信息，客户端可以在后续的一次请求中带上 [<code>If-Modified-Since</code>](“If-Modified-Since 是一个条件式请求首部，服务器只在所请求的资源在给定的日期时间之后对内容进行过修改的情况下才会将资源返回，状态码为 200  。如果请求的资源从那时起未经修改，那么返回一个不带有消息主体的  304  响应，而在 Last-Modified 首部中会带有上次修改时间。 不同于  If-Unmodified-Since, If-Modified-Since 只可以用在 GET 或 HEAD 请求中。”) 来验证缓存。<br>当向服务端发起缓存校验的请求时，服务端会返回 [<code>200</code>](“状态码 200 OK 表明请求已经成功. 默认情况下状态码为200的响应可以被缓存。”) ok表示返回正常的结果或者 [<code>304</code>](“HTTP 304 未改变说明无需再次传输请求的内容，也就是说可以使用缓存的内容。这通常是在一些安全的方法（safe），例如GET 或HEAD 或在请求中附带了头部信息： If-None-Match 或If-Modified-Since。”) Not Modified(不返回body)表示浏览器可以使用本地缓存文件。304的响应头也可以同时更新缓存文档的过期时间。</p>
-<h2 id="带Vary头的响应"><a href="#带Vary头的响应" class="headerlink" title="带Vary头的响应"></a>带Vary头的响应</h2><p> Vary 是一个HTTP响应头部信息，它决定了对于未来的一个请求头，应该用一个缓存的回复(response)还是向源服务器请求一个新的回复。它被服务器用来表明在 content negotiation algorithm（内容协商算法）中选择一个资源代表的时候应该使用哪些头部信息（headers）.”) HTTP 响应头决定了对于后续的请求头，如何判断是请求一个新的资源还是使用缓存的文件。</p>
-<p>当缓存服务器收到一个请求，只有当前的请求和原始（缓存）的请求头跟缓存的响应头里的Vary都匹配，才能使用缓存的响应。<br><img src="https://mdn.mozillademos.org/files/13769/HTTPVary.png" alt="The Vary header leads cache to use more HTTP headers as key for the cache."></p>
-<p>使用vary头有利于内容服务的动态多样性。例如，使用Vary: User-Agent头，缓存服务器需要通过UA判断是否使用缓存的页面。如果需要区分移动端和桌面端的展示内容，利用这种方式就能避免在不同的终端展示错误的布局。另外，它可以帮助google或者其他搜索引擎更好地发现页面的移动版本，并且告诉搜索引擎没有引入<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cloaking">Cloaking</a>。<br>`Vary: User-Agent<br>因为移动版和桌面的客户端的请求头中的User-Agent不同， 缓存服务器不会错误地把移动端的内容输出到桌面端到用户。<br>Vary的意义在于告诉代理服务器/缓存/CDN，如何判断请求是否一样，Vary中的组合就是服务器/缓存/CDN判断的依据，比如Vary中有User-Agent，那么即使相同的请求，如果用户使用IE打开了一个页面，再用Firefox打开这个页面的时候，CDN/代理会认为是不同的页面，如果Vary中没有User-Agent，那么CDN/代理会认为是相同的页面，直接给用户返回缓存的页面，而不会再去web服务器请求相应的页面。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-cn">https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-cn</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching_FAQ">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching_FAQ</a></li>
-<li><a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7234">https://tools.ietf.org/html/rfc7234</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13">https://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.mnot.net/cache_docs">https://www.mnot.net/cache_docs</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/12/spring-filter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/12/spring-filter/" class="post-title-link" itemprop="url">SpringBoot中filter的使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-03-12 12:22:17" itemprop="dateCreated datePublished" datetime="2018-03-12T12:22:17+08:00">2018-03-12</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:00:40" itemprop="dateModified" datetime="2020-10-26T23:00:40+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="在使用-RequestBody注解时，我们通常使用如下代码实现功能"><a href="#在使用-RequestBody注解时，我们通常使用如下代码实现功能" class="headerlink" title="在使用@RequestBody注解时，我们通常使用如下代码实现功能"></a>在使用@RequestBody注解时，我们通常使用如下代码实现功能</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">@RequestMapping(&quot;&#x2F;category&quot;)</span><br><span class="line">public class CategoryController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private ICategoryService categoryService;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value &#x3D; &quot;&#x2F;xxx&quot;, method &#x3D; RequestMethod.POST)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public Category getAllCategory(@RequestBody Category category) &#123;</span><br><span class="line">        category &#x3D; categoryService.selectById(1);</span><br><span class="line">        return category;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@ControllerAdvice</span><br><span class="line">@Configuration</span><br><span class="line">public class WebConfig extends WebMvcConfigurerAdapter &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void configureMessageConverters(List&lt;HttpMessageConverter&lt;?&gt;&gt; converters) &#123;</span><br><span class="line">        Jackson2ObjectMapperBuilder builder &#x3D; new Jackson2ObjectMapperBuilder();</span><br><span class="line">        builder.serializationInclusion(JsonInclude.Include.NON_NULL);</span><br><span class="line">        ObjectMapper objectMapper &#x3D; builder.build();</span><br><span class="line">        SimpleModule simpleModule &#x3D; new SimpleModule();</span><br><span class="line">        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);</span><br><span class="line">        objectMapper.registerModule(simpleModule);</span><br><span class="line">        objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);</span><br><span class="line">        MappingJackson2HttpMessageConverter converter &#x3D; new MappingJackson2HttpMessageConverter(objectMapper);</span><br><span class="line">        List&lt;MediaType&gt; types &#x3D; Lists.newArrayList();</span><br><span class="line">        types.add(MediaType.APPLICATION_JSON);</span><br><span class="line">&#x2F;&#x2F;        types.add(MediaType.TEXT_PLAIN);</span><br><span class="line">        converter.setSupportedMediaTypes(types);</span><br><span class="line">        converters.add(converter);</span><br><span class="line">        super.configureMessageConverters(converters);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是如果请求头信息里，Content-Type不是MediaType.APPLICATION_JSON类型，请求会报450错误。</p>
-<p>在尝试解决这个问题时，有两个思路，一是请求必须使用正确的头信息（推荐），二是服务端做拦截兼容。<br>过程中使用了两种方法达到效果，记录一下。</p>
-<h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>将上文中converter配置中添加一个支持类型。</p>
-<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><h2 id="过滤器（Filter）和拦截器（Interceptor）之间的区别"><a href="#过滤器（Filter）和拦截器（Interceptor）之间的区别" class="headerlink" title="过滤器（Filter）和拦截器（Interceptor）之间的区别"></a>过滤器（Filter）和拦截器（Interceptor）之间的区别</h2><p>过滤器可以包装Request和Response，而拦截器并不能，所以为了跳过验证，我们可以使用Filter而不是Interceptor。</p>
-<h2 id="如何修改HttpServletRequest的请求头信息？"><a href="#如何修改HttpServletRequest的请求头信息？" class="headerlink" title="如何修改HttpServletRequest的请求头信息？"></a>如何修改HttpServletRequest的请求头信息？</h2><p>实际HttpServletRequest并未开放接口提供修改头信息，但是利用过滤器+装饰模式可以达到跳过验证。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">package com.anruence.filter;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.web.servlet.ServletComponentScan;</span><br><span class="line">import org.springframework.http.MediaType;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">import javax.servlet.Filter;</span><br><span class="line">import javax.servlet.FilterChain;</span><br><span class="line">import javax.servlet.FilterConfig;</span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.ServletRequest;</span><br><span class="line">import javax.servlet.ServletResponse;</span><br><span class="line">import javax.servlet.annotation.WebFilter;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletRequestWrapper;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.util.Enumeration;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">@ServletComponentScan</span><br><span class="line">@WebFilter(urlPatterns &#x3D; &quot;&#x2F;category&#x2F;*&quot;, filterName &#x3D; &quot;requestFilter&quot;)</span><br><span class="line">public class RequestFilter implements Filter &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void init(FilterConfig filterConfig) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException &#123;</span><br><span class="line">        String ret &#x3D; servletRequest.getContentType();</span><br><span class="line">        chain.doFilter(new CustomizedRequest((HttpServletRequest) servletRequest), servletResponse);</span><br><span class="line">&#x2F;&#x2F;        chain.doFilter(servletRequest, servletResponse);</span><br><span class="line">        String ret1 &#x3D; servletRequest.getContentType();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void destroy() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class CustomizedRequest extends HttpServletRequestWrapper &#123;</span><br><span class="line"></span><br><span class="line">        public CustomizedRequest(HttpServletRequest request) &#123;</span><br><span class="line">            super(request);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public Enumeration&lt;String&gt; getHeaders(String name) &#123;</span><br><span class="line">            if (null !&#x3D; name &amp;&amp; name.equalsIgnoreCase(&quot;Content-Type&quot;)) &#123;</span><br><span class="line">                return new Enumeration&lt;String&gt;() &#123;</span><br><span class="line">                    private boolean hasGetted &#x3D; false;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public String nextElement() &#123;</span><br><span class="line">                        if (hasGetted) &#123;</span><br><span class="line">                            return &quot;&quot;;</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            hasGetted &#x3D; true;</span><br><span class="line">                            return MediaType.APPLICATION_JSON_UTF8_VALUE;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public boolean hasMoreElements() &#123;</span><br><span class="line">                        return !hasGetted;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;</span><br><span class="line">            return super.getHeaders(name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/05/tcc-2pc-3pc/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/05/tcc-2pc-3pc/" class="post-title-link" itemprop="url">理解TCC、2PC和3PC</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-03-05 10:30:59" itemprop="dateCreated datePublished" datetime="2018-03-05T10:30:59+08:00">2018-03-05</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h2><p>2PC，是Two-Phase Commit的缩写，二阶段提交。<br>过程如下：</p>
-<ul>
-<li><p>阶段一：提交事务请求</p>
-<ol>
-<li>事务询问<br>协调者节点向所有参与者节点询问是否可以执行提交操作(vote)，并开始等待各参与者节点的响应。</li>
-<li>执行事务<br>参与者节点执行询问发起为止的所有事务操作，并将Undo信息和Redo信息写入日志。（注意：若成功这里其实每个参与者已经执行了事务操作）</li>
-<li>各参与者向协调者反馈事务询问的响应<br>3）各参与者节点响应协调者节点发起的询问。如果参与者节点的事务操作实际执行成功，则它返回一个”同意”消息；如果参与者节点的事务操作实际执行失败，则它返回一个”中止”消息。</li>
-</ol>
-</li>
-<li><p>阶段二：执行事务提交<br>当协调者节点从所有参与者节点获得的相应消息都为”同意”时：</p>
-</li>
-</ul>
-<ol>
-<li>发送提交请求<br>协调者节点向所有参与者节点发出”正式提交(commit)”的请求。</li>
-<li>事务提交<br>参与者节点正式完成操作，并释放在整个事务期间内占用的资源。</li>
-<li>反馈事务提交结果<br>参与者节点向协调者节点发送”完成”消息。</li>
-<li>完成事务<br>协调者节点受到所有参与者节点反馈的”完成”消息后，完成事务。<br>如果任一参与者节点在第一阶段返回的响应消息为”中止”，或者 协调者节点在第一阶段的询问超时之前无法获取所有参与者节点的响应消息时：<br>中断事务：</li>
-<li>发起回滚请求<br>协调者节点向所有参与者节点发出”回滚操作(rollback)”的请求。</li>
-<li>事务回滚<br>参与者节点利用之前写入的Undo信息执行回滚，并释放在整个事务期间内占用的资源。</li>
-<li>反馈事务回滚结果<br>参与者节点向协调者节点发送”回滚完成”消息。</li>
-<li>中断事务<br>协调者节点受到所有参与者节点反馈的”回滚完成”消息后，取消事务。<br>不管最后结果如何，第二阶段都会结束当前事务。</li>
-</ol>
-<h2 id="2PC的缺点"><a href="#2PC的缺点" class="headerlink" title="2PC的缺点"></a>2PC的缺点</h2><p>二阶段提交看起来确实能够提供原子性的操作，但是不幸的事，二阶段提交还是有几个缺点的：<br>1、同步阻塞问题。执行过程中，所有参与节点都是事务阻塞型的。当参与者占有公共资源时，其他第三方节点访问公共资源不得不处于阻塞状态。</p>
-<p>2、单点故障。由于协调者的重要性，一旦协调者发生故障。参与者会一直阻塞下去。尤其在第二阶段，协调者发生故障，那么所有的参与者还都处于锁定事务资源的状态中，而无法继续完成事务操作。（如果是协调者挂掉，可以重新选举一个协调者，但是无法解决因为协调者宕机导致的参与者处于阻塞状态的问题）</p>
-<p>3、数据不一致。在二阶段提交的阶段二中，当协调者向参与者发送commit请求之后，发生了局部网络异常或者在发送commit请求过程中协调者发生了故障，这回导致只有一部分参与者接受到了commit请求。而在这部分参与者接到commit请求之后就会执行commit操作。但是其他部分未接到commit请求的机器则无法执行事务提交。于是整个分布式系统便出现了数据部一致性的现象。</p>
-<p>4、二阶段无法解决的问题：协调者再发出commit消息之后宕机，而唯一接收到这条消息的参与者同时也宕机了。那么即使协调者通过选举协议产生了新的协调者，这条事务的状态也是不确定的，没人知道事务是否被已经提交。</p>
-<p>由于二阶段提交存在着诸如同步阻塞、单点问题、脑裂等缺陷，所以，研究者们在二阶段提交的基础上做了改进，提出了三阶段提交。</p>
-<h2 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h2><p>三阶段提交（Three-phase commit），也叫三阶段提交协议（Three-phase commit protocol），是二阶段提交（2PC）的改进版本。</p>
-<p>与两阶段提交不同的是，三阶段提交有两个改动点。</p>
-<p>1、引入超时机制。同时在协调者和参与者中都引入超时机制。2、在第一阶段和第二阶段中插入一个准备阶段。保证了在最后提交阶段之前各参与节点的状态是一致的。</p>
-<p>也就是说，除了引入超时机制之外，3PC把2PC的准备阶段再次一分为二，这样三阶段提交就有CanCommit、PreCommit、DoCommit三个阶段。</p>
-<p>CanCommit阶段</p>
-<p>3PC的CanCommit阶段其实和2PC的准备阶段很像。协调者向参与者发送commit请求，参与者如果可以提交就返回Yes响应，否则返回No响应。</p>
-<p>1.事务询问协调者向参与者发送CanCommit请求。询问是否可以执行事务提交操作。然后开始等待参与者的响应。</p>
-<p>2.响应反馈参与者接到CanCommit请求之后，正常情况下，如果其自身认为可以顺利执行事务，则返回Yes响应，并进入预备状态。否则反馈No</p>
-<p>PreCommit阶段</p>
-<p>协调者根据参与者的反应情况来决定是否可以记性事务的PreCommit操作。根据响应情况，有以下两种可能。</p>
-<p>假如协调者从所有的参与者获得的反馈都是Yes响应，那么就会执行事务的预执行。</p>
-<p>1.发送预提交请求协调者向参与者发送PreCommit请求，并进入Prepared阶段。</p>
-<p>2.事务预提交参与者接收到PreCommit请求后，会执行事务操作，并将undo和redo信息记录到事务日志中。</p>
-<p>3.响应反馈如果参与者成功的执行了事务操作，则返回ACK响应，同时开始等待最终指令。</p>
-<p>假如有任何一个参与者向协调者发送了No响应，或者等待超时之后，协调者都没有接到参与者的响应，那么就执行事务的中断。</p>
-<p>1.发送中断请求协调者向所有参与者发送abort请求。</p>
-<p>2.中断事务参与者收到来自协调者的abort请求之后（或超时之后，仍未收到协调者的请求），执行事务的中断。</p>
-<p>doCommit阶段</p>
-<p>该阶段进行真正的事务提交，也可以分为以下两种情况。</p>
-<p>执行提交</p>
-<p>1.发送提交请求协调接收到参与者发送的ACK响应，那么他将从预提交状态进入到提交状态。并向所有参与者发送doCommit请求。</p>
-<p>2.事务提交参与者接收到doCommit请求之后，执行正式的事务提交。并在完成事务提交之后释放所有事务资源。</p>
-<p>3.响应反馈事务提交完之后，向协调者发送Ack响应。</p>
-<p>4.完成事务协调者接收到所有参与者的ack响应之后，完成事务。</p>
-<p>中断事务协调者没有接收到参与者发送的ACK响应（可能是接受者发送的不是ACK响应，也可能响应超时），那么就会执行中断事务。</p>
-<p>1.发送中断请求协调者向所有参与者发送abort请求</p>
-<p>2.事务回滚参与者接收到abort请求之后，利用其在阶段二记录的undo信息来执行事务的回滚操作，并在完成回滚之后释放所有的事务资源。</p>
-<p>3.反馈结果参与者完成事务回滚之后，向协调者发送ACK消息</p>
-<p>4.中断事务协调者接收到参与者反馈的ACK消息之后，执行事务的中断。</p>
-<h2 id="2PC与3PC的区别"><a href="#2PC与3PC的区别" class="headerlink" title="2PC与3PC的区别"></a>2PC与3PC的区别</h2><p>相对于2PC，3PC主要解决的单点故障问题，并减少阻塞，因为一旦参与者无法及时收到来自协调者的信息之后，他会默认执行commit。而不会一直持有事务资源并处于阻塞状态。但是这种机制也会导致数据一致性问题，因为，由于网络原因，协调者发送的abort响应没有及时被参与者接收到，那么参与者在等待超时之后执行了commit操作。这样就和其他接到abort命令并执行回滚的参与者之间存在数据不一致的情况。</p>
-<h2 id="TCC"><a href="#TCC" class="headerlink" title="TCC"></a>TCC</h2><p>TCC分别对应Try、Confirm和Cancel三种操作，这三种操作的业务含义如下：<br>Try：预留业务资源<br>Confirm：确认执行业务操作<br>Cancel：取消执行业务操作<br>稍稍对照下关系型数据库事务的三种操作：DML、Commit和Rollback，会发现和TCC有异曲同工之妙。在一个跨应用的业务操作中，Try操作是先把多个应用中的业务资源预留和锁定住，为后续的确认打下基础，类似的，DML操作要锁定数据库记录行，持有数据库资源；Confirm操作是在Try操作中涉及的所有应用均成功之后进行确认，使用预留的业务资源，和Commit类似；而Cancel则是当Try操作中涉及的所有应用没有全部成功，需要将已成功的应用进行取消(即Rollback回滚)。其中Confirm和Cancel操作是一对反向业务操作。</p>
-<h2 id="TCC和两阶段分布式事务处理的区别"><a href="#TCC和两阶段分布式事务处理的区别" class="headerlink" title="TCC和两阶段分布式事务处理的区别"></a>TCC和两阶段分布式事务处理的区别</h2><p>当讨论2PC时，我们只专注于事务处理阶段，因而只讨论prepare和commit，所以，可能很多人都忘了，使用2PC事务管理机制时也是有业务逻辑阶段的。正是因为业务逻辑的执行，发起了全局事务，这才有其后的事务处理阶段。实际上，使用2PC机制时，以提交为例<br>一个完整的事务生命周期是：begin -&gt; 业务逻辑 -&gt; prepare -&gt; commit。</p>
-<p>再看TCC，也不外乎如此。我们要发起全局事务，同样也必须通过执行一段业务逻辑来实现。该业务逻辑一来通过执行触发TCC全局事务的创建；二来也需要执行部分数据写操作；此外，还要通过执行来向TCC全局事务注册自己，以便后续TCC全局事务commit/rollback时回调其相应的confirm/cancel业务逻辑。所以，使用TCC机制时，以提交为例<br>一个完整的事务生命周期是：begin -&gt; 业务逻辑(try业务) -&gt; commit(comfirm业务)。</p>
-<p>综上，我们可以从执行的阶段上将二者一一对应起来：<br>1、 2PC机制的业务阶段 等价于 TCC机制的try业务阶段；<br>2、 2PC机制的提交阶段（prepare &amp; commit） 等价于 TCC机制的提交阶段（confirm）；<br>3、 2PC机制的回滚阶段（rollback） 等价于 TCC机制的回滚阶段（cancel）。</p>
-<p>因此，可以看出，虽然TCC机制中有两个阶段都存在业务逻辑的执行，但其中try业务阶段其实是与全局事务处理无关的。认清了这一点，当我们再比较TCC和2PC时，就会很容易地发现，TCC不是两阶段提交，而只是它对事务的提交/回滚是通过执行一段confirm/cancel业务逻辑来实现，仅此而已。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="http://blog.jobbole.com/95632/">http://blog.jobbole.com/95632/</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/zhangjq520/article/details/78433686">http://blog.csdn.net/zhangjq520/article/details/78433686</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/48627764/answer/111983553">https://www.zhihu.com/question/48627764/answer/111983553</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d3eda795188a">https://www.jianshu.com/p/d3eda795188a</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/03/01/deadlock/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/01/deadlock/" class="post-title-link" itemprop="url">插入死锁案例</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-03-01 14:07:30" itemprop="dateCreated datePublished" datetime="2018-03-01T14:07:30+08:00">2018-03-01</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="死锁案例"><a href="#死锁案例" class="headerlink" title="死锁案例"></a>死锁案例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;tt&#96; (</span><br><span class="line">  &#96;id&#96; int(11) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  &#96;name&#96; varchar(100) NOT NULL,</span><br><span class="line">  &#96;tid&#96; int(11) NOT NULL,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;idx_tid&#96; (&#96;tid&#96;)</span><br><span class="line">) ENGINE&#x3D;InnoDB AUTO_INCREMENT&#x3D;1 DEFAULT CHARSET&#x3D;utf8</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">+----+------+-----+</span><br><span class="line">| id | name | tid |</span><br><span class="line">+----+------+-----+</span><br><span class="line">|  1 | a    |   1 |</span><br><span class="line">|  2 | b    |   2 |</span><br><span class="line">|  4 | t    |   4 |</span><br><span class="line">|  5 | c    |   5 |</span><br><span class="line">|  6 | c    |  16 |</span><br><span class="line">|  7 | c    |  17 |</span><br><span class="line">+----+------+-----+</span><br></pre></td></tr></table></figure>
-
-<p>gap锁：<br>简单的理解就是执行 delete from tt where tid = 7，tid存在一个索引，mysql根据索引进行搜索，7不在这些key里面而是位于(5,16)间隙中，对(5,16)这个间隙加的锁就叫做Gap锁。<br>Insert Intention锁：<br>插入意向锁，insert语句会对插入的行加一个X锁，但是在插入这个行的过程之前，会设置一个Insert intention锁。</p>
-<p>存在Insert Intention 锁时，申请Gap锁是允许的；但是存在Gap锁时，申请Insert Intention锁时是被阻止的。</p>
-<p>T1:delete from tt where tid = 7;<br>T2:delete from tt where tid = 8;<br>T1:insert into tt values(null,’a’,8);<br>T2:insert into tt values(null,’b’,7);</p>
-<p>T1 持有了Gap(5,16)的X锁；<br>T2 申请Gap(5,16)的X锁，该申请被授权，所以T2 持有了Gap(5,16)的X锁。<br>T1 申请Insert Intention(5,16)的X锁，根据之前讲的互斥关系，由于T2持有Gap(5,16)的X锁，该申请被block。<br>T2 申请Insert Intention(5,16)的X锁，根据之前讲的互斥关系，由于T1持有Gap(5,16)的X锁，该申请被block。</p>
-<p>死锁很明显的出现了，T1与T2都持有一个锁，同时都在等对方释放一个锁。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html">https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/and1kaney/article/details/51214001">http://blog.csdn.net/and1kaney/article/details/51214001</a></li>
-<li><a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2016/01/01/">http://mysql.taobao.org/monthly/2016/01/01/</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1676,7 +1667,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1687,13 +1678,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">254k</span>
+    <span title="站点总字数">264k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:51</span>
+    <span title="站点阅读时长">4:01</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

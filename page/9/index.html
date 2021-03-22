@@ -138,17 +138,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">75</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">79</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">41</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">45</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-count">79</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -281,6 +281,472 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/30/ssh-forward/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/01/30/ssh-forward/" class="post-title-link" itemprop="url">SSH端口转发</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-30 19:39:35" itemprop="dateCreated datePublished" datetime="2018-01-30T19:39:35+08:00">2018-01-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L port:host:hostport remote</span><br></pre></td></tr></table></figure>
+<p>将打到本地port的连接 通过 remote 转发到host的hostport端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-L [bind_address:]port:host:hostport</span><br><span class="line">Specifies that the given port on the local (client) host is to be forwarded to the given host and port on the remote side. This works by allocating</span><br><span class="line">a socket to listen to port on the local side, optionally bound to the specified bind_address. Whenever a connection is made to this port, the con‐</span><br><span class="line">nection is forwarded over the secure channel, and a connection is made to host port hostport from the remote machine. Port forwardings can also be</span><br><span class="line">specified in the configuration file. IPv6 addresses can be specified by enclosing the address in square brackets. Only the superuser can forward</span><br><span class="line">privileged ports. By default, the local port is bound in accordance with the GatewayPorts setting. However, an explicit bind_address may be used to</span><br><span class="line">bind the connection to a specific address. The bind_address of “localhost” indicates that the listening port be bound for local use only, while an</span><br><span class="line">empty address or ‘*’ indicates that the port should be available from all interfaces.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -R port:host:hostport remote</span><br></pre></td></tr></table></figure>
+<p>监听remote的port端口，将打到port端口的请求通过local转发到host的hostport端口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-R [bind_address:]port:host:hostport</span><br><span class="line"></span><br><span class="line">Specifies that the given port on the remote (server) host is to be forwarded to the given host and port on the local side. This works by allocating</span><br><span class="line">a socket to listen to port on the remote side, and whenever a connection is made to this port, the connection is forwarded over the secure channel,</span><br><span class="line">and a connection is made to host port hostport from the local machine.</span><br><span class="line"></span><br><span class="line">Port forwardings can also be specified in the configuration file. Privileged ports can be forwarded only when logging in as root on the remote</span><br><span class="line">machine. IPv6 addresses can be specified by enclosing the address in square brackets.</span><br><span class="line"></span><br><span class="line">By default, the listening socket on the server will be bound to the loopback interface only. This may be overridden by specifying a bind_address.</span><br><span class="line">An empty bind_address, or the address ‘*’, indicates that the remote socket should listen on all interfaces. Specifying a remote bind_address will</span><br><span class="line">only succeed if the server&#39;s GatewayPorts option is enabled (see sshd_config(5)).</span><br><span class="line"></span><br><span class="line">If the port argument is ‘0’, the listen port will be dynamically allocated on the server and reported to the client at run time. When used together</span><br><span class="line">with -O forward the allocated port will be printed to the standard output.</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/24/threadlocal-leak/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/01/24/threadlocal-leak/" class="post-title-link" itemprop="url">ThreadLocal内存泄露</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-24 19:16:43" itemprop="dateCreated datePublished" datetime="2018-01-24T19:16:43+08:00">2018-01-24</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="ThreadLocal作用"><a href="#ThreadLocal作用" class="headerlink" title="ThreadLocal作用"></a>ThreadLocal作用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * This class provides thread-local variables.  These variables differ from</span><br><span class="line"> * their normal counterparts in that each thread that accesses one (via its</span><br><span class="line"> * &lt;tt&gt;get&lt;&#x2F;tt&gt; or &lt;tt&gt;set&lt;&#x2F;tt&gt; method) has its own, independently initialized</span><br><span class="line"> * copy of the variable.  &lt;tt&gt;ThreadLocal&lt;&#x2F;tt&gt; instances are typically private</span><br><span class="line"> * static fields in classes that wish to associate state with a thread (e.g.,</span><br><span class="line"> * a user ID or Transaction ID).</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;For example, the class below generates unique identifiers local to each</span><br><span class="line"> * thread.</span><br><span class="line"> * A thread&#39;s id is assigned the first time it invokes &lt;tt&gt;ThreadId.get()&lt;&#x2F;tt&gt;</span><br><span class="line"> * and remains unchanged on subsequent calls.</span><br><span class="line"> * &lt;pre&gt;</span><br><span class="line"> * import java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"> *</span><br><span class="line"> * public class ThreadId &#123;</span><br><span class="line"> *     &#x2F;&#x2F; Atomic integer containing the next thread ID to be assigned</span><br><span class="line"> *     private static final AtomicInteger nextId &#x3D; new AtomicInteger(0);</span><br><span class="line"> *</span><br><span class="line"> *     &#x2F;&#x2F; Thread local variable containing each thread&#39;s ID</span><br><span class="line"> *     private static final ThreadLocal&lt;Integer&gt; threadId &#x3D;</span><br><span class="line"> *         new ThreadLocal&lt;Integer&gt;() &#123;</span><br><span class="line"> *             &amp;#64;Override protected Integer initialValue() &#123;</span><br><span class="line"> *                 return nextId.getAndIncrement();</span><br><span class="line"> *         &#125;</span><br><span class="line"> *     &#125;;</span><br><span class="line"> *</span><br><span class="line"> *     &#x2F;&#x2F; Returns the current thread&#39;s unique ID, assigning it if necessary</span><br><span class="line"> *     public static int get() &#123;</span><br><span class="line"> *         return threadId.get();</span><br><span class="line"> *     &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> * &lt;&#x2F;pre&gt;</span><br><span class="line"> * &lt;p&gt;Each thread holds an implicit reference to its copy of a thread-local</span><br><span class="line"> * variable as long as the thread is alive and the &lt;tt&gt;ThreadLocal&lt;&#x2F;tt&gt;</span><br><span class="line"> * instance is accessible; after a thread goes away, all of its copies of</span><br><span class="line"> * thread-local instances are subject to garbage collection (unless other</span><br><span class="line"> * references to these copies exist).</span><br><span class="line"> *</span><br><span class="line"> * @author  Josh Bloch and Doug Lea</span><br><span class="line"> * @since   1.2</span><br><span class="line"> *&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>ThreadLocal的作用是提供线程内的局部变量，这种变量在线程的生命周期内起作用，减少同一个线程内多个函数或者组件之间一些公共变量的传递的复杂度。</p>
+<h2 id="ThreadLocal的实现"><a href="#ThreadLocal的实现" class="headerlink" title="ThreadLocal的实现"></a>ThreadLocal的实现</h2><p>ThreadLocal的实现是这样的：<br>每个Thread 维护一个ThreadLocalMap映射表，这个映射表的key是ThreadLocal实例本身，value是真正需要存储的对象Object。</p>
+<p>也就是说ThreadLocal本身并不存储值，它只是作为一个key来让线程从ThreadLocalMap获取value。<br>但ThreadLocalMap是使用ThreadLocal的弱引用作为Key的，弱引用的对象在GC时会被回收。</p>
+<h2 id="ThreadLocal为什么会内存泄漏"><a href="#ThreadLocal为什么会内存泄漏" class="headerlink" title="ThreadLocal为什么会内存泄漏"></a>ThreadLocal为什么会内存泄漏</h2><p>ThreadLocalMap使用ThreadLocal的弱引用作为key，如果一个ThreadLocal没有外部强引用来引用它，那么系统 GC 的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链：Thread Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value永远无法回收，造成内存泄漏。</p>
+<p>这个强引用链个人理解是指线程对ThreadLocalMap的，会始终存在一个null值为key的value，这个value一直存储在ThreadLocalMap中，除非线程终止，或者手动清除map中的null key，否则无法回收，多个线程都有这样的问题话，可能会导致内存泄漏。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.importnew.com/22046.html">http://www.importnew.com/22046.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/VeL9tMavp4ppv3j2w9hwVg">https://mp.weixin.qq.com/s/VeL9tMavp4ppv3j2w9hwVg</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/23089780">https://www.zhihu.com/question/23089780</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA3MDExNzcyNA==&amp;mid=2650392118&amp;idx=1&amp;sn=a2144a19bdeba48001f4f76f423e25d9&amp;scene=0#wechat_redirect">https://mp.weixin.qq.com/s?__biz=MzA3MDExNzcyNA==&amp;mid=2650392118&amp;idx=1&amp;sn=a2144a19bdeba48001f4f76f423e25d9&amp;scene=0#wechat_redirect</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/23/hashmap-serialize/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/01/23/hashmap-serialize/" class="post-title-link" itemprop="url">HashMap序列化的一个问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-23 14:46:19" itemprop="dateCreated datePublished" datetime="2018-01-23T14:46:19+08:00">2018-01-23</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public class SimpleSerializationTest &#123;</span><br><span class="line">    @Test</span><br><span class="line">    public void testHashMap() throws Exception &#123;</span><br><span class="line">        &#x2F;&#x2F; 注意这句</span><br><span class="line">        HashMap&lt;String, String&gt; hmap &#x3D; new HashMap&lt;String, String&gt;() &#123;&#123;</span><br><span class="line">            put(&quot;key1&quot;, &quot;value1&quot;);</span><br><span class="line">            put(&quot;key2&quot;, &quot;value2&quot;);</span><br><span class="line">        &#125;&#125;;</span><br><span class="line"></span><br><span class="line">        ByteArrayOutputStream bos &#x3D; new ByteArrayOutputStream();</span><br><span class="line">        ObjectOutput out &#x3D; null;</span><br><span class="line">        out &#x3D; new ObjectOutputStream(bos);</span><br><span class="line">        out.writeObject(hmap);</span><br><span class="line">        byte[] yourBytes &#x3D; bos.toByteArray();</span><br><span class="line">        if (out !&#x3D; null) &#123;</span><br><span class="line">            out.close();</span><br><span class="line">        &#125;</span><br><span class="line">        bos.close();</span><br><span class="line"></span><br><span class="line">        ByteArrayInputStream bis &#x3D; new ByteArrayInputStream(yourBytes);</span><br><span class="line">        ObjectInput in &#x3D; null;</span><br><span class="line">        in &#x3D; new ObjectInputStream(bis);</span><br><span class="line">        Object o &#x3D; in.readObject();</span><br><span class="line">        bis.close();</span><br><span class="line">        if (in !&#x3D; null) &#123;</span><br><span class="line">            in.close();</span><br><span class="line">        &#125;</span><br><span class="line">        assertEquals(hmap, o);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="问题解释"><a href="#问题解释" class="headerlink" title="问题解释"></a>问题解释</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">The exception message tells you exactly what the problem is: you are trying to serialize an instance of class SimpleSerializationTest, and that class is not serializable.</span><br><span class="line"></span><br><span class="line">Why? Well, you have created an anonymous inner class of SimpleSerializationTest, one that extends HashMap, and you are trying to serialize an instance of that class. Inner classes always have references to the relevant instance of their outer class, and by default, serialization will try to traverse those.</span><br><span class="line"></span><br><span class="line">I observe that you use a double-brace &#123;&#123; ... &#125;&#125; syntax as if you think it has some sort of special significance. It is important to understand that it is actually two separate constructs. The outer pair of braces appearing immediately after a constructor invocation mark the boundaries of the inner class definition. The inner pair bound an instance initializer block, such as you can use in any class body (though they are unusual in contexts other than anonymous inner classes). Ordinarily, you would also include one or more method implementations &#x2F; overrides inside the outer pair, either before or after the initializer block.</span><br></pre></td></tr></table></figure>
+
+<p>意思是 我们创建了一个继承HashMap的SimpleSerializationTest匿名内部类，然后试着去序列化这个内部类的实例。内部类持有外部类的引用，默认情况下序列化会序列化内部类和外部类。</p>
+<p>继承一个类一般引用自身，不会有父类的引用。<br>根源在于双大括号的语法上，外部大括号创建了一个匿名类，内部大括号指定的是匿名类初始化代码块。</p>
+<h2 id="扩展引申"><a href="#扩展引申" class="headerlink" title="扩展引申"></a>扩展引申</h2><h2 id="什么是Java中的内存泄露"><a href="#什么是Java中的内存泄露" class="headerlink" title="什么是Java中的内存泄露"></a>什么是Java中的内存泄露</h2><p>导致内存泄漏主要的原因是，先前申请了内存空间而忘记了释放。如果程序中存在对无用对象的引用，那么这些对象就会驻留内存，消耗内存，因为无法让垃圾回收器GC验证这些对象是否不再需要。如果存在对象的引用，这个对象就被定义为”有效的活动”，同时不会被释放。要确定对象所占内存将被回收，我们就要务必确认该对象不再会被使用。典型的做法就是把对象数据成员设为null或者从集合中移除该对象。但当局部变量不需要时，不需明显的设为null，因为一个方法执行完毕时，这些引用会自动被清理。<br>在Java中，内存泄漏就是存在一些被分配的对象，这些对象有下面两个特点，首先，这些对象是有被引用的，即在有向树形图中，存在树枝通路可以与其相连;其次，这些对象是无用的，即程序以后不会再使用这些对象。如果对象满足这两个条件，这些对象就可以判定为Java中的内存泄漏，这些对象不会被GC所回收，然而它却占用内存。</p>
+<h2 id="使用Double-brace初始化HashMap导致内存泄漏的风险"><a href="#使用Double-brace初始化HashMap导致内存泄漏的风险" class="headerlink" title="使用Double brace初始化HashMap导致内存泄漏的风险"></a>使用Double brace初始化HashMap导致内存泄漏的风险</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class ReallyHeavyObject &#123;</span><br><span class="line"> </span><br><span class="line">    &#x2F;&#x2F; Just to illustrate...</span><br><span class="line">    private int[] tonsOfValues;</span><br><span class="line">    private Resource[] tonsOfResources;</span><br><span class="line"> </span><br><span class="line">    &#x2F;&#x2F; This method almost does nothing</span><br><span class="line">    public Map quickHarmlessMethod() &#123;</span><br><span class="line">        Map source &#x3D; new HashMap()&#123;&#123;</span><br><span class="line">            put(&quot;firstName&quot;, &quot;John&quot;);</span><br><span class="line">            put(&quot;lastName&quot;, &quot;Smith&quot;);</span><br><span class="line">            put(&quot;organizations&quot;, new HashMap()&#123;&#123;</span><br><span class="line">                put(&quot;0&quot;, new HashMap()&#123;&#123;</span><br><span class="line">                    put(&quot;id&quot;, &quot;1234&quot;);</span><br><span class="line">                &#125;&#125;);</span><br><span class="line">                put(&quot;abc&quot;, new HashMap()&#123;&#123;</span><br><span class="line">                    put(&quot;id&quot;, &quot;5678&quot;);</span><br><span class="line">                &#125;&#125;);</span><br><span class="line">            &#125;&#125;);</span><br><span class="line">        &#125;&#125;;</span><br><span class="line">        return source;</span><br><span class="line">        &#x2F;&#x2F; Some more code here</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>当调用quickHarmlessMethod往外部暴露数据时，会导致ReallyHeavyObject这个大对象不能被垃圾回收器回收。因为Map里的每个匿名内部类都持有ReallyHeavyObject的引用。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.jooq.org/2014/12/08/dont-be-clever-the-double-curly-braces-anti-pattern/">https://blog.jooq.org/2014/12/08/dont-be-clever-the-double-curly-braces-anti-pattern/</a></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://reinhard.codes/2016/07/30/double-brace-initialisation-and-java-initialisation-blocks/">https://reinhard.codes/2016/07/30/double-brace-initialisation-and-java-initialisation-blocks/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/36366039">https://www.zhihu.com/question/36366039</a></li>
+<li><a target="_blank" rel="noopener" href="https://richardcao.me/2017/05/15/Java-Hashmap-Serializable/">https://richardcao.me/2017/05/15/Java-Hashmap-Serializable/</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32790025/hashmap-not-serializable">https://stackoverflow.com/questions/32790025/hashmap-not-serializable</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html">https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/22/coroutine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/01/22/coroutine/" class="post-title-link" itemprop="url">理解coroutine</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-22 13:43:18" itemprop="dateCreated datePublished" datetime="2018-01-22T13:43:18+08:00">2018-01-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-11-14 19:15:52" itemprop="dateModified" datetime="2020-11-14T19:15:52+08:00">2020-11-14</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/" itemprop="url" rel="index"><span itemprop="name">语言特性</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="什么是coroutine？"><a href="#什么是coroutine？" class="headerlink" title="什么是coroutine？"></a>什么是coroutine？</h2><blockquote>
+<p>近几年在高性能web server上node.js、异步IO等概念火了起来，协程作为异步IO的最佳封装方式又被提及起来。假设为了减少线程数量和切换开销，我们的web server运行在单个线程，依次处理请求，某个请求的处理中调用了阻塞函数会影响后续请求，但我们可以使用异步API:</p>
+</blockquote>
+<blockquote>
+<p>假设想让业务中的多个RPC可以并行，通过线程池创建Future来实现的代价会很大。<br>有一个应用的请求处理被拆成了一堆可并发的模块，默认情况下顺序方法调用这些模块，而开启选项是可以使用线程池来并发调用这些模块达到降低RT的目的。该应用设计时未考虑有的模块中是不用进行RPC的，但为了确保需要RPC的部分能正确并发，仍然要通过线程池调用。处理一个请求就需要200次的线程池操作，因此当开启该选项时系统load、cpu都明显吃紧，很快进入限流。</p>
+</blockquote>
+<p>将线程实现切换到协程后(创建多个协程在当前线程内部调度)，我们获得了RT降低的效果，且cpu 使用率，load的情况可以和顺序调用媲美，因为一个普通方法调用和使用协程去执行一个方法然后切换回来(没有任何阻塞的情况)相比之多了几十条指令，那些没有阻塞的模块用异步方式去调用并没有带来很多损耗</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Coroutine#Comparison_with_subroutines">https://en.wikipedia.org/wiki/Coroutine#Comparison_with_subroutines</a></li>
+</ul>
+<p>协程是自己程序调度的，逻辑上并行执行，底层上非并行执行<br>线程是操作系统调度的，逻辑和底层上都是并行执行</p>
+<blockquote>
+<p>用户控制切换，自动保存上下文状态，切换之间可以通过参数通信，可用同步的方式实现异步。这是我理解中的协程最重要的几个特征。</p>
+</blockquote>
+<p>协程的切换开销远远小于内核对于线程的切换开销，因此对于IO密集型的程序，使用协程的优势在于用户可以像写同步IO一样，无需关心IO异步接口的细节。封装等待IO返回的逻辑，跳转到coroutine库进行调度。减小使用多个线程做同步IO带来的内核大量线程切换的开销。</p>
+<h2 id="coroutine和goroutine对比"><a href="#coroutine和goroutine对比" class="headerlink" title="coroutine和goroutine对比"></a>coroutine和goroutine对比</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18058164/is-a-go-goroutine-a-coroutine">https://stackoverflow.com/questions/18058164/is-a-go-goroutine-a-coroutine</a></li>
+</ul>
+<h2 id="协程在各语言中的实现应用"><a href="#协程在各语言中的实现应用" class="headerlink" title="协程在各语言中的实现应用"></a>协程在各语言中的实现应用</h2><h2 id="kotlin"><a href="#kotlin" class="headerlink" title="kotlin"></a>kotlin</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.kotlincn.net/docs/reference/coroutines/coroutines-guide.html">http://www.kotlincn.net/docs/reference/coroutines/coroutines-guide.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://vertx.io/docs/vertx-lang-kotlin-coroutines/kotlin/">https://vertx.io/docs/vertx-lang-kotlin-coroutines/kotlin/</a></li>
+</ul>
+<h2 id="php"><a href="#php" class="headerlink" title="php"></a>php</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html">http://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html</a></li>
+</ul>
+<h2 id="lua"><a href="#lua" class="headerlink" title="lua"></a>lua</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.lua.org/pil/9.1.html">http://www.lua.org/pil/9.1.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000004207662">https://segmentfault.com/a/1190000004207662</a></li>
+</ul>
+<h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.dabeaz.com/coroutines/Coroutines.pdf">http://www.dabeaz.com/coroutines/Coroutines.pdf</a></li>
+</ul>
+<h2 id="node-js"><a href="#node-js" class="headerlink" title="node.js"></a>node.js</h2><blockquote>
+<p>首先coroutine是个很宽泛的概念，async/await也属于coroutine的一种。但是问题是拿async/await和stackful coroutine比较。所谓stackful是指每个coroutine有独立的运行栈，比如每个goroutine会分配一个4k的内存来做为运行栈，切换goroutine的时候运行栈也会切换。stackful的好处在于这种coroutine是完整的，coroutine可以嵌套、循环。与stackful对应的是stackless coroutine，比如generator,continuation，这类coroutine不需要分配单独的栈空间，coroutine状态保存在闭包里，但缺点是功能比较弱，不能被嵌套调用，也没办法和异步函数配合使用进行控制流的调度，所以基本上没办法跟stackful coroutine做比较。但是async/await的出现，实现了基于stackless coroutine的完整coroutine。在特性上已经非常接近stackful coroutine了，不但可以嵌套使用也可以支持try catch。所以是不是可以认为async/await是一个更好的方案？</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://es6.ruanyifeng.com/#docs/generator-async">http://es6.ruanyifeng.com/#docs/generator-async</a></li>
+<li><a target="_blank" rel="noopener" href="http://es6.ruanyifeng.com/#docs/promise">http://es6.ruanyifeng.com/#docs/promise</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/shenlei19911210/article/details/61194617">http://blog.csdn.net/shenlei19911210/article/details/61194617</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/lilongsy/article/details/74333802">http://blog.csdn.net/lilongsy/article/details/74333802</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/65647171/answer/233781797">https://www.zhihu.com/question/65647171/answer/233781797</a></li>
+</ul>
+<h2 id="扩展-并发"><a href="#扩展-并发" class="headerlink" title="扩展-并发"></a>扩展-并发</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://jolestar.com/parallel-programming-model-thread-goroutine-actor/">http://jolestar.com/parallel-programming-model-thread-goroutine-actor/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/presentations/free-performance-lunch-alibaba-jdk-association">http://www.infoq.com/cn/presentations/free-performance-lunch-alibaba-jdk-association</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1074,120 +1540,10 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/10/corsproxy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/01/10/corsproxy/" class="post-title-link" itemprop="url">node反向代理解决跨域问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-01-10 12:06:12" itemprop="dateCreated datePublished" datetime="2018-01-10T12:06:12+08:00">2018-01-10</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:05:58" itemprop="dateModified" datetime="2020-10-26T23:05:58+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>635</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="创建proxy-server"><a href="#创建proxy-server" class="headerlink" title="创建proxy server"></a>创建proxy server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g corsproxy</span><br><span class="line">$ corsproxy</span><br><span class="line"><span class="comment">## with custom port: CORSPROXY_PORT=1234 corsproxy</span></span><br><span class="line"><span class="comment">## with custom host: CORSPROXY_HOST=localhost corsproxy</span></span><br><span class="line"><span class="comment">## with debug server: DEBUG=1 corsproxy</span></span><br><span class="line"><span class="comment">## with custom payload max bytes set to 10MB (1MB by default): CORSPROXY_MAX_PAYLOAD=10485760 corsproxy</span></span><br></pre></td></tr></table></figure>
-<p>使用方法：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://localhost:1337/localhost:3000/sign_in">http://localhost:1337/localhost:3000/sign_in</a></li>
-<li><a target="_blank" rel="noopener" href="http://localhost:1337/my.domain.com/path/to/resource">http://localhost:1337/my.domain.com/path/to/resource</a></li>
-</ul>
-<h3 id="创建测试Server"><a href="#创建测试Server" class="headerlink" title="创建测试Server"></a>创建测试Server</h3><p><a target="_blank" rel="noopener" href="https://github.com/troygoode/node-cors-server">https://github.com/troygoode/node-cors-server</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br><span class="line">$ node app.js</span><br></pre></td></tr></table></figure>
-
-<h3 id="创建测试Client"><a href="#创建测试Client" class="headerlink" title="创建测试Client"></a>创建测试Client</h3><p><a target="_blank" rel="noopener" href="https://github.com/troygoode/node-cors-client">https://github.com/troygoode/node-cors-client</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br><span class="line">$ node app.js</span><br></pre></td></tr></table></figure>
-<p>修改client项目中index.js的访问url</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:1337&#x2F;localhost:3000</span><br></pre></td></tr></table></figure>
-<p>访问<a target="_blank" rel="noopener" href="http://localhost:3001/">http://localhost:3001</a> 查看测试页面</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1228,7 +1584,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1239,13 +1595,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">254k</span>
+    <span title="站点总字数">264k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:51</span>
+    <span title="站点阅读时长">4:01</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
