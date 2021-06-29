@@ -148,7 +148,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">92</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,7 +226,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">92</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -281,6 +281,153 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2021/06/29/domain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/29/domain/" class="post-title-link" itemprop="url">浅谈领域建模</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-29 16:17:22 / 修改时间：22:51:07" itemprop="dateCreated datePublished" datetime="2021-06-29T16:17:22+08:00">2021-06-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="什么是领域"><a href="#什么是领域" class="headerlink" title="什么是领域"></a>什么是领域</h2><p>领域是指组织的业务范围以及在其中所进行的活动，也就是平台能力需要支撑的业务范围。因此，为了构建出平台能力，需要对业务领域进行深入的理解和设计。</p>
+<p>在业务架构部分，将进行领域战略层级的建模，主要包括:“子域”、“领域对象”、“领域事件” 部分的设计。</p>
+<img src="../images/ddd/domain-design.jpg" style="zoom:50%;" />
+
+<h3 id="领域事件识别"><a href="#领域事件识别" class="headerlink" title="领域事件识别"></a>领域事件识别</h3><p>领域事件(Domain Event): 是领域专家关心的，在业务上真实发生的事件，这些事件对系统会产生重要的影响，如果没有这些事件的发生，整个业务逻辑和系统实现就不能成立。我们可以通过领域事件对过去发生的事情进行溯源，因为过去所发生的对业务有意义的信息都会通过某种形式保存下来。 比如:“用户地址已更新”、“订单已发货” 等领 域事件。<br>领域事件对系统常见的影响有:<br>• 对内</p>
+<ul>
+<li>产生了某种数据</li>
+<li>触发了某种流程或事情 </li>
+<li>状态发生了某种变化</li>
+</ul>
+<p>•对外</p>
+<ul>
+<li>发送了某些消息</li>
+</ul>
+<p>目前比较常用的领域事件识别方法是“事件风暴 (Event Storming)”，<br>主要步骤如下:<br>• 邀请业务专家(或领域专家)和技术专家共同 参与事件风暴工作坊，其它参与角色按需补充。<br>• 明确和选择需要分析的业务场景。<br>• 确定起始事件和结束事件，事件以“XXX 已 YYY”的形式进行命名(对于英文版过去完成时的中文表达方法)。<br>• 根据场景和业务复述的复杂度，决定以时间线的哪个方向开始梳理事件(正向或逆向)【注】有些理论会要求从后往前识别。<br>• 以先发散再收敛的方式，按照时间线的先后顺序和并行关系，补充和完善领域事件。<br>• 使用“规则”抽象分支条件或复杂的规则细节，通过抽象降低分支复杂度，规则以“XXX规则” 的名词形式进行命名。<br>• 完成一遍事件梳理之后，通过问问题的方式，逆向检查(Reverse Check)事件流的逻辑合理性，例如:</p>
+<ul>
+<li>该事件真的需要在系统实现的时候考虑吗?</li>
+<li>该事件如果存在，那它的前提条件是什么? </li>
+<li>该事件如果要产生，那它的前一个事件必须是?<br>• 重复以上步骤，迭代式的完成全部领域事件的识别。</li>
+</ul>
+<p><img src="images/ddd/event.jpg"></p>
+<h3 id="领域对象识别"><a href="#领域对象识别" class="headerlink" title="领域对象识别"></a>领域对象识别</h3><p>领域对象(Domain Object):是对业务的高度抽象，作为业务和系统实现的核心联系，领域对象封装和承载了业务逻辑，是系统设计的基础。<br>领域建模中重要的部分之一就是对“领域对象”及 领域对象之间关系的识别和设计。而领域对象识别 将基于前面领域事件识别的结果开展。<br>领域对象，通常包含(但不限于):<br>• 领域事件中出现了的名词;<br>• 如果没有信息系统，在现实中会看得见摸得着的事物(例如订单);<br>• 虽然在当前业务中看不见摸不着，但是可以在未来抽象出来的业务概念。</p>
+<p>在领域驱动设计(Domain-Driven Design)中一般存在三类领域对象:<br>聚合根: 是领域对象的根节点，具有全局标识，对象其它的实体只能通过聚合根来导航;<br>如订单可以分为订单头和订单行，订单头是聚合根，它包含了订单基本信息;订单行是实体，它包含订单的明细信息，聚合跟所代表的聚合实现了对于业务一致性的保障，是业务一致性的边界。</p>
+<p>实体: 是领域对象的主干，具有唯一标识和生命周期，可以通过标识判断相等性，并且是可变的，如常见的用户实体、订单实体;</p>
+<p>值对象: 实体的附加业务概念，用来描述实体所包含的业务信息，无唯一标识，可枚举且不可变，如收货地址、合同种类等等。</p>
+<p>业务架构只负责初步和整体识别领域对象，而对领域对象的分类(聚合根、实体、值对象)和战术层级的详细设计将在应用架构设计部分完成。</p>
+<p>领域对象识别的主要步骤如下:<br>• 对每一个领域事件，快速识别或抽象出与该领域事件最相关(或隐含的)的业务概念，并将其以名词形式予以贴出。<br>• 检查领域名词和领域事件在概念和粒度(例如数量，单数还是集合)上的一致性，通过重命名的方式统一语言，消除二义性。<br>• 如果在讨论过程中，有任何因为问题澄清和知识增长带来的对于之前各种产出物的共识性调整，请不要犹豫，立刻予以调整和优化。<br>• 重复以上步骤，迭代式的完成全部领域对象的识别。</p>
+<img src="../images/ddd/d1.jpg" style="zoom:50%;" />
+<img src="../images/ddd/d2.jpg" style="zoom:50%;" />
+
+
+
+<h3 id="子域划分"><a href="#子域划分" class="headerlink" title="子域划分"></a>子域划分</h3><img src="../images/ddd/sub-domain.jpg" style="zoom:50%;" />
+
+
+<p>子域(Subdomain):是对问题域的澄清和划分， 同时也是对于资源投入优先级的重要参考。比如: “订单子域”、“物流子域”等，子域的划分仍属于业务架构关注范畴。</p>
+<p>核心域(Core Domain): 是当前产品的核心差异化竞争力，是整个业务的盈利来源和基石，如果核心域不存在那么整个业务就不能运作。对于核心域，需要投入最优势的资源(包括能力高的人)， 和做严谨良好的设计。</p>
+<p>支撑域(Supporting Subdomain): 解决的是支撑核心域运作的问题，其重要程度不如核心域，但具备强烈的个性化需求，难以在业内找到现成的解决方案，需要专门的团队定制开发。</p>
+<p>通用域(Generic Subdomain): 该类问题在业内非常常见，所以很可能有现成的解决方案，通过购买或简单修改的方式就可以使用。</p>
+<p>子域划分的主要步骤如下:</p>
+<p>根据“每一个问题子域负责解决一个有独立业 务价值的业务问题”的视角出发，可以通过疑问句的方式来澄清和分析子域需要解决的业务问题，例如“如何进行库存管理?(英文描述 类似 How to…?)”。</p>
+<p>利用虚线，将解决同一个业务问题的限界上下文以切割图像的方式划在一起，并以“XXX 子域” 的形式对每个子域进行命名。</p>
+<p>根据三种类型的子域定义，共同结合业务实际 (或者参考设计思维中的电梯演讲)，确定每个子域的子域类型</p>
+<img src="../images/ddd/domain-seg.jpg" style="zoom:50%;" />
+
+
+<h3 id="识别对象是否是聚合根"><a href="#识别对象是否是聚合根" class="headerlink" title="识别对象是否是聚合根"></a>识别对象是否是聚合根</h3><p>假设有一个业务系统，里面有项目，项目成员的概念，只有项目成员才能访问该项目。这个例子中，项目成员是否是聚合根？</p>
+<p>假设这个系统是一个任务管理系统，支持用户创建项目，项目管理员可以设置项目的成员，项目成员可以在项目下创建任务，并把任务分配给其他成员。<br>在我看来，成员和任务，相对项目而言是平等的，他们都是项目下的业务数据，我们不能因为他们在某个项目下才有意义而把它们聚合在项目下</p>
+<p>判断一个对象是否是独立聚合根，一般就是看创建该对象的场景是否是独立的。判断一个聚合根是否要聚合其他实体，主要看其是否关心其他实体的存在，以及从自身完整性的考虑。</p>
+<p>场景是否是独立怎么理解的？</p>
+<p>针对上面的例子，创建项目，添加项目成员，创建任务，分别是三个不同的业务场景，分别对应三个聚合根；项目聚合根不关心下面有哪些成员，哪些任务。项目的目的只是为了隔离业务数据，所以对于业务数据来说，项目只是一个分类标识</p>
+<p>我们设计领域模型时不能以用户为中心作为出发点去思考问题，不能老是想着用户会对系统做什么；而应该从一个客观的角度，根据用户需求挖掘出领域内的相关事物，思考这些事物的本质关联及其变化规律作为出发点去思考问题。</p>
+<p>领域模型是排除了人之外的客观世界模型，但是领域模型包含人所扮演的参与者角色，但是一般情况下不要让参与者角色在领域模型中占据主要位置，如果以人所扮演的参与者角色在领域模型中占据主要位置，那么各个系统的领域模型将变得没有差别，因为软件系统就是一个人机交互的系统，都是以人为主的活动记录或跟踪；比如：论坛中如果以人为主导，那么领域模型就是：人发帖，人回帖，人结贴，等等；DDD的例子中，如果是以人为中心的话，就变成了：托运人托运货物，收货人收货物，付款人付款，等等；因此，当我们谈及领域模型时，已经默认把人的因素排除开了，因为领域只有对人来说才有意义，人是在领域范围之外的，如果人也划入领域，领域模型将很难保持客观性。领域模型是与谁用和怎样用是无关的客观模型。归纳起来说就是，领域建模是建立虚拟模型让我们现实的人使用，而不是建立虚拟空间，去模仿现实。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UOr0zRCxy1j__-uaEBt4fA">https://mp.weixin.qq.com/s/UOr0zRCxy1j__-uaEBt4fA</a></li>
+<li>ThoughtWorks现代企业架构框架白皮书</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1264,149 +1411,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2020/10/22/distribute-transaction/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/22/distribute-transaction/" class="post-title-link" itemprop="url">关于分布式事务的文章</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-10-22 20:26:18" itemprop="dateCreated datePublished" datetime="2020-10-22T20:26:18+08:00">2020-10-22</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:05:22" itemprop="dateModified" datetime="2020-10-26T23:05:22+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">分布式事务</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.9k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="如何理解事务中的一致性"><a href="#如何理解事务中的一致性" class="headerlink" title="如何理解事务中的一致性"></a>如何理解事务中的一致性</h2><p>单机事务一致性的定义</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Consistency_(database_systems)#mw-head">https://en.wikipedia.org/wiki/Consistency_(database_systems)#mw-head</a></li>
-</ul>
-<p>可以理解单机一致性是：应用系统从一个正确的状态到另一个正确的状态，而ACID就是说事务能够通过AID来保证这个C的过程，C是目的，AID都是方法，ACID中的一致性是数据库保证所有的约束没有被打破</p>
-<h2 id="关于分布式事务的文章"><a href="#关于分布式事务的文章" class="headerlink" title="关于分布式事务的文章"></a>关于分布式事务的文章</h2><ul>
-<li><p>ServiceComb中的数据最终一致性方案<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/FL63Zv9Zou86950w/article/details/78393439">https://blog.csdn.net/FL63Zv9Zou86950w/article/details/78393439</a><br>开源项目：ServiceComb-Saga<br>地址：<a target="_blank" rel="noopener" href="https://github.com/ServiceComb/ServiceComb-Saga">https://github.com/ServiceComb/ServiceComb-Saga</a></p>
-</li>
-<li><p>基于Sagas思路实现：Sagas相关论文<br><a target="_blank" rel="noopener" href="https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf">https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf</a><br>分布式事务系列文章<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27384769/article/details/79305402">https://blog.csdn.net/qq_27384769/article/details/79305402</a></p>
-</li>
-<li><p>分布式事务学习之（可靠消息一致性方案之独立消息服务）（七）<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014401141/article/details/78933248">https://blog.csdn.net/u014401141/article/details/78933248</a></p>
-</li>
-<li><p>（微服务）分布式事务-最大努力交付 &amp;&amp; 消息最终一致性方案<br><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011479826">https://segmentfault.com/a/1190000011479826</a></p>
-</li>
-<li><p>分布式事务：不过是在一致性、吞吐量和复杂度之间，做一个选择<br><a target="_blank" rel="noopener" href="http://p.primeton.com/articles/59030eeda6f2a40690f03602">http://p.primeton.com/articles/59030eeda6f2a40690f03602</a></p>
-</li>
-<li><p>微服务架构下的数据一致性保证（三）：补偿模式<br><a target="_blank" rel="noopener" href="http://dwz.cn/3TVJaB">http://dwz.cn/3TVJaB</a></p>
-</li>
-<li><p>使用事件和消息队列实现分布式事务<br><a target="_blank" rel="noopener" href="http://www.bubuko.com/infodetail-1996270.html">http://www.bubuko.com/infodetail-1996270.html</a></p>
-</li>
-<li><p>微服务架构分布式事务解决方案设计思路（可靠消息最终一致方案-概念）<br><a target="_blank" rel="noopener" href="https://my.oschina.net/sundasheng44/blog/834259">https://my.oschina.net/sundasheng44/blog/834259</a></p>
-</li>
-</ul>
-<h2 id="关于分布式事务开源框架"><a href="#关于分布式事务开源框架" class="headerlink" title="关于分布式事务开源框架"></a>关于分布式事务开源框架</h2><ul>
-<li><p>Tarzan 基于外部事件实现的可靠事件系统<br><a target="_blank" rel="noopener" href="https://github.com/beston123/Tarzan">https://github.com/beston123/Tarzan</a></p>
-</li>
-<li><p>LCN: LCN分布式事务框架，兼容dubbo、springcloud、motan框架<br>官方地址：<br><a target="_blank" rel="noopener" href="http://www.txlcn.org/">http://www.txlcn.org/</a><br><a target="_blank" rel="noopener" href="https://github.com/codingapi/tx-lcn">https://github.com/codingapi/tx-lcn</a></p>
-</li>
-<li><p>消息最终一致性方案，基于rabbitmq的分布式事务解决方案<br> <br><a target="_blank" rel="noopener" href="https://github.com/vvsuperman/coolmq">https://github.com/vvsuperman/coolmq</a></p>
-</li>
-<li><p>tcc-transaction: 是TCC型事务java实现<br>      <br><a target="_blank" rel="noopener" href="https://github.com/changmingxie/tcc-transaction">https://github.com/changmingxie/tcc-transaction</a></p>
-</li>
-<li><p>Hmily框架<br>分布式事务方案之tcc开源框架，支持dubbo，SpringCloud等rpc框架进行分布式事务<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/hmily">https://github.com/yu199195/hmily</a></p>
-</li>
-<li><p>myth框架：基于消息队列最终一致性<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/myth">https://github.com/yu199195/myth</a></p>
-</li>
-<li><p>happylifeplat-tcc：TCC型解决方案<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/happylifeplat-tcc">https://github.com/yu199195/happylifeplat-tcc</a>
- </p>
-</li>
-<li><p>happylifeplat-transaction 二阶段提交强一致性<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/happylifeplat-transaction">https://github.com/yu199195/happylifeplat-transaction</a></p>
-</li>
-</ul>
-<h2 id="补充资料"><a href="#补充资料" class="headerlink" title="补充资料"></a>补充资料</h2><p>大型SOA架构体系里的数据一致性问题 <br><a target="_blank" rel="noopener" href="http://www.360doc.com/content/17/0212/09/13792507_628391906.shtml">http://www.360doc.com/content/17/0212/09/13792507_628391906.shtml</a></p>
-<p>从CRUD编程切换到事件溯源和区块链编程<br><a target="_blank" rel="noopener" href="http://www.jdon.com/49396">http://www.jdon.com/49396</a></p>
-<p>事件概念正在重塑分布式系统的未来<br><a target="_blank" rel="noopener" href="http://www.jdon.com/49368">http://www.jdon.com/49368</a></p>
-<p>什么是事件溯源Event Sourcing？<br><a target="_blank" rel="noopener" href="http://www.jdon.com/48501">http://www.jdon.com/48501</a><br><a target="_blank" rel="noopener" href="https://github.com/baihui212/tsharding">https://github.com/baihui212/tsharding</a></p>
-<p>保障数据一致性的6种方案<br><a target="_blank" rel="noopener" href="http://www.360doc.com/content/16/0419/22/31851752_552140045.shtml">http://www.360doc.com/content/16/0419/22/31851752_552140045.shtml</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1462,13 +1466,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">260k</span>
+    <span title="站点总字数">263k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:56</span>
+    <span title="站点阅读时长">3:59</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

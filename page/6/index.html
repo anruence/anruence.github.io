@@ -148,7 +148,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">92</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,7 +226,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">92</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -281,6 +281,110 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/07/09/consistent-hash/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/07/09/consistent-hash/" class="post-title-link" itemprop="url">一致性hash</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-07-09 17:16:44" itemprop="dateCreated datePublished" datetime="2018-07-09T17:16:44+08:00">2018-07-09</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 23:11:10" itemprop="dateModified" datetime="2020-10-26T23:11:10+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%B8%80%E8%87%B4%E6%80%A7hash/" itemprop="url" rel="index"><span itemprop="name">一致性hash</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>414</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="一致性hash"><a href="#一致性hash" class="headerlink" title="一致性hash"></a>一致性hash</h2><p>网站的伸缩性<br>所谓网站的伸缩性是指不要改变网站的软硬件设计，仅仅通过改变部署的服务器数量就可以扩大或者缩小网站的服务处理能力。</p>
+<p>应用服务器集群的伸缩性<br>对于所有服务器都部署相同应用的应用服务器集群，想要实现分布式集群的伸缩性，可以使用负载均衡实现，如反向代理负载均衡等。</p>
+<p>分布式缓存集群的伸缩性<br>1.分布式缓存集群特点</p>
+<p>不同于应用服务器集群的伸缩性设计，对于分布式缓存集群，不同的服务器中缓存的数据各不相同，缓存访问请求不可以在缓存服务器集群中任意一台处理，必须找到缓存相应数据的服务器，然后才能进行访问。</p>
+<p>2.伸缩性设计存在问题</p>
+<p>由于分布式缓存集群的这个特点，那么当在缓存集群增加或者去掉服务器的时候，就会出现新上线的缓存服务器没有缓存任何数据，但是已经下线的缓存服务器还缓存着网站的许多热点数据。</p>
+<p>3.设计目标</p>
+<p>使新加入或者下线缓存服务器之后对整个缓存服务器集群中已经缓存的数据尽可能还被访问到，此时Hash算法的选择就比较重要。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1339,115 +1443,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/04/10/java-proxy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/04/10/java-proxy/" class="post-title-link" itemprop="url">Aop中的代理限制</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-04-10 17:11:23" itemprop="dateCreated datePublished" datetime="2018-04-10T17:11:23+08:00">2018-04-10</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:08:04" itemprop="dateModified" datetime="2020-10-26T23:08:04+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4.4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="从一个异常说起"><a href="#从一个异常说起" class="headerlink" title="从一个异常说起"></a>从一个异常说起</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Caused by: org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named &#39;merchantCouponModule&#39; is expected to be of type &#39;com.xxx.OrderServiceImpl&#39; but was actually of type &#39;com.sun.proxy.$Proxy96&#39;</span><br><span class="line">	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:378)</span><br><span class="line">	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)</span><br><span class="line">	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:522)</span><br><span class="line">	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)</span><br><span class="line">	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:627)</span><br><span class="line">	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:169)</span><br><span class="line">	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)</span><br><span class="line">	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessPropertyValues(CommonAnnotationBeanPostProcessor.java:318)</span><br><span class="line">	... 60 more</span><br></pre></td></tr></table></figure>
-<p>报错表示注入类型不正确，期望类型是OrderServiceImpl，而实际类型是com.sun.proxy（JDK代理对象）。</p>
-<h2 id="JDK代理-amp-Cglib"><a href="#JDK代理-amp-Cglib" class="headerlink" title="JDK代理 &amp; Cglib"></a>JDK代理 &amp; Cglib</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Construct a new JdkDynamicAopProxy for the given AOP configuration.</span><br><span class="line"> * @param config the AOP configuration as AdvisedSupport object</span><br><span class="line"> * @throws AopConfigException if the config is invalid. We try to throw an informative</span><br><span class="line"> * exception in this case, rather than let a mysterious failure happen later.</span><br><span class="line"> *&#x2F;</span><br><span class="line">public JdkDynamicAopProxy(AdvisedSupport config) throws AopConfigException &#123;</span><br><span class="line">	Assert.notNull(config, &quot;AdvisedSupport must not be null&quot;);</span><br><span class="line">	if (config.getAdvisors().length &#x3D;&#x3D; 0 &amp;&amp; config.getTargetSource() &#x3D;&#x3D; AdvisedSupport.EMPTY_TARGET_SOURCE) &#123;</span><br><span class="line">		throw new AopConfigException(&quot;No advisors and no TargetSource specified&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	this.advised &#x3D; config;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public Object getProxy() &#123;</span><br><span class="line">	return getProxy(ClassUtils.getDefaultClassLoader());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public Object getProxy(ClassLoader classLoader) &#123;</span><br><span class="line">	if (logger.isDebugEnabled()) &#123;</span><br><span class="line">		logger.debug(&quot;Creating JDK dynamic proxy: target source is &quot; + this.advised.getTargetSource());</span><br><span class="line">	&#125;</span><br><span class="line">	Class&lt;?&gt;[] proxiedInterfaces &#x3D; AopProxyUtils.completeProxiedInterfaces(this.advised, true);</span><br><span class="line">	findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);</span><br><span class="line">	return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们知道proxy是JDK的代理对象，通常为了对接口进行增强，常用于AOP中。<br>我们看下Jdk代理的Aop实现，Proxy.newProxyInstance生成的Proxy对象是一个实现了proxiedInterfaces接口类型为$Proxy?的实例，即为异常中的$Proxy96。<br>然而由于我们在注入bean时使用的是：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> OrderServiceImpl orderService;</span><br></pre></td></tr></table></figure>
-<p>@Autowire和@Resources都可以实现根据名称和类型注入，但是会检测声明变量的类型的（checkBeanNotOfRequiredType），没法强制转换。<br>所以生成的代理对象和原对象不匹配，抛出以上异常。但是如何解决呢？</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h2 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h2><p>虽然代理对象和原对象不匹配，但是接口匹配，所以我们可以使用：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> OrderService orderService;</span><br></pre></td></tr></table></figure>
-
-<h2 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h2><p>因为JDK的代理会生成$Proxy?的实例，可以使用CgLib代替JDK的代理。CgLib可以生成目标类的子类来实现增强，代理对象依然是OrderServiceImpl类型的。引入Aspectj，设置proxy-target-class=true即可。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">proxy-target-class</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<p>注意：如果实现多个接口时不会使用cglib代理，参考hasNoUserSuppliedProxyInterfaces。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> AopProxy <span class="title">createAopProxy</span><span class="params">(AdvisedSupport config)</span> <span class="keyword">throws</span> AopConfigException </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) &#123;</span><br><span class="line">		Class targetClass = config.getTargetClass();</span><br><span class="line">		<span class="keyword">if</span> (targetClass == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> AopConfigException(<span class="string">&quot;TargetSource cannot determine target class: &quot;</span> +</span><br><span class="line">					<span class="string">&quot;Either an interface or a target is required for proxy creation.&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (targetClass.isInterface()) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">new</span> JdkDynamicAopProxy(config);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (!cglibAvailable) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> AopConfigException(</span><br><span class="line">					<span class="string">&quot;Cannot proxy target class because CGLIB2 is not available. &quot;</span> +</span><br><span class="line">					<span class="string">&quot;Add CGLIB to the class path or specify proxy interfaces.&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> CglibProxyFactory.createCglibProxy(config);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> JdkDynamicAopProxy(config);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Determine whether the supplied &#123;<span class="doctag">@link</span> AdvisedSupport&#125; has only the</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> org.springframework.aop.SpringProxy&#125; interface specified</span></span><br><span class="line"><span class="comment"> * (or no proxy interfaces specified at all).</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">hasNoUserSuppliedProxyInterfaces</span><span class="params">(AdvisedSupport config)</span> </span>&#123;</span><br><span class="line">	Class[] interfaces = config.getProxiedInterfaces();</span><br><span class="line">	<span class="keyword">return</span> (interfaces.length == <span class="number">0</span> || (interfaces.length == <span class="number">1</span> &amp;&amp; SpringProxy.class.equals(interfaces[<span class="number">0</span>])));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1503,13 +1498,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">260k</span>
+    <span title="站点总字数">263k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:56</span>
+    <span title="站点阅读时长">3:59</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

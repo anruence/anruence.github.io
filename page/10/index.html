@@ -148,7 +148,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">92</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,7 +226,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">92</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -281,6 +281,122 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/01/10/reentrantlock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/01/10/reentrantlock/" class="post-title-link" itemprop="url">理解ReentrantLock</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-10 16:22:17" itemprop="dateCreated datePublished" datetime="2018-01-10T16:22:17+08:00">2018-01-10</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="显式锁"><a href="#显式锁" class="headerlink" title="显式锁"></a>显式锁</h2><p>协调共享对象的访问的三个关键词<br>synchronized 、volatile和lock</p>
+<h2 id="Lock-and-ReentrantLock"><a href="#Lock-and-ReentrantLock" class="headerlink" title="Lock and ReentrantLock"></a>Lock and ReentrantLock</h2><p>内置锁的局限性：</p>
+<ul>
+<li>无法 中断一个正在等待获取锁的线程</li>
+<li>无法 在请求获取一个锁时 无限等待下去</li>
+<li>内置锁必须在获取该锁的代码块中释放，无法实现非阻塞结构的加锁规则</li>
+</ul>
+<h3 id="轮询锁和定时锁"><a href="#轮询锁和定时锁" class="headerlink" title="轮询锁和定时锁"></a>轮询锁和定时锁</h3><p>同时获取两个锁时才进行操作<br>显式地索取和释放锁，那么在索取锁的时候可以设定一个超时时间，如果超过这个时间还没索取到锁，则不会继续堵塞而是放弃此次任务。<br>tryLock时设置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">trySendOnSharedLine</span><span class="params">(String message,  </span></span></span><br><span class="line"><span class="function"><span class="params">                                   <span class="keyword">long</span> timeout, TimeUnit unit)</span>  </span></span><br><span class="line"><span class="function">                                   <span class="keyword">throws</span> InterruptedException </span>&#123;  </span><br><span class="line">    <span class="keyword">long</span> nanosToLock = unit.toNanos(timeout)  </span><br><span class="line">                     - estimatedNanosToSend(message);  </span><br><span class="line">    <span class="keyword">if</span> (!lock.tryLock(nanosToLock, NANOSECONDS))  </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;  </span><br><span class="line">    <span class="keyword">try</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> sendOnSharedLine(message);  </span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;  </span><br><span class="line">        lock.unlock();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<h3 id="可中断的锁获取操作"><a href="#可中断的锁获取操作" class="headerlink" title="可中断的锁获取操作"></a>可中断的锁获取操作</h3><p>lock.lockInterruptibly();<br>能够在获取锁的同时保持对中断的响应，tryLock同样也能响应中断，适用于实现 一个定时和可中断的锁获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">sendOnSharedLine</span><span class="params">(String message)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    lock.lockInterruptibly();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> cancellableSendOnSharedLine(message);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">cancellableSendOnSharedLine</span><span class="params">(String message)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="comment">/* send something */</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="非块结构的加锁（非阻塞？）"><a href="#非块结构的加锁（非阻塞？）" class="headerlink" title="非块结构的加锁（非阻塞？）"></a>非块结构的加锁（非阻塞？）</h3><ul>
+<li>内置锁是基于块结构的加锁</li>
+<li>锁分段技术，不同的线程可以独立的对链表的不同部分进行操作。<br>每个节点的锁将保护链接指针以及该节点中存储的数据，遍历或者修改时，获取当前节点的锁，直到获得下个节点的锁。<br>连锁式加锁</li>
+</ul>
+<h2 id="公平性"><a href="#公平性" class="headerlink" title="公平性"></a>公平性</h2><p>非公平锁和公平锁，非公平锁允许插队。插队是指 当一个线程请求非公平锁时，在发出请求的同时该锁的状态变为可用，那么可跳过队列中所有等待线程。</p>
+<h2 id="如何选择synchronized和ReentrantLock"><a href="#如何选择synchronized和ReentrantLock" class="headerlink" title="如何选择synchronized和ReentrantLock"></a>如何选择synchronized和ReentrantLock</h2><p>在一些内置锁无法满足的情况下，ReentrantLock可以作为一种高级工具：<br>实现 可定时、可轮询和可中断的锁获取操作，公平队列，非块结构的锁。<br>否则优先使用synchronized。</p>
+<h2 id="读-写锁"><a href="#读-写锁" class="headerlink" title="读-写锁"></a>读-写锁</h2><p>放宽粒度 允许读-读操作，多个线程同时读。<br>读数据时确保读取最新数据，读数据时不会又其他线程修改数据。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -446,13 +562,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">260k</span>
+    <span title="站点总字数">263k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:56</span>
+    <span title="站点阅读时长">3:59</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

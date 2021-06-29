@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"anruence.com","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="什么是领域领域是指组织的业务范围以及在其中所进行的活动，也就是平台能力需要支撑的业务范围。因此，为了构建出平台能力，需要对业务领域进行深入的理解和设计。 在业务架构部分，将进行领域战略层级的建模，主要包括:“子域”、“领域对象”、“领域事件” 部分的设计。   领域事件识别领域事件(Domain Event): 是领域专家关心的，在业务上真实发生的事件，这些事件对系统会产生重要的影响，如果没有这些">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈领域建模">
+<meta property="og:url" content="http://anruence.com/2021/06/29/domain/index.html">
+<meta property="og:site_name" content="安然写字的地方">
+<meta property="og:description" content="什么是领域领域是指组织的业务范围以及在其中所进行的活动，也就是平台能力需要支撑的业务范围。因此，为了构建出平台能力，需要对业务领域进行深入的理解和设计。 在业务架构部分，将进行领域战略层级的建模，主要包括:“子域”、“领域对象”、“领域事件” 部分的设计。   领域事件识别领域事件(Domain Event): 是领域专家关心的，在业务上真实发生的事件，这些事件对系统会产生重要的影响，如果没有这些">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://anruence.com/2021/06/29/images/ddd/domain-design.jpg">
+<meta property="og:image" content="http://anruence.com/2021/06/29/domain/images/ddd/event.jpg">
+<meta property="og:image" content="http://anruence.com/2021/06/29/images/ddd/d1.jpg">
+<meta property="og:image" content="http://anruence.com/2021/06/29/images/ddd/d2.jpg">
+<meta property="og:image" content="http://anruence.com/2021/06/29/images/ddd/sub-domain.jpg">
+<meta property="og:image" content="http://anruence.com/2021/06/29/images/ddd/domain-seg.jpg">
+<meta property="article:published_time" content="2021-06-29T08:17:22.000Z">
+<meta property="article:modified_time" content="2021-06-29T14:51:07.122Z">
+<meta property="article:author" content="anruence">
+<meta property="article:tag" content="DDD">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://anruence.com/2021/06/29/images/ddd/domain-design.jpg">
+
+
+<link rel="canonical" href="http://anruence.com/2021/06/29/domain/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>浅谈领域建模 | 安然写字的地方</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">安然写字的地方</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">关山难越，谁悲失路之人？萍水相逢，尽是他乡之客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">79</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">45</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">92</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%A2%86%E5%9F%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是领域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E8%AF%86%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">领域事件识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%86%E5%9F%9F%E5%AF%B9%E8%B1%A1%E8%AF%86%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text">领域对象识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E5%9F%9F%E5%88%92%E5%88%86"><span class="nav-number">1.3.</span> <span class="nav-text">子域划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%86%E5%88%AB%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E6%98%AF%E8%81%9A%E5%90%88%E6%A0%B9"><span class="nav-number">1.4.</span> <span class="nav-text">识别对象是否是聚合根</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anruence</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">92</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">79</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/anruence" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;anruence" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:anruence@gmail.com" title="E-Mail → mailto:anruence@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/anruence" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2021/06/29/domain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          浅谈领域建模
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-29 16:17:22 / 修改时间：22:51:07" itemprop="dateCreated datePublished" datetime="2021-06-29T16:17:22+08:00">2021-06-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="什么是领域"><a href="#什么是领域" class="headerlink" title="什么是领域"></a>什么是领域</h2><p>领域是指组织的业务范围以及在其中所进行的活动，也就是平台能力需要支撑的业务范围。因此，为了构建出平台能力，需要对业务领域进行深入的理解和设计。</p>
+<p>在业务架构部分，将进行领域战略层级的建模，主要包括:“子域”、“领域对象”、“领域事件” 部分的设计。</p>
+<img src="../images/ddd/domain-design.jpg" style="zoom:50%;" />
+
+<h3 id="领域事件识别"><a href="#领域事件识别" class="headerlink" title="领域事件识别"></a>领域事件识别</h3><p>领域事件(Domain Event): 是领域专家关心的，在业务上真实发生的事件，这些事件对系统会产生重要的影响，如果没有这些事件的发生，整个业务逻辑和系统实现就不能成立。我们可以通过领域事件对过去发生的事情进行溯源，因为过去所发生的对业务有意义的信息都会通过某种形式保存下来。 比如:“用户地址已更新”、“订单已发货” 等领 域事件。<br>领域事件对系统常见的影响有:<br>• 对内</p>
+<ul>
+<li>产生了某种数据</li>
+<li>触发了某种流程或事情 </li>
+<li>状态发生了某种变化</li>
+</ul>
+<p>•对外</p>
+<ul>
+<li>发送了某些消息</li>
+</ul>
+<p>目前比较常用的领域事件识别方法是“事件风暴 (Event Storming)”，<br>主要步骤如下:<br>• 邀请业务专家(或领域专家)和技术专家共同 参与事件风暴工作坊，其它参与角色按需补充。<br>• 明确和选择需要分析的业务场景。<br>• 确定起始事件和结束事件，事件以“XXX 已 YYY”的形式进行命名(对于英文版过去完成时的中文表达方法)。<br>• 根据场景和业务复述的复杂度，决定以时间线的哪个方向开始梳理事件(正向或逆向)【注】有些理论会要求从后往前识别。<br>• 以先发散再收敛的方式，按照时间线的先后顺序和并行关系，补充和完善领域事件。<br>• 使用“规则”抽象分支条件或复杂的规则细节，通过抽象降低分支复杂度，规则以“XXX规则” 的名词形式进行命名。<br>• 完成一遍事件梳理之后，通过问问题的方式，逆向检查(Reverse Check)事件流的逻辑合理性，例如:</p>
+<ul>
+<li>该事件真的需要在系统实现的时候考虑吗?</li>
+<li>该事件如果存在，那它的前提条件是什么? </li>
+<li>该事件如果要产生，那它的前一个事件必须是?<br>• 重复以上步骤，迭代式的完成全部领域事件的识别。</li>
+</ul>
+<p><img src="images/ddd/event.jpg"></p>
+<h3 id="领域对象识别"><a href="#领域对象识别" class="headerlink" title="领域对象识别"></a>领域对象识别</h3><p>领域对象(Domain Object):是对业务的高度抽象，作为业务和系统实现的核心联系，领域对象封装和承载了业务逻辑，是系统设计的基础。<br>领域建模中重要的部分之一就是对“领域对象”及 领域对象之间关系的识别和设计。而领域对象识别 将基于前面领域事件识别的结果开展。<br>领域对象，通常包含(但不限于):<br>• 领域事件中出现了的名词;<br>• 如果没有信息系统，在现实中会看得见摸得着的事物(例如订单);<br>• 虽然在当前业务中看不见摸不着，但是可以在未来抽象出来的业务概念。</p>
+<p>在领域驱动设计(Domain-Driven Design)中一般存在三类领域对象:<br>聚合根: 是领域对象的根节点，具有全局标识，对象其它的实体只能通过聚合根来导航;<br>如订单可以分为订单头和订单行，订单头是聚合根，它包含了订单基本信息;订单行是实体，它包含订单的明细信息，聚合跟所代表的聚合实现了对于业务一致性的保障，是业务一致性的边界。</p>
+<p>实体: 是领域对象的主干，具有唯一标识和生命周期，可以通过标识判断相等性，并且是可变的，如常见的用户实体、订单实体;</p>
+<p>值对象: 实体的附加业务概念，用来描述实体所包含的业务信息，无唯一标识，可枚举且不可变，如收货地址、合同种类等等。</p>
+<p>业务架构只负责初步和整体识别领域对象，而对领域对象的分类(聚合根、实体、值对象)和战术层级的详细设计将在应用架构设计部分完成。</p>
+<p>领域对象识别的主要步骤如下:<br>• 对每一个领域事件，快速识别或抽象出与该领域事件最相关(或隐含的)的业务概念，并将其以名词形式予以贴出。<br>• 检查领域名词和领域事件在概念和粒度(例如数量，单数还是集合)上的一致性，通过重命名的方式统一语言，消除二义性。<br>• 如果在讨论过程中，有任何因为问题澄清和知识增长带来的对于之前各种产出物的共识性调整，请不要犹豫，立刻予以调整和优化。<br>• 重复以上步骤，迭代式的完成全部领域对象的识别。</p>
+<img src="../images/ddd/d1.jpg" style="zoom:50%;" />
+<img src="../images/ddd/d2.jpg" style="zoom:50%;" />
+
+
+
+<h3 id="子域划分"><a href="#子域划分" class="headerlink" title="子域划分"></a>子域划分</h3><img src="../images/ddd/sub-domain.jpg" style="zoom:50%;" />
+
+
+<p>子域(Subdomain):是对问题域的澄清和划分， 同时也是对于资源投入优先级的重要参考。比如: “订单子域”、“物流子域”等，子域的划分仍属于业务架构关注范畴。</p>
+<p>核心域(Core Domain): 是当前产品的核心差异化竞争力，是整个业务的盈利来源和基石，如果核心域不存在那么整个业务就不能运作。对于核心域，需要投入最优势的资源(包括能力高的人)， 和做严谨良好的设计。</p>
+<p>支撑域(Supporting Subdomain): 解决的是支撑核心域运作的问题，其重要程度不如核心域，但具备强烈的个性化需求，难以在业内找到现成的解决方案，需要专门的团队定制开发。</p>
+<p>通用域(Generic Subdomain): 该类问题在业内非常常见，所以很可能有现成的解决方案，通过购买或简单修改的方式就可以使用。</p>
+<p>子域划分的主要步骤如下:</p>
+<p>根据“每一个问题子域负责解决一个有独立业 务价值的业务问题”的视角出发，可以通过疑问句的方式来澄清和分析子域需要解决的业务问题，例如“如何进行库存管理?(英文描述 类似 How to…?)”。</p>
+<p>利用虚线，将解决同一个业务问题的限界上下文以切割图像的方式划在一起，并以“XXX 子域” 的形式对每个子域进行命名。</p>
+<p>根据三种类型的子域定义，共同结合业务实际 (或者参考设计思维中的电梯演讲)，确定每个子域的子域类型</p>
+<img src="../images/ddd/domain-seg.jpg" style="zoom:50%;" />
+
+
+<h3 id="识别对象是否是聚合根"><a href="#识别对象是否是聚合根" class="headerlink" title="识别对象是否是聚合根"></a>识别对象是否是聚合根</h3><p>假设有一个业务系统，里面有项目，项目成员的概念，只有项目成员才能访问该项目。这个例子中，项目成员是否是聚合根？</p>
+<p>假设这个系统是一个任务管理系统，支持用户创建项目，项目管理员可以设置项目的成员，项目成员可以在项目下创建任务，并把任务分配给其他成员。<br>在我看来，成员和任务，相对项目而言是平等的，他们都是项目下的业务数据，我们不能因为他们在某个项目下才有意义而把它们聚合在项目下</p>
+<p>判断一个对象是否是独立聚合根，一般就是看创建该对象的场景是否是独立的。判断一个聚合根是否要聚合其他实体，主要看其是否关心其他实体的存在，以及从自身完整性的考虑。</p>
+<p>场景是否是独立怎么理解的？</p>
+<p>针对上面的例子，创建项目，添加项目成员，创建任务，分别是三个不同的业务场景，分别对应三个聚合根；项目聚合根不关心下面有哪些成员，哪些任务。项目的目的只是为了隔离业务数据，所以对于业务数据来说，项目只是一个分类标识</p>
+<p>我们设计领域模型时不能以用户为中心作为出发点去思考问题，不能老是想着用户会对系统做什么；而应该从一个客观的角度，根据用户需求挖掘出领域内的相关事物，思考这些事物的本质关联及其变化规律作为出发点去思考问题。</p>
+<p>领域模型是排除了人之外的客观世界模型，但是领域模型包含人所扮演的参与者角色，但是一般情况下不要让参与者角色在领域模型中占据主要位置，如果以人所扮演的参与者角色在领域模型中占据主要位置，那么各个系统的领域模型将变得没有差别，因为软件系统就是一个人机交互的系统，都是以人为主的活动记录或跟踪；比如：论坛中如果以人为主导，那么领域模型就是：人发帖，人回帖，人结贴，等等；DDD的例子中，如果是以人为中心的话，就变成了：托运人托运货物，收货人收货物，付款人付款，等等；因此，当我们谈及领域模型时，已经默认把人的因素排除开了，因为领域只有对人来说才有意义，人是在领域范围之外的，如果人也划入领域，领域模型将很难保持客观性。领域模型是与谁用和怎样用是无关的客观模型。归纳起来说就是，领域建模是建立虚拟模型让我们现实的人使用，而不是建立虚拟空间，去模仿现实。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UOr0zRCxy1j__-uaEBt4fA">https://mp.weixin.qq.com/s/UOr0zRCxy1j__-uaEBt4fA</a></li>
+<li>ThoughtWorks现代企业架构框架白皮书</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>您的支持将鼓励我继续创作 笔芯</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/uploads/wechatpay.jpeg" alt="anruence 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/uploads/alipay.jpeg" alt="anruence 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/DDD/" rel="tag"><i class="fa fa-tag"></i> DDD</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/03/22/mind-key/" rel="prev" title="近期发现比较有趣的关键词">
+                  <i class="fa fa-chevron-left"></i> 近期发现比较有趣的关键词
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anruence</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">263k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:59</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1ade6ae310dee1a615bb',
+      clientSecret: 'bb83a1099492163bf8a19e4a14f956dd1d27d018',
+      repo        : 'anruence.github.io',
+      owner       : 'anruence',
+      admin       : ['anruence'],
+      id          : '391d69de6c2f813c17150cc7578cd238',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

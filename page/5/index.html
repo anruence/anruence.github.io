@@ -148,7 +148,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">92</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,7 +226,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">92</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -281,6 +281,122 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/12/27/no-such-method/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/12/27/no-such-method/" class="post-title-link" itemprop="url">java.lang.NoSuchMethodError排查</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-27 18:03:59" itemprop="dateCreated datePublished" datetime="2018-12-27T18:03:59+08:00">2018-12-27</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-23 10:38:21" itemprop="dateModified" datetime="2020-10-23T10:38:21+08:00">2020-10-23</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="代码案列"><a href="#代码案列" class="headerlink" title="代码案列"></a>代码案列</h2><p>Rhino.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rhino</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">someOps</span><span class="params">(<span class="keyword">int</span> a, String b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Async.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Async</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">doSomething</span><span class="params">(String b, String c)</span> </span>&#123;</span><br><span class="line">        Rhino rhino = <span class="keyword">new</span> Rhino();</span><br><span class="line">        rhino.someOps(<span class="number">0</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;normal&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Clinet.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Async b = <span class="keyword">new</span> Async();</span><br><span class="line">        System.out.print(b.doSomething(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">⋊&gt; test ls</span><br><span class="line">Async.java  Client.java Rhino.java</span><br><span class="line">⋊&gt; test javac Client.java</span><br><span class="line">⋊&gt; test ls</span><br><span class="line">Async.class  Async.java   Client.class Client.java  Rhino.class  Rhino.java</span><br><span class="line">⋊&gt; test javap -v Rhino.class</span><br><span class="line">Classfile &#x2F;Users&#x2F;wuanran&#x2F;Desktop&#x2F;test&#x2F;Rhino.class</span><br><span class="line">  Last modified 2018-12-28; size 259 bytes</span><br><span class="line">  MD5 checksum 3bf6201d461e5b960d606f5dbad16ad1</span><br><span class="line">  Compiled from &quot;Rhino.java&quot;</span><br><span class="line">public class Rhino</span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: 52</span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #1 &#x3D; Methodref          #3.#12         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">   #2 &#x3D; Class              #13            &#x2F;&#x2F; Rhino</span><br><span class="line">   #3 &#x3D; Class              #14            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object</span><br><span class="line">   #4 &#x3D; Utf8               &lt;init&gt;</span><br><span class="line">   #5 &#x3D; Utf8               ()V</span><br><span class="line">   #6 &#x3D; Utf8               Code</span><br><span class="line">   #7 &#x3D; Utf8               LineNumberTable</span><br><span class="line">   #8 &#x3D; Utf8               someOps</span><br><span class="line">   #9 &#x3D; Utf8               (ILjava&#x2F;lang&#x2F;String;)I</span><br><span class="line">  #10 &#x3D; Utf8               SourceFile</span><br><span class="line">  #11 &#x3D; Utf8               Rhino.java</span><br><span class="line">  #12 &#x3D; NameAndType        #4:#5          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">  #13 &#x3D; Utf8               Rhino</span><br><span class="line">  #14 &#x3D; Utf8               java&#x2F;lang&#x2F;Object</span><br><span class="line">&#123;</span><br><span class="line">  public Rhino();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack&#x3D;1, locals&#x3D;1, args_size&#x3D;1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: invokespecial #1                  &#x2F;&#x2F; Method java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">         4: return</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 2: 0</span><br><span class="line"></span><br><span class="line">  public int someOps(int, java.lang.String);</span><br><span class="line">    descriptor: (ILjava&#x2F;lang&#x2F;String;)I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack&#x3D;1, locals&#x3D;3, args_size&#x3D;3</span><br><span class="line">         0: iconst_0</span><br><span class="line">         1: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 5: 0</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: &quot;Rhino.java&quot;</span><br><span class="line"></span><br><span class="line">## 修改Rhino.java，更改方法返回类型为String</span><br><span class="line"></span><br><span class="line">    public String someOps(int a, String b) &#123;</span><br><span class="line">        return &quot;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">⋊&gt; test javac Rhino.java</span><br><span class="line">⋊&gt; test javac Client.java</span><br><span class="line">⋊&gt; test java Client</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.NoSuchMethodError: Rhino.someOps(ILjava&#x2F;lang&#x2F;String;)I</span><br><span class="line">	at Async.doSomething(Async.java:5)</span><br><span class="line">	at Client.main(Client.java:5)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="java-lang-NoSuchMethodError分析"><a href="#java-lang-NoSuchMethodError分析" class="headerlink" title="java.lang.NoSuchMethodError分析"></a>java.lang.NoSuchMethodError分析</h2><ul>
+<li><p>为什么会出现这个错误？<br>原因：Rhino.java中someOps方法在编译时候已经被虚拟机设置为(ILjava/lang/String;)I类型，而修改后someOps方法在class文件中为(ILjava/lang/String;)Ljava/lang/String;，因此异常发生。</p>
+</li>
+<li><p>这个例子在三方jar中也会遇到，A.jar B.jar C.jar，关系如下，C中一方法执行有如下依赖，B-0.1依赖A的0.1版本，C依赖B-0.1版本。当A升级到0.2版本后改变了原方法返回类型，此时引用的版本为： A-0.2 B-0.1，C中方法执行时会出现类似异常。</p>
+</li>
+</ul>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>在项目依赖比较复杂或者 Java 运行的环境有问题时，或者同一类型的 jar 包有不同版本存在，都可能触发该错误。本质上说是 JVM 找不到某个类的特定方法，也就是说 JVM 加载了错误版本的类。说白了，就是 JVM 找不到真正想要调用的方法啦！出现该错误的情形主要有以下两个种：</p>
+<p>导入了不匹配的包版本；</p>
+<p>开发环境和运行环境不一致。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>查看“External Libraries”，看报错的方法到底存不存在，如果不存在，说明这个包一定有问题啦，更新包就可以啦；如果存在，说明包已经引入成功，但集成开发环境有可能没有同步到，可以尝试强制更新的方法。此外，可以查看一下开发环境和运行环境是否一致，如果不一致，修改。</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>哪些方法的返回类型是在编译时确定，泛型又是如何处理的？</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1331,110 +1447,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2018/07/09/consistent-hash/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/07/09/consistent-hash/" class="post-title-link" itemprop="url">一致性hash</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-07-09 17:16:44" itemprop="dateCreated datePublished" datetime="2018-07-09T17:16:44+08:00">2018-07-09</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:11:10" itemprop="dateModified" datetime="2020-10-26T23:11:10+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E4%B8%80%E8%87%B4%E6%80%A7hash/" itemprop="url" rel="index"><span itemprop="name">一致性hash</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>414</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="一致性hash"><a href="#一致性hash" class="headerlink" title="一致性hash"></a>一致性hash</h2><p>网站的伸缩性<br>所谓网站的伸缩性是指不要改变网站的软硬件设计，仅仅通过改变部署的服务器数量就可以扩大或者缩小网站的服务处理能力。</p>
-<p>应用服务器集群的伸缩性<br>对于所有服务器都部署相同应用的应用服务器集群，想要实现分布式集群的伸缩性，可以使用负载均衡实现，如反向代理负载均衡等。</p>
-<p>分布式缓存集群的伸缩性<br>1.分布式缓存集群特点</p>
-<p>不同于应用服务器集群的伸缩性设计，对于分布式缓存集群，不同的服务器中缓存的数据各不相同，缓存访问请求不可以在缓存服务器集群中任意一台处理，必须找到缓存相应数据的服务器，然后才能进行访问。</p>
-<p>2.伸缩性设计存在问题</p>
-<p>由于分布式缓存集群的这个特点，那么当在缓存集群增加或者去掉服务器的时候，就会出现新上线的缓存服务器没有缓存任何数据，但是已经下线的缓存服务器还缓存着网站的许多热点数据。</p>
-<p>3.设计目标</p>
-<p>使新加入或者下线缓存服务器之后对整个缓存服务器集群中已经缓存的数据尽可能还被访问到，此时Hash算法的选择就比较重要。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1490,13 +1502,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">260k</span>
+    <span title="站点总字数">263k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:56</span>
+    <span title="站点阅读时长">3:59</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

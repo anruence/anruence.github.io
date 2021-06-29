@@ -148,7 +148,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">92</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,7 +226,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">92</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -281,6 +281,149 @@
       
 
       
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://anruence.com/2020/10/22/distribute-transaction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anruence">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安然写字的地方">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/22/distribute-transaction/" class="post-title-link" itemprop="url">关于分布式事务的文章</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-10-22 20:26:18" itemprop="dateCreated datePublished" datetime="2020-10-22T20:26:18+08:00">2020-10-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-10-26 23:05:22" itemprop="dateModified" datetime="2020-10-26T23:05:22+08:00">2020-10-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">分布式事务</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="如何理解事务中的一致性"><a href="#如何理解事务中的一致性" class="headerlink" title="如何理解事务中的一致性"></a>如何理解事务中的一致性</h2><p>单机事务一致性的定义</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Consistency_(database_systems)#mw-head">https://en.wikipedia.org/wiki/Consistency_(database_systems)#mw-head</a></li>
+</ul>
+<p>可以理解单机一致性是：应用系统从一个正确的状态到另一个正确的状态，而ACID就是说事务能够通过AID来保证这个C的过程，C是目的，AID都是方法，ACID中的一致性是数据库保证所有的约束没有被打破</p>
+<h2 id="关于分布式事务的文章"><a href="#关于分布式事务的文章" class="headerlink" title="关于分布式事务的文章"></a>关于分布式事务的文章</h2><ul>
+<li><p>ServiceComb中的数据最终一致性方案<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/FL63Zv9Zou86950w/article/details/78393439">https://blog.csdn.net/FL63Zv9Zou86950w/article/details/78393439</a><br>开源项目：ServiceComb-Saga<br>地址：<a target="_blank" rel="noopener" href="https://github.com/ServiceComb/ServiceComb-Saga">https://github.com/ServiceComb/ServiceComb-Saga</a></p>
+</li>
+<li><p>基于Sagas思路实现：Sagas相关论文<br><a target="_blank" rel="noopener" href="https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf">https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf</a><br>分布式事务系列文章<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27384769/article/details/79305402">https://blog.csdn.net/qq_27384769/article/details/79305402</a></p>
+</li>
+<li><p>分布式事务学习之（可靠消息一致性方案之独立消息服务）（七）<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014401141/article/details/78933248">https://blog.csdn.net/u014401141/article/details/78933248</a></p>
+</li>
+<li><p>（微服务）分布式事务-最大努力交付 &amp;&amp; 消息最终一致性方案<br><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011479826">https://segmentfault.com/a/1190000011479826</a></p>
+</li>
+<li><p>分布式事务：不过是在一致性、吞吐量和复杂度之间，做一个选择<br><a target="_blank" rel="noopener" href="http://p.primeton.com/articles/59030eeda6f2a40690f03602">http://p.primeton.com/articles/59030eeda6f2a40690f03602</a></p>
+</li>
+<li><p>微服务架构下的数据一致性保证（三）：补偿模式<br><a target="_blank" rel="noopener" href="http://dwz.cn/3TVJaB">http://dwz.cn/3TVJaB</a></p>
+</li>
+<li><p>使用事件和消息队列实现分布式事务<br><a target="_blank" rel="noopener" href="http://www.bubuko.com/infodetail-1996270.html">http://www.bubuko.com/infodetail-1996270.html</a></p>
+</li>
+<li><p>微服务架构分布式事务解决方案设计思路（可靠消息最终一致方案-概念）<br><a target="_blank" rel="noopener" href="https://my.oschina.net/sundasheng44/blog/834259">https://my.oschina.net/sundasheng44/blog/834259</a></p>
+</li>
+</ul>
+<h2 id="关于分布式事务开源框架"><a href="#关于分布式事务开源框架" class="headerlink" title="关于分布式事务开源框架"></a>关于分布式事务开源框架</h2><ul>
+<li><p>Tarzan 基于外部事件实现的可靠事件系统<br><a target="_blank" rel="noopener" href="https://github.com/beston123/Tarzan">https://github.com/beston123/Tarzan</a></p>
+</li>
+<li><p>LCN: LCN分布式事务框架，兼容dubbo、springcloud、motan框架<br>官方地址：<br><a target="_blank" rel="noopener" href="http://www.txlcn.org/">http://www.txlcn.org/</a><br><a target="_blank" rel="noopener" href="https://github.com/codingapi/tx-lcn">https://github.com/codingapi/tx-lcn</a></p>
+</li>
+<li><p>消息最终一致性方案，基于rabbitmq的分布式事务解决方案<br> <br><a target="_blank" rel="noopener" href="https://github.com/vvsuperman/coolmq">https://github.com/vvsuperman/coolmq</a></p>
+</li>
+<li><p>tcc-transaction: 是TCC型事务java实现<br>      <br><a target="_blank" rel="noopener" href="https://github.com/changmingxie/tcc-transaction">https://github.com/changmingxie/tcc-transaction</a></p>
+</li>
+<li><p>Hmily框架<br>分布式事务方案之tcc开源框架，支持dubbo，SpringCloud等rpc框架进行分布式事务<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/hmily">https://github.com/yu199195/hmily</a></p>
+</li>
+<li><p>myth框架：基于消息队列最终一致性<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/myth">https://github.com/yu199195/myth</a></p>
+</li>
+<li><p>happylifeplat-tcc：TCC型解决方案<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/happylifeplat-tcc">https://github.com/yu199195/happylifeplat-tcc</a>
+ </p>
+</li>
+<li><p>happylifeplat-transaction 二阶段提交强一致性<br><a target="_blank" rel="noopener" href="https://github.com/yu199195/happylifeplat-transaction">https://github.com/yu199195/happylifeplat-transaction</a></p>
+</li>
+</ul>
+<h2 id="补充资料"><a href="#补充资料" class="headerlink" title="补充资料"></a>补充资料</h2><p>大型SOA架构体系里的数据一致性问题 <br><a target="_blank" rel="noopener" href="http://www.360doc.com/content/17/0212/09/13792507_628391906.shtml">http://www.360doc.com/content/17/0212/09/13792507_628391906.shtml</a></p>
+<p>从CRUD编程切换到事件溯源和区块链编程<br><a target="_blank" rel="noopener" href="http://www.jdon.com/49396">http://www.jdon.com/49396</a></p>
+<p>事件概念正在重塑分布式系统的未来<br><a target="_blank" rel="noopener" href="http://www.jdon.com/49368">http://www.jdon.com/49368</a></p>
+<p>什么是事件溯源Event Sourcing？<br><a target="_blank" rel="noopener" href="http://www.jdon.com/48501">http://www.jdon.com/48501</a><br><a target="_blank" rel="noopener" href="https://github.com/baihui212/tsharding">https://github.com/baihui212/tsharding</a></p>
+<p>保障数据一致性的6种方案<br><a target="_blank" rel="noopener" href="http://www.360doc.com/content/16/0419/22/31851752_552140045.shtml">http://www.360doc.com/content/16/0419/22/31851752_552140045.shtml</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
     
 
 
@@ -1352,155 +1495,6 @@ spring相关组件完整提供了这种能力，资料很多，就不赘述了</
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://anruence.com/2019/05/23/enode/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="anruence">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="安然写字的地方">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/23/enode/" class="post-title-link" itemprop="url">对enode设计上的思考</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-05-23 14:58:08" itemprop="dateCreated datePublished" datetime="2019-05-23T14:58:08+08:00">2019-05-23</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2020-10-26 23:09:45" itemprop="dateModified" datetime="2020-10-26T23:09:45+08:00">2020-10-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
-        </span>
-    </span>
-
-  
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>enode是真正意义上的，聚合根完全独立不相互依赖，聚合之间完全无感知，聚合之间通信完全通过消息，消息流程控制器完全无状态，消息幂等处理自动支持，支持分布式，支持actor，in-memory模式的一个框架，聚合的关系上做到了完全的解耦。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/anruence/enode">https://github.com/anruence/enode</a></p>
-<h2 id="核心点"><a href="#核心点" class="headerlink" title="核心点"></a>核心点</h2><ul>
-<li><p>事件驱动架构</p>
-</li>
-<li><p>全流程异步</p>
-</li>
-<li><p>聚合根in-memory</p>
-</li>
-<li><p>聚合根并发修改问题规避，保证对同一个聚合的操作路由到同一个分区</p>
-</li>
-<li><p>实现了Saga (Process Manager)</p>
-</li>
-</ul>
-<h3 id="CQRS如何实现避免资源竞争"><a href="#CQRS如何实现避免资源竞争" class="headerlink" title="CQRS如何实现避免资源竞争"></a>CQRS如何实现避免资源竞争</h3><p>对于C端，我们的目标是尽可能的在1s内处理更多的Command，也就是数据写请求。在经典DDD的四层架构中，我们会有一个模式叫工作单元模式，即Unit of Work（简称UoW）模式。通过该模式，我们能在应用层，一次性以事务的方式将当前请求所涉及的多个对象的修改提交到DB。微软的EF实体框架的DbContext就是一个UoW模式的实现。这种做法的好处是，一个请求对多个聚合根的修改，能做到强一致性，因为是事务的。但是这种做法，实际上，没有很好的遵守避开资源竞争的原则。</p>
-<p>试想，事务A要修改a1,a2,a3三个聚合根；事务B要修改a2,a3,a4；事务C要修改a3,a4,a5三个聚合根。那这样，我们很容易理解，这三个事务只能串行执行，因为它们要修改相同的资源。比如事务A和事务B都要修改a2,a3这两个聚合根，那同一时刻，只能由一个事务能被执行。同理，事务B和事务C也是一样。如果A,B,C这种事务执行的并发很高，那数据库就会出现严重的并发冲突，甚至死锁。那要如何避免这种资源竞争呢？</p>
-<h3 id="让一个Command总是只修改一个聚合根"><a href="#让一个Command总是只修改一个聚合根" class="headerlink" title="让一个Command总是只修改一个聚合根"></a>让一个Command总是只修改一个聚合根</h3><p>这个做法其实就是缩小事务的范围，确保一个事务一次只涉及一条记录的修改。也就是做到，只有单个聚合根的修改才是事务的，让聚合根成为数据强一致性的最小单位。这样我们就能最大化的实现并行修改。但是你会问，但是我一个请求就是会涉及多个聚合根的修改的，这种情况怎么办呢？在CQRS架构中，有一个东西叫Saga。Saga是一种基于事件驱动的思想来实现业务流程的技术，通过Saga，我们可以用最终一致性的方式最终实现对多个聚合根的修改。对于一次涉及多个聚合根修改的业务场景，一般总是可以设计为一个业务流程，也就是可以定义出要先做什么后做什么。比如以银行转账的场景为例子，如果是按照传统事务的做法，那可能是先开启一个事务，然后让A账号扣减余额，再让B账号加上余额，最后提交事务；如果A账号余额不足，则直接抛出异常，同理B账号如果加上余额也遇到异常，那也抛出异常即可，事务会保证原子性以及自动回滚。也就是说，数据一致性已经由DB帮我们做掉了。</p>
-<p>但是，如果是Saga的设计，那就不是这样了。我们会把整个转账过程定义为一个业务流程。然后，流程中会包括多个参与该流程的聚合根以及一个用于协调聚合根交互的流程管理器（ProcessManager，无状态），流程管理器负责响应流程中的每个聚合根产生的领域事件，然后根据事件发送相应的Command，从而继续驱动其他的聚合根进行操作。</p>
-<p>转账的例子，涉及到的聚合根有：两个银行账号聚合根，一个交易（Transaction）聚合根，它用于负责存储流程的当前状态，它还会维护流程状态变更时的规则约束；然后当然还有一个流程管理器。转账开始时，我们会先创建一个Transaction聚合根，然后它产生一个TransactionStarted的事件，然后流程管理器响应事件，然后发送一个Command让A账号聚合根做减余额的操作；A账号操作完成后，产生领域事件；然后流程管理器响应事件，然后发送一个Command通知Transaction聚合根确认A账号的操作；确认完成后也会产生事件，然后流程管理器再响应，然后发送一个Command通知B账号做加上余额的操作；后续的步骤就不详细讲了。大概意思我想已经表达了。总之，通过这样的设计，我们可以通过事件驱动的方式，来完成整个业务流程。如果流程中的任何一步出现了异常，那我们可以在流程中定义补偿机制实现回退操作。或者不回退也没关系，因为Transaction聚合根记录了流程的当前状态，这样我们可以很方便的后续排查有状态没有正常结束的转账交易。</p>
-<h2 id="原则"><a href="#原则" class="headerlink" title="原则"></a>原则</h2><p>领域事件 =&gt; 事件是聚合根产生的，原则是一个命令只能修改一个聚合根，如果遇到一个请求需要操作多个聚合根时，将请求拆分成命令一个个处理（通过Saga机制）<br>域 =&gt; 问题域，系统要解决什么问题<br>上下文 =&gt; 解决方案，解决域问题的系统</p>
-<ul>
-<li>如何设计聚合</li>
-</ul>
-<ol>
-<li><p>找出你关心的所有领域概念</p>
-</li>
-<li><p>先假设所有概念都是实体，且都是聚合根</p>
-</li>
-<li><p>利用排除法，分析哪些概念没有独立的生命周期，则排除。怎么分析生命周期呢，这样思考，是否有场景会直接创建或者修改该概念，而不是先导航到其他概念再修改这个概念</p>
-</li>
-<li><p>把排查的概念放在其他的聚合根下形成聚合</p>
-</li>
-</ol>
-<ul>
-<li><p>如何理解界限上下文，界限上下文跟子域有什么关系？<br>领域过大时候需要分拆子域，子域有分核心子域和支撑子域，通用子域等，按业务划分。<br>之所以要写个程序，这个程序的最核心的作用(核心域)，有行业或者业务共识的模型(通用子域)，为了让核心域能发挥作用补充相关功能串联整个系统的(支撑子域)</p>
-</li>
-<li><p>是否可以一次事务操作多个聚合根？</p>
-</li>
-</ul>
-<p>这种情况应该避免，如果有人这样做了，需要首先分析这两个聚合根的操作是否一定要一起修改？通常应该允许不一起修改的。<br>就像下订单，处理订单时，创建订单和减库存可以不在一个事务里一样<br>虽然原则上是一个事务操作一个聚合根，但在单个上下文内使用领域服务操作两个紧密关联的聚合根也可以。只是取舍问题<br>只是他的这个上下文架构选型可能用了强一致性事务的基础设施支持， 在一个上下文中使用强一致性，一次事务操作多个聚合也是很常见的</p>
-<ul>
-<li><p>一个聚合根可以出现在多个领域服务里不？<br>聚合根不是放在领域服务里的。<br>领域服务的作用是协调聚合根，通常不需要领域服务。你问出这个问题问感觉你犯了一个错误，就是你认为聚合根的操作一定要通过领域服务暴露出来。<br>需求是聚合根，服务是服务，所以，你说把需求做成服务A，让人无法理解，太混乱<br>领域服务只不过是协调多个聚合的操作而已，如果你这个业务操作只牵涉到一个聚合，那么在应用服务层就行。</p>
-</li>
-<li><p>为什么注册时要加锁？<br>DDD 业务规则要在领域中体现出来，限制条件要显式的表达出来</p>
-</li>
-</ul>
-<p>Q端的任何更新都应该把聚合根ID和事件版本号作为条件</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/tangxuehua/enode">https://github.com/tangxuehua/enode</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/netfocus/category/496012.html">http://www.cnblogs.com/netfocus/category/496012.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/netfocus/p/5180378.html">https://www.cnblogs.com/netfocus/p/5180378.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/netfocus/p/4249237.html">https://www.cnblogs.com/netfocus/p/4249237.html</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
   
   <nav class="pagination">
@@ -1556,13 +1550,13 @@ spring相关组件完整提供了这种能力，资料很多，就不赘述了</
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">260k</span>
+    <span title="站点总字数">263k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:56</span>
+    <span title="站点阅读时长">3:59</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
